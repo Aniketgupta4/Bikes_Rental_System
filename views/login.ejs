@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - BikeRental</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* ----------------------- 1. DESIGN SYSTEM ----------------------- */
+        :root {
+            --primary: #ff6b6b;
+            --primary-dark: #ee5253;
+            --secondary: #1e1e2f;
+            --bg-body: #f4f7fe;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        html, body { overflow-x: hidden; width: 100%; min-height: 100vh; }
+        body { background: var(--bg-body); color: var(--text-main); display: flex; flex-direction: column; }
+
+        /* ----------------------- 2. UNIVERSAL NAVBAR ----------------------- */
+        .navbar {
+            background: var(--secondary); padding: 12px 6%;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .navbar .brand { font-size: 1.8rem; font-weight: 700; color: var(--primary); text-decoration: none; letter-spacing: 1px; }
+        .navbar .brand span { color: #fff; font-weight: 300; }
+
+        .nav-links { display: flex; gap: 10px; align-items: center; }
+        .nav-links a {
+            color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 10px;
+            font-weight: 500; font-size: 0.9rem; transition: 0.3s ease;
+        }
+        .nav-links a:hover { background: rgba(255, 107, 107, 0.1); color: var(--primary); }
+        .nav-btn { background: var(--primary); color: #fff !important; }
+
+        .menu-btn { display: none; cursor: pointer; color: #fff; font-size: 1.6rem; padding: 5px; }
+
+        /* Mobile Overlay */
+        .mobile-overlay {
+            position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
+            background: var(--secondary); z-index: 2500; transition: 0.4s ease;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px;
+        }
+        .mobile-overlay.active { right: 0; }
+        .mobile-overlay a { color: #fff; text-decoration: none; font-size: 1.5rem; font-weight: 600; }
+        .close-menu { position: absolute; top: 25px; right: 25px; color: #fff; font-size: 2.2rem; cursor: pointer; }
+
+        /* ----------------------- 3. LOGIN BOX LAYOUT ----------------------- */
+        main.container {
+            flex: 1; display: flex; justify-content: center; align-items: center;
+            padding: 60px 20px; animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .form-card {
+            background: var(--card-bg); width: 100%; max-width: 450px;
+            padding: 50px 40px; border-radius: 30px; box-shadow: var(--shadow);
+            text-align: center; border: 1px solid #edf2f7;
+        }
+        
+        .form-card h2 { font-size: 2.2rem; font-weight: 800; color: var(--secondary); margin-bottom: 10px; }
+        .form-card p.subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 40px; }
+
+        /* Input Styling */
+        .input-group { position: relative; margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--secondary); margin-bottom: 8px; text-transform: uppercase; }
+        .input-group i { position: absolute; left: 15px; top: 43px; color: #cbd5e0; font-size: 1.1rem; transition: 0.3s; }
+        
+        .input-group input {
+            width: 100%; padding: 15px 15px 15px 45px; border-radius: 15px;
+            border: 2px solid #e2e8f0; font-size: 1rem; outline: none; transition: 0.3s;
+        }
+        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 5px rgba(255, 107, 107, 0.1); }
+        .input-group input:focus + i { color: var(--primary); }
+
+        .btn-login {
+            width: 100%; padding: 16px; border-radius: 15px; border: none;
+            background: var(--primary); color: #fff; font-size: 1.1rem; font-weight: 700;
+            cursor: pointer; transition: 0.3s; margin-top: 15px; box-shadow: 0 10px 20px rgba(255, 107, 107, 0.2);
+        }
+        .btn-login:hover { background: var(--primary-dark); transform: translateY(-3px); }
+
+        .alert-error {
+            background: #fff5f5; color: #c53030; padding: 15px; border-radius: 15px;
+            margin-bottom: 25px; font-size: 0.85rem; font-weight: 600; border: 1px solid #feb2b2;
+            display: flex; align-items: center; gap: 10px; justify-content: center;
+        }
+
+        .bottom-links { margin-top: 30px; font-size: 0.9rem; color: var(--text-muted); }
+        .bottom-links a { color: var(--primary); text-decoration: none; font-weight: 700; }
+        .bottom-links a:hover { text-decoration: underline; }
+
+        /* ----------------------- 4. UNIVERSAL FOOTER ----------------------- */
+        footer { background: var(--secondary); color: #fff; padding: 70px 6% 30px; margin-top: auto; border-top: 6px solid var(--primary); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 40px; }
+        
+        .footer-brand h3 { color: var(--primary); font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; }
+        .footer-brand p { color: #b2bec3; font-size: 0.95rem; line-height: 1.7; }
+        .footer-links h4 { color: #fff; margin-bottom: 20px; font-size: 1.1rem; border-left: 3px solid var(--primary); padding-left: 10px; }
+        .footer-links ul { list-style: none; }
+        .footer-links a { color: #b2bec3; text-decoration: none; display: block; margin-bottom: 12px; font-size: 0.9rem; transition: 0.3s; }
+        .footer-links a:hover { color: var(--primary); padding-left: 5px; }
+
+        .footer-form input, .footer-form textarea {
+            width: 100%; padding: 12px; border-radius: 10px; border: none; background: #2d2d44; color: #fff; margin-bottom: 10px; outline: none;
+        }
+        .footer-form button { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; }
+
+        .copyright { text-align: center; padding-top: 30px; margin-top: 50px; border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.85rem; }
+
+        /* ----------------------- 5. RESPONSIVE QUERIES ----------------------- */
+        @media (max-width: 850px) {
+            .nav-links { display: none; }
+            .menu-btn { display: block; }
+        }
+        @media (max-width: 480px) {
+            .form-card { padding: 40px 25px; border-radius: 20px; }
+            .form-card h2 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="/" class="brand">Bike<span>Rental</span></a>
+        <div class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/signup" class="nav-btn">Create Account</a>
+        </nav>
+    </header>
+
+    <div class="mobile-overlay" id="mobileNav">
+        <div class="close-menu" onclick="toggleMenu()"><i class="fas fa-times"></i></div>
+        <a href="/" onclick="toggleMenu()">Home</a>
+        <a href="/signup" onclick="toggleMenu()">Signup</a>
+    </div>
+
+    <main class="container">
+        <div class="form-card">
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Please enter your credentials to access your account.</p>
+
+            <% if (typeof message !== 'undefined' && message) { %>
+                <div class="alert-error">
+                    <i class="fas fa-circle-exclamation"></i> <%= message %>
+                </div>
+            <% } %>
+
+            <form action="/login" method="POST">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" placeholder="name@example.com" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+
+                <div class="input-group">
+                    <label>Secure Password</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+
+                <button type="submit" class="btn-login">Sign In Now</button>
+            </form>
+
+            <div class="bottom-links">
+                <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>BikeRental</h3>
+                <p>Providing the most reliable bike rental experience since 2026. Safe, fast, and high-performance rides for every urban explorer.</p>
+                <div style="display: flex; gap: 15px; margin-top: 25px;">
+                    <a href="#" style="font-size: 1.2rem;"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" style="font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
+                    <a href="#" style="font-size: 1.2rem;"><i class="fab fa-x-twitter"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="/">Browse Fleet</a></li>
+                    <li><a href="/signup">Join as Partner</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Contact Info</h4>
+                <p style="color:#b2bec3; font-size:0.9rem; margin-bottom:12px;"><i class="fas fa-envelope" style="color:var(--primary); margin-right:10px;"></i> support@bikerental.com</p>
+                <p style="color:#b2bec3; font-size:0.9rem;"><i class="fas fa-location-dot" style="color:var(--primary); margin-right:10px;"></i> Civil Lines, Jabalpur, MP</p>
+            </div>
+
+            <div class="footer-form">
+                <h4>Support Chat</h4>
+                <form action="/feedback" method="POST">
+                    <input type="text" placeholder="Your Name" required>
+                    <textarea placeholder="How can we help?" rows="2" required></textarea>
+                    <button type="submit">Submit Request</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>© <%= new Date().getFullYear() %> BikeRental System | Premium Mobility Solution | Developed by Aniket Kumar Gupta</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById("mobileNav").classList.toggle("active");
+        }
+    </script>
+
+</body>
+</html>
