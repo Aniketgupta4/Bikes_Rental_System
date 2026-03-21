@@ -19,130 +19,129 @@
             --text-main: #2d3436;
             --text-muted: #636e72;
             --success: #00b894;
-            --warning: #f1c40f;
+            --danger: #d63031;
             --shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        
-        /* Prevent horizontal scroll */
         html, body { overflow-x: hidden; width: 100%; }
         body { background: var(--bg-body); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
 
         /* ----------------------- 2. MODERN NAVBAR ----------------------- */
         .navbar {
-            background: var(--secondary); padding: 12px 6%;
+            background: var(--secondary); padding: 15px 6%;
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         .navbar .brand { font-size: 1.8rem; font-weight: 700; color: var(--primary); text-decoration: none; letter-spacing: 1px; }
         .navbar .brand span { color: #fff; font-weight: 300; }
 
-        .nav-links { display: flex; gap: 10px; align-items: center; }
-        .nav-links a {
-            color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 10px;
-            font-weight: 500; font-size: 0.9rem; transition: 0.3s ease;
-        }
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .nav-links a { color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 500; font-size: 0.95rem; transition: 0.3s ease; }
         .nav-links a:hover { background: rgba(255, 107, 107, 0.1); color: var(--primary); }
         .nav-btn { background: var(--primary); color: #fff !important; }
+        .nav-btn:hover { background: var(--primary-dark) !important; color: #fff !important; }
 
         .menu-btn { display: none; cursor: pointer; color: #fff; font-size: 1.6rem; padding: 5px; }
 
         /* Mobile Menu Overlay */
         .mobile-overlay {
             position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
-            background: var(--secondary); z-index: 1500; transition: 0.4s ease;
+            background: var(--secondary); z-index: 2500; transition: 0.4s ease;
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px;
         }
         .mobile-overlay.active { right: 0; }
-        .mobile-overlay a { color: #fff; text-decoration: none; font-size: 1.4rem; font-weight: 600; }
-        .close-menu { position: absolute; top: 25px; right: 25px; color: #fff; font-size: 2rem; cursor: pointer; }
+        .mobile-overlay a { color: #fff; text-decoration: none; font-size: 1.5rem; font-weight: 600; }
+        .close-menu { position: absolute; top: 25px; right: 25px; color: #fff; font-size: 2.2rem; cursor: pointer; }
 
         /* ----------------------- 3. HERO SECTION ----------------------- */
         .hero {
-            background: linear-gradient(rgba(30, 30, 47, 0.8), rgba(30, 30, 47, 0.8)), 
+            background: linear-gradient(rgba(30, 30, 47, 0.75), rgba(30, 30, 47, 0.85)), 
                         url('https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1350&q=80');
             background-size: cover; background-position: center;
-            color: #fff; text-align: center; padding: clamp(60px, 10vh, 120px) 20px;
+            color: #fff; text-align: center; padding: clamp(80px, 12vh, 150px) 20px;
         }
-        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; text-transform: uppercase; margin-bottom: 15px; }
-        .hero p { font-size: clamp(0.9rem, 2vw, 1.2rem); max-width: 800px; margin: 0 auto; opacity: 0.9; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 800; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
+        .hero p { font-size: clamp(1rem, 2vw, 1.2rem); max-width: 800px; margin: 0 auto; opacity: 0.9; line-height: 1.6; }
 
-        /* ----------------------- 4. RESPONSIVE GRID ----------------------- */
-        .container { width: 90%; max-width: 1200px; margin: auto; padding: 40px 0; flex: 1; }
-        .section-header { text-align: center; margin-bottom: 40px; }
-        .section-header h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--secondary); font-weight: 800; }
+        /* ----------------------- 4. RESPONSIVE GRID & CARDS ----------------------- */
+        .container { width: 90%; max-width: 1250px; margin: auto; padding: 60px 0; flex: 1; }
+        .section-header { text-align: center; margin-bottom: 50px; }
+        .section-header h2 { font-size: clamp(2rem, 4vw, 2.8rem); color: var(--secondary); font-weight: 800; }
         .section-header span { color: var(--primary); }
 
-        /* Grid fixed for narrow screens */
         .bike-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); 
-            gap: 25px; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px; 
         }
 
         .bike-card {
             background: var(--card-bg); border-radius: 20px; overflow: hidden;
-            box-shadow: var(--shadow); transition: 0.4s; display: flex; flex-direction: column;
-            border: 1px solid #edf2f7;
+            box-shadow: var(--shadow); transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            display: flex; flex-direction: column; border: 1px solid #edf2f7;
         }
-        .bike-card:hover { transform: translateY(-8px); }
+        .bike-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
 
-        .img-wrapper { width: 100%; height: 200px; overflow: hidden; position: relative; }
-        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .img-wrapper { width: 100%; height: 220px; overflow: hidden; position: relative; }
+        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .bike-card:hover .img-wrapper img { transform: scale(1.05); }
         
+        /* The Status Badges */
         .badge {
-            position: absolute; top: 12px; left: 12px; padding: 5px 12px; border-radius: 20px;
-            font-size: 0.7rem; font-weight: 700; color: #fff; text-transform: uppercase; z-index: 10;
+            position: absolute; top: 15px; left: 15px; padding: 6px 14px; border-radius: 25px;
+            font-size: 0.75rem; font-weight: 700; color: #fff; text-transform: uppercase; z-index: 10;
+            display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
+        .badge-available { background: var(--success); }
+        .badge-booked { background: var(--danger); }
 
-        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-content h3 { font-size: 1.2rem; color: var(--secondary); margin-bottom: 8px; }
-        .card-content .price { font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 15px; }
+        .card-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-content h3 { font-size: 1.4rem; font-weight: 700; color: var(--secondary); margin-bottom: 8px; }
+        .card-content .price { font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
 
         .btn-book {
-            width: 100%; padding: 12px; border-radius: 10px; border: none;
+            width: 100%; padding: 14px; border-radius: 12px; border: none;
             background: var(--secondary); color: #fff; font-weight: 700; text-decoration: none;
-            text-align: center; transition: 0.3s; font-size: 0.9rem;
+            text-align: center; transition: 0.3s; font-size: 1rem; display: block;
         }
-        .btn-book:hover:not(:disabled) { background: var(--primary); }
-        .btn-book:disabled { background: #cbd5e0; cursor: not-allowed; }
+        .btn-book:hover:not(.disabled) { background: var(--primary); transform: translateY(-2px); }
+        .btn-book.disabled { background: #cbd5e0; color: #718096; cursor: not-allowed; pointer-events: none; }
 
         /* ----------------------- 5. UNIVERSAL FOOTER ----------------------- */
-        footer { background: var(--secondary); color: #fff; padding: 60px 6% 30px; margin-top: auto; border-top: 5px solid var(--primary); }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 40px; }
+        footer { background: var(--secondary); color: #fff; padding: 80px 6% 40px; margin-top: auto; border-top: 6px solid var(--primary); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 50px; max-width: 1250px; margin: 0 auto; }
         
-        .footer-brand h3 { color: var(--primary); font-size: 1.7rem; font-weight: 700; margin-bottom: 15px; }
-        .footer-brand p { color: #b2bec3; font-size: 0.9rem; line-height: 1.6; }
+        .footer-brand h3 { color: var(--primary); font-size: 2rem; font-weight: 800; margin-bottom: 20px; }
+        .footer-brand p { color: #b2bec3; font-size: 0.95rem; line-height: 1.8; }
+        .social-icons { display: flex; gap: 15px; margin-top: 20px; }
+        .social-icons a { color: var(--primary); font-size: 1.3rem; transition: 0.3s; }
+        .social-icons a:hover { color: #fff; }
 
-        .footer-links h4 { color: #fff; margin-bottom: 20px; font-size: 1.1rem; position: relative; padding-bottom: 8px; }
-        .footer-links h4::after { content:''; position: absolute; left: 0; bottom: 0; width: 30px; height: 2px; background: var(--primary); }
+        .footer-links h4 { color: #fff; margin-bottom: 25px; font-size: 1.2rem; }
         .footer-links ul { list-style: none; }
-        .footer-links a { color: #b2bec3; text-decoration: none; display: block; margin-bottom: 10px; font-size: 0.9rem; transition: 0.3s; }
-        .footer-links a:hover { color: var(--primary); padding-left: 5px; }
+        .footer-links a { color: #b2bec3; text-decoration: none; display: block; margin-bottom: 12px; font-size: 0.95rem; transition: 0.3s; }
+        .footer-links a:hover { color: var(--primary); padding-left: 8px; }
 
-        .footer-contact p { color: #b2bec3; font-size: 0.9rem; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
-        .footer-contact i { color: var(--primary); }
+        .footer-contact p { color: #b2bec3; font-size: 0.95rem; margin-bottom: 15px; display: flex; align-items: center; gap: 12px; }
+        .footer-contact i { color: var(--primary); width: 20px; }
 
-        .footer-form input, .footer-form textarea {
-            width: 100%; padding: 10px; border-radius: 8px; border: none; background: #2d2d44; color: #fff; margin-bottom: 8px; outline: none;
-        }
-        .footer-form button {
-            width: 100%; padding: 10px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;
-        }
+        .footer-form input, .footer-form textarea { width: 100%; padding: 12px; border-radius: 10px; border: none; background: #2d2d44; color: #fff; margin-bottom: 12px; outline: none; font-family: inherit; }
+        .footer-form button { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .footer-form button:hover { background: var(--primary-dark); }
 
-        .copyright { text-align: center; padding-top: 30px; margin-top: 40px; border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.8rem; }
+        .copyright { text-align: center; padding-top: 40px; margin-top: 60px; border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.85rem; }
 
         /* ----------------------- 6. RESPONSIVE QUERIES ----------------------- */
-        @media (max-width: 850px) {
+        @media (max-width: 900px) {
             .nav-links { display: none; }
             .menu-btn { display: block; }
         }
-
-        @media (max-width: 480px) {
-            .navbar { padding: 12px 5%; }
-            .container { width: 95%; }
-            .hero { padding: 50px 15px; }
+        @media (max-width: 600px) {
+            .navbar { padding: 15px 5%; }
+            .container { padding: 40px 0; }
+            .hero { padding: 60px 20px; }
+            .bike-grid { grid-template-columns: 1fr; padding: 0 10px; }
         }
     </style>
 </head>
@@ -176,7 +175,7 @@
     </div>
 
     <section class="hero">
-        <div class="container">
+        <div class="container" style="padding: 0;">
             <h1>Premium Rides, Simplified.</h1>
             <p>Don't just commute, enjoy the ride. Book top-quality bikes at the most affordable rates in town.</p>
         </div>
@@ -189,22 +188,21 @@
         
         <div class="bike-grid">
             <% if (!bikes || bikes.length === 0) { %>
-                <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                    <i class="fas fa-motorcycle fa-3x" style="color: #cbd5e0; margin-bottom: 15px;"></i>
-                    <p style="color: var(--text-muted);">No rides available right now.</p>
+                <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                    <i class="fas fa-motorcycle fa-4x" style="color: #cbd5e0; margin-bottom: 20px;"></i>
+                    <p style="color: var(--text-muted); font-size: 1.2rem;">No rides available right now.</p>
                 </div>
             <% } else { %>
                 <% bikes.forEach(b => { %>
                     <div class="bike-card">
                         <div class="img-wrapper">
-                            <% if (!b.isAvailable) { %>
-                                <span class="badge" style="background: var(--text-muted);">Service</span>
-                            <% } else if (b.isCurrentlyRented) { %>
-                                <span class="badge" style="background: var(--warning); color: #000;">Booked</span>
+                            <% if (b.isAvailable) { %>
+                                <span class="badge badge-available"><i class="fas fa-check-circle"></i> Available</span>
                             <% } else { %>
-                                <span class="badge" style="background: var(--success);">Available</span>
+                                <span class="badge badge-booked"><i class="fas fa-lock"></i> Currently Booked</span>
                             <% } %>
-                            <img src="<%= b.image || 'https://via.placeholder.com/400x250?text=No+Image' %>" alt="<%= b.name %>">
+                            
+                            <img src="<%= b.image ? b.image : 'https://via.placeholder.com/400x250?text=No+Image' %>" alt="<%= b.name %>">
                         </div>
 
                         <div class="card-content">
@@ -213,10 +211,10 @@
                                 <p class="price">₹ <%= b.pricePerDay %> <small style="font-weight: 400; color: var(--text-muted);">/ Day</small></p>
                             </div>
 
-                            <% if (!b.isAvailable || b.isCurrentlyRented) { %>
-                                <button class="btn-book" disabled>Not Available</button>
+                            <% if (b.isAvailable) { %>
+                                <a class="btn-book" href="/bike/<%= b._id %>">Rent Now</a>
                             <% } else { %>
-                                <a class="btn-book" href="/bike/<%= b._id %>">View Details</a>
+                                <button class="btn-book disabled" disabled>Unavailable</button>
                             <% } %>
                         </div>
                     </div>
@@ -230,47 +228,43 @@
             <div class="footer-brand">
                 <h3>BikeRental</h3>
                 <p>Your premium partner for city commutes. We provide safe, sanitized, and high-performance bikes for all your travel needs.</p>
-                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-x-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
-
             <div class="footer-links">
                 <h4>Navigation</h4>
                 <ul>
-                    <li><a href="/">All Bikes</a></li>
-                    <li><a href="/user/dashboard">My Bookings</a></li>
-                    <li><a href="/login">Login Area</a></li>
+                    <li><a href="/">Browse Fleet</a></li>
+                    <li><a href="/login">User Login</a></li>
+                    <li><a href="/signup">Create Account</a></li>
                 </ul>
             </div>
-
             <div class="footer-contact">
                 <h4>Contact Info</h4>
                 <p><i class="fas fa-envelope"></i> support@bikerental.com</p>
                 <p><i class="fas fa-phone"></i> +91 98765 43210</p>
                 <p><i class="fas fa-location-dot"></i> Civil Lines, Jabalpur</p>
             </div>
-
-            <div class="footer-form">
-                <h4>Feedback</h4>
-                <form action="/feedback" method="POST">
+            <div class="footer-links">
+                <h4>Quick Feedback</h4>
+                <form action="/feedback" method="POST" class="footer-form">
                     <input type="text" placeholder="Your Name" required>
                     <textarea placeholder="Message..." rows="2" required></textarea>
-                    <button type="submit">Submit</button>
+                    <button type="submit">Submit Note</button>
                 </form>
             </div>
         </div>
-
         <div class="copyright">
             <p>© <%= new Date().getFullYear() %> BikeRental System | Premium Mobility Solution | Developed by Aniket Kumar Gupta</p>
         </div>
     </footer>
 
     <script>
-        function toggleMenu() {
-            document.getElementById("mobileNav").classList.toggle("active");
+        function toggleMenu() { 
+            document.getElementById("mobileNav").classList.toggle("active"); 
         }
     </script>
 </body>

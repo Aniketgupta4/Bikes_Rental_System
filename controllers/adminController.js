@@ -2,7 +2,7 @@ const Bike = require("../models/Bike");
 const Booking = require("../models/Booking");
 const { Parser } = require("json2csv");
 
-// 1. Admin Dashboard - Sabhi bookings aur bikes fetch karna
+// 1. Admin Dashboard - Statistics & Data Fetching
 exports.dashboard = async (req, res) => {
   try {
     const bookings = await Booking.find()
@@ -11,6 +11,7 @@ exports.dashboard = async (req, res) => {
       .sort({ createdAt: -1 });
 
     const bikes = await Bike.find();
+    
     res.render("adminDashboard", {
       bookings: bookings || [],
       bikes: bikes || [],
@@ -31,11 +32,21 @@ exports.addBikePage = (req, res) => {
 exports.addBike = async (req, res) => {
   try {
     const { name, description, pricePerDay } = req.body;
-    const image = req.file ? req.file.path : null;
-    await Bike.create({ name, description, pricePerDay, image });
+    
+    // Cloudinary URL logic (Permanent Online Link)
+    const image = req.file ? req.file.path : null; 
+
+    await Bike.create({ 
+        name, 
+        description, 
+        pricePerDay, 
+        image, 
+        isAvailable: true // Default setting
+    });
+
     res.redirect("/admin/dashboard");
   } catch (err) {
-    console.error(err);
+    console.error("Add Bike Error:", err);
     res.render("addBike", { bike: null, user: req.session.user || null, message: "Error adding bike" });
   }
 };
@@ -53,16 +64,23 @@ exports.editBikePage = async (req, res) => {
 exports.updateBike = async (req, res) => {
   try {
     const { name, description, pricePerDay, isAvailable } = req.body;
-    const data = { 
+    
+    const updateData = { 
         name, 
         description, 
         pricePerDay, 
-        isAvailable: isAvailable === "on" // Checkbox logic
+        isAvailable: isAvailable === "on" 
     };
-    if (req.file && req.file.path) data.image = req.file.path;
-    await Bike.findByIdAndUpdate(req.params.id, data);
+
+    // Cloudinary update check
+    if (req.file && req.file.path) {
+        updateData.image = req.file.path;
+    }
+
+    await Bike.findByIdAndUpdate(req.params.id, updateData);
     res.redirect("/admin/dashboard");
   } catch (err) {
+    console.error("Update Error:", err);
     res.redirect("/admin/dashboard");
   }
 };
@@ -76,9 +94,9 @@ exports.deleteBike = async (req, res) => {
   }
 };
 
-// --- BOOKING LIFE-CYCLE MANAGEMENT (Industry Level) ---
+// --- BOOKING OPERATIONS (Lifecycle & Status Sync) ---
 
-// Step 1: Approve Request (Bike Reserved but still shows 'Available' on Home)
+// Step 1: Approve Request
 exports.approveBooking = async (req, res) => {
   try {
     await Booking.findByIdAndUpdate(req.params.id, { status: "approved" });
@@ -88,27 +106,47 @@ exports.approveBooking = async (req, res) => {
   }
 };
 
-// Step 2: Handover / Start Trip (Bike now becomes 'Unavailable/Rented' on Home)
+// Step 2: Handover (Start Trip) -> Syncs with Home Page!
 exports.startTrip = async (req, res) => {
     try {
-      await Booking.findByIdAndUpdate(req.params.id, { status: "ongoing" });
+      const booking = await Booking.findById(req.params.id);
+      
+      // 1. Mark booking as ongoing
+      booking.status = "ongoing";
+      await booking.save();
+
+      // 2. Mark Bike as Unavailable (This fixes the home page issue)
+      const bikeId = booking.bike._id || booking.bike;
+      await Bike.findByIdAndUpdate(bikeId, { isAvailable: false });
+
       res.redirect("/admin/dashboard");
     } catch (err) {
+      console.error("Handover Error:", err);
       res.redirect("/admin/dashboard");
     }
 };
 
-// Step 3: Return / Complete Trip (Bike becomes 'Available' again)
+// Step 3: Return (Complete Trip) -> Syncs with Home Page!
 exports.completeTrip = async (req, res) => {
     try {
-      await Booking.findByIdAndUpdate(req.params.id, { status: "completed" });
+      const booking = await Booking.findById(req.params.id);
+      
+      // 1. Mark booking as completed
+      booking.status = "completed";
+      await booking.save();
+
+      // 2. Mark Bike as Available again (Rent button comes back on home page)
+      const bikeId = booking.bike._id || booking.bike;
+      await Bike.findByIdAndUpdate(bikeId, { isAvailable: true });
+
       res.redirect("/admin/dashboard");
     } catch (err) {
+      console.error("Complete Trip Error:", err);
       res.redirect("/admin/dashboard");
     }
 };
 
-// Step 4: Reject/Cancel (If user doesn't show up)
+// Step 4: Reject
 exports.rejectBooking = async (req, res) => {
   try {
     await Booking.findByIdAndUpdate(req.params.id, { status: "rejected" });
@@ -118,7 +156,7 @@ exports.rejectBooking = async (req, res) => {
   }
 };
 
-// Cleanup: Delete record
+// Cleanup
 exports.deleteBooking = async (req, res) => {
   try {
     await Booking.findByIdAndDelete(req.params.id);
@@ -128,7 +166,7 @@ exports.deleteBooking = async (req, res) => {
   }
 };
 
-// --- ANALYTICS ---
+// --- DATA EXPORT ---
 
 exports.exportBookings = async (req, res) => {
   try {
@@ -137,20 +175,20 @@ exports.exportBookings = async (req, res) => {
     const fields = [
       { label: 'Customer', value: 'user.name' },
       { label: 'Bike', value: 'bike.name' },
-      { label: 'Pickup', value: 'pickupDateTime' },
-      { label: 'Return', value: 'returnDateTime' },
-      { label: 'Earnings (INR)', value: 'totalPrice' },
-      { label: 'Status', value: 'status' }
+      { label: 'Pickup Time', value: 'pickupDateTime' },
+      { label: 'Return Time', value: 'returnDateTime' },
+      { label: 'Total Bill (INR)', value: 'totalPrice' },
+      { label: 'Trip Status', value: 'status' }
     ];
 
     const json2csvParser = new Parser({ fields });
     const csv = json2csvParser.parse(bookings);
 
     res.header('Content-Type', 'text/csv');
-    res.attachment(`Rental_Report_${new Date().toLocaleDateString()}.csv`);
+    res.attachment(`BikeRental_Report_${new Date().toLocaleDateString()}.csv`);
     return res.send(csv);
   } catch (err) {
-    console.error("Export Error:", err);
+    console.error("CSV Export Error:", err);
     res.redirect("/admin/dashboard");
   }
 };

@@ -11,7 +11,8 @@ const BookingSchema = new mongoose.Schema({
   totalPrice: { type: Number, required: true },
   status: { 
     type: String, 
-    enum: ["pending", "approved", "rejected"], 
+    // 👇 YAHAN FIX KIYA HAI: 'ongoing' aur 'completed' add kar diya hai
+    enum: ["pending", "approved", "ongoing", "completed", "rejected"], 
     default: "pending" 
   }
 }, { timestamps: true });
