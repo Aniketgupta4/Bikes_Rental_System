@@ -2,7 +2,7 @@ const Bike = require("../models/Bike");
 const Booking = require("../models/Booking");
 const { Parser } = require("json2csv");
 
-// 1. Admin Dashboard - Statistics + Data Fetching
+// 1. Admin Dashboard - Sabhi bookings aur bikes fetch karna
 exports.dashboard = async (req, res) => {
   try {
     const bookings = await Booking.find()
@@ -11,8 +11,6 @@ exports.dashboard = async (req, res) => {
       .sort({ createdAt: -1 });
 
     const bikes = await Bike.find();
-    
-    // UI par stats dikhane ke liye calculation
     res.render("adminDashboard", {
       bookings: bookings || [],
       bikes: bikes || [],
@@ -59,7 +57,7 @@ exports.updateBike = async (req, res) => {
         name, 
         description, 
         pricePerDay, 
-        isAvailable: isAvailable === "on" 
+        isAvailable: isAvailable === "on" // Checkbox logic
     };
     if (req.file && req.file.path) data.image = req.file.path;
     await Bike.findByIdAndUpdate(req.params.id, data);
@@ -78,9 +76,9 @@ exports.deleteBike = async (req, res) => {
   }
 };
 
-// --- BOOKING OPERATIONS (Fixes your Handover Error) ---
+// --- BOOKING LIFE-CYCLE MANAGEMENT (Industry Level) ---
 
-// Step 1: Approve (Reservation confirmed)
+// Step 1: Approve Request (Bike Reserved but still shows 'Available' on Home)
 exports.approveBooking = async (req, res) => {
   try {
     await Booking.findByIdAndUpdate(req.params.id, { status: "approved" });
@@ -90,19 +88,17 @@ exports.approveBooking = async (req, res) => {
   }
 };
 
-// Step 2: Handover (Start Trip - Bike becomes unavailable on Home)
+// Step 2: Handover / Start Trip (Bike now becomes 'Unavailable/Rented' on Home)
 exports.startTrip = async (req, res) => {
     try {
-      // Ye function trigger hoga jab tum 'Handover' button click karoge
       await Booking.findByIdAndUpdate(req.params.id, { status: "ongoing" });
       res.redirect("/admin/dashboard");
     } catch (err) {
-      console.error("Start Trip Error:", err);
       res.redirect("/admin/dashboard");
     }
 };
 
-// Step 3: Return (Complete Trip - Bike becomes available again)
+// Step 3: Return / Complete Trip (Bike becomes 'Available' again)
 exports.completeTrip = async (req, res) => {
     try {
       await Booking.findByIdAndUpdate(req.params.id, { status: "completed" });
@@ -112,7 +108,7 @@ exports.completeTrip = async (req, res) => {
     }
 };
 
-// Step 4: Reject/Cancel (Free the reserved slot)
+// Step 4: Reject/Cancel (If user doesn't show up)
 exports.rejectBooking = async (req, res) => {
   try {
     await Booking.findByIdAndUpdate(req.params.id, { status: "rejected" });
@@ -122,7 +118,7 @@ exports.rejectBooking = async (req, res) => {
   }
 };
 
-// Cleanup Record
+// Cleanup: Delete record
 exports.deleteBooking = async (req, res) => {
   try {
     await Booking.findByIdAndDelete(req.params.id);
@@ -132,7 +128,7 @@ exports.deleteBooking = async (req, res) => {
   }
 };
 
-// --- DATA EXPORT ---
+// --- ANALYTICS ---
 
 exports.exportBookings = async (req, res) => {
   try {
@@ -141,9 +137,9 @@ exports.exportBookings = async (req, res) => {
     const fields = [
       { label: 'Customer', value: 'user.name' },
       { label: 'Bike', value: 'bike.name' },
-      { label: 'Pickup Time', value: 'pickupDateTime' },
-      { label: 'Return Time', value: 'returnDateTime' },
-      { label: 'Total Bill', value: 'totalPrice' },
+      { label: 'Pickup', value: 'pickupDateTime' },
+      { label: 'Return', value: 'returnDateTime' },
+      { label: 'Earnings (INR)', value: 'totalPrice' },
       { label: 'Status', value: 'status' }
     ];
 

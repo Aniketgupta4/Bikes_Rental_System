@@ -1,397 +1,431 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>Admin Control Center - BikeRental</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <style>
-        /* ----------------------- 1. MASTER DESIGN SYSTEM ----------------------- */
-        :root {
-            --primary: #ff6b6b;
-            --primary-dark: #ee5253;
-            --secondary: #1e1e2f;
-            --bg-body: #f4f7fe;
-            --card-bg: #ffffff;
-            --text-main: #2d3436;
-            --text-muted: #636e72;
-            --success: #00b894;
-            --warning: #f1c40f;
-            --info: #0984e3;
-            --danger: #d63031;
-            --shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Admin Control Center - BikeRental</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    /* ---------------------------------------------------- */
+    /* 1. CORE VARIABLES & DESIGN SYSTEM */
+    /* ---------------------------------------------------- */
+    :root {
+      --primary: #ff6b6b;
+      --primary-dark: #ee5253;
+      --secondary: #1e1e2f;
+      --bg-body: #f4f7fe;
+      --card-bg: #ffffff;
+      --text-main: #2d3436;
+      --text-muted: #636e72;
+      --success: #00b894;
+      --warning: #f1c40f;
+      --info: #0984e3;
+      --danger: #d63031;
+      --shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
 
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-        html, body { height:100%; }
-        body { background: var(--bg-body); color: var(--text-main); display:flex; flex-direction:column; overflow-x: hidden; }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+    html, body { height:100%; }
+    body { background: var(--bg-body); color: var(--text-main); display:flex; flex-direction:column; overflow-x: hidden; }
 
-        /* ----------------------- 2. UNIVERSAL NAVBAR ----------------------- */
-        .navbar {
-            background: var(--secondary); padding: 12px 6%;
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .navbar .brand { font-size: 1.8rem; font-weight: 700; color: var(--primary); text-decoration: none; letter-spacing: 1px; }
-        .navbar .brand span { color: #fff; font-weight: 300; }
+    /* ---------------------------------------------------- */
+    /* 2. PREMIUM HEADER */
+    /* ---------------------------------------------------- */
+    header {
+      background: var(--secondary); color: #fff; padding: 12px 6%;
+      display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    header h1 { font-size: 1.8rem; font-weight: 700; color: var(--primary); letter-spacing: 1px; }
+    header h1 span { color: #fff; font-weight: 300; }
 
-        .nav-links { display: flex; gap: 10px; align-items: center; }
-        .nav-links a { color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 500; font-size: 0.9rem; transition: 0.3s ease; }
-        .nav-links a:hover { background: rgba(255, 107, 107, 0.1); color: var(--primary); }
-        .nav-active { background: rgba(255, 107, 107, 0.15) !important; color: var(--primary) !important; }
-        .logout-btn { background: var(--primary); color: #fff !important; }
+    nav { display: flex; gap: 10px; align-items: center; transition: 0.3s ease; }
+    nav a {
+      color: #fff; text-decoration: none; padding: 10px 18px;
+      border-radius: 8px; transition: 0.3s ease; font-weight: 500; font-size: 0.9rem;
+    }
+    nav a:hover { background: rgba(255, 107, 107, 0.1); color: var(--primary); }
+    .nav-active { background: rgba(255, 107, 107, 0.15); color: var(--primary); }
+    .logout-btn { background: var(--primary); color: #fff; }
+    .logout-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
 
-        .menu-btn { display: none; cursor: pointer; color: #fff; font-size: 1.6rem; }
+    .menu-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.6rem; cursor: pointer; }
 
-        .mobile-overlay {
-            position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
-            background: var(--secondary); z-index: 2500; transition: 0.4s ease;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px;
-        }
-        .mobile-overlay.active { right: 0; }
-        .mobile-overlay a { color: #fff; text-decoration: none; font-size: 1.5rem; font-weight: 600; }
-        .close-btn { position: absolute; top: 25px; right: 25px; color: #fff; font-size: 2.2rem; cursor: pointer; }
+    /* ---------------------------------------------------- */
+    /* 3. DASHBOARD CONTENT */
+    /* ---------------------------------------------------- */
+    main.container { width: 94%; max-width: 1300px; margin: 35px auto; flex-grow: 1; }
 
-        /* ----------------------- 3. CONTENT LAYOUT ----------------------- */
-        .container { width: 92%; max-width: 1300px; margin: 30px auto; flex: 1; }
-        .header-section { margin-bottom: 40px; border-left: 6px solid var(--primary); padding-left: 20px; }
-        .header-section h2 { font-size: 2.2rem; font-weight: 800; color: var(--secondary); }
+    .welcome-banner { margin-bottom: 35px; }
+    .welcome-banner h2 { font-size: 1.9rem; color: var(--secondary); font-weight: 700; }
+    .welcome-banner p { color: var(--text-muted); font-size: 1rem; }
 
-        /* Stats Section */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 50px; }
-        .stat-card {
-            background: var(--card-bg); padding: 30px; border-radius: 25px;
-            display: flex; align-items: center; gap: 20px; box-shadow: var(--shadow);
-            border: 1px solid #edf2f7; transition: 0.3s;
-        }
-        .stat-card:hover { transform: translateY(-5px); }
-        .stat-icon { width: 60px; height: 60px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+    /* --- STATS SECTION --- */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 25px; margin-bottom: 45px;
+    }
+    .stat-card {
+      background: var(--card-bg); padding: 25px; border-radius: 20px;
+      display: flex; align-items: center; gap: 20px;
+      box-shadow: var(--shadow); border: 1px solid #edf2f7; transition: 0.3s;
+    }
+    .stat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
+    .stat-icon { width: 55px; height: 55px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+    .stat-info h3 { font-size: 1.7rem; font-weight: 700; color: var(--secondary); line-height: 1.2; }
+    .stat-info p { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Table Design */
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .section-header h3 { font-size: 1.5rem; font-weight: 700; color: var(--secondary); }
-        
-        .btn-main { padding: 12px 22px; border-radius: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; font-size: 0.85rem; border: none; cursor: pointer; }
-        .btn-primary { background: var(--secondary); color: #fff; }
-        .btn-outline { background: #fff; color: var(--secondary); border: 2px solid #e2e8f0; }
+    /* --- SECTION HEADERS --- */
+    .section-header {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+      margin-bottom: 25px; padding: 0 5px;
+    }
+    .section-header h2 { font-size: 1.4rem; font-weight: 700; color: var(--secondary); position: relative; padding-left: 18px; }
+    .section-header h2::before { content: ''; position: absolute; left: 0; top: 15%; height: 70%; width: 5px; background: var(--primary); border-radius: 10px; }
 
-        .table-card { background: #fff; border-radius: 25px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid #edf2f7; margin-bottom: 50px; }
-        table { width: 100%; border-collapse: collapse; }
-        table th { background: #f8fafc; padding: 20px; text-align: left; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid #edf2f7; }
-        table td { padding: 20px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; vertical-align: middle; }
+    /* --- TABLE STYLING --- */
+    .data-card {
+      background: var(--card-bg); border-radius: 20px; overflow: hidden;
+      box-shadow: var(--shadow); border: 1px solid #edf2f7; margin-bottom: 50px;
+    }
 
-        .status-badge { padding: 6px 14px; border-radius: 30px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; display: inline-block; }
-        .badge-pending { background: #fff9db; color: #f08c00; }
-        .badge-approved { background: #e3f2fd; color: #1976d2; }
-        .badge-ongoing { background: #e6fcf5; color: #0ca678; }
-        .badge-completed { background: #f1f3f5; color: #495057; }
-        .badge-rejected { background: #fff5f5; color: #fa5252; }
+    table { width: 100%; border-collapse: collapse; }
+    table th {
+      background: #f8fafc; padding: 18px 20px; text-align: left;
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.2px;
+      color: var(--text-muted); border-bottom: 1px solid #edf2f7;
+    }
+    table td { padding: 18px 20px; border-bottom: 1px solid #f1f5f9; font-size: 0.92rem; vertical-align: middle; }
+    table tr:hover { background-color: #fcfdfe; }
 
-        /* One-Line Action Buttons Alignment */
-        .action-cell { display: flex; align-items: center; gap: 12px; }
-        .icon-btn { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.2rem; transition: 0.3s; border: none; cursor: pointer; }
-        .i-edit { background: #f1f5f9; color: var(--info); }
-        .i-delete { background: #fff5f5; color: var(--danger); }
-        .i-ok { background: #e6fcf5; color: var(--success); }
-        .i-no { background: #fff5f5; color: var(--danger); }
-        .i-key { background: #fff9db; color: #f08c00; }
+    /* Status Pills */
+    .status { padding: 6px 14px; border-radius: 30px; font-size: 0.75rem; font-weight: 600; display: inline-block; text-transform: capitalize; }
+    .status-pending { background: #fff9db; color: #f08c00; }
+    .status-approved { background: #e3f2fd; color: #1976d2; }
+    .status-ongoing { background: #e6fcf5; color: #0ca678; }
+    .status-completed { background: #f1f3f5; color: #495057; }
+    .status-rejected { background: #fff5f5; color: #fa5252; }
 
-        /* ----------------------- 4. MOBILE VIEW (Separated Cards) ----------------------- */
-        .mobile-list-view { display: none; }
+    /* Action Buttons */
+    .btn {
+      padding: 9px 18px; border-radius: 10px; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; border: none; transition: 0.3s; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-add { background: var(--secondary); color: #fff; box-shadow: 0 4px 10px rgba(30, 30, 47, 0.2); }
+    .btn-add:hover { background: #000; transform: translateY(-2px); }
+    .btn-download { background: #fff; color: var(--secondary); border: 1.5px solid #cbd5e0; }
+    .btn-download:hover { background: #f8fafc; border-color: var(--secondary); }
 
-        @media (max-width: 992px) {
-            .table-card { display: none; }
-            .mobile-list-view { display: block; }
-            
-            .independent-card {
-                background: #fff; border-radius: 25px; padding: 25px; margin-bottom: 30px;
-                box-shadow: 0 15px 30px rgba(0,0,0,0.05); border: 1px solid #edf2f7;
-                position: relative; overflow: hidden;
-            }
-            .independent-card::before { content:''; position: absolute; left:0; top:0; width:6px; height:100%; background: var(--primary); }
-            
-            .m-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #f1f5f9; }
-            .m-row:last-of-type { border: none; margin-bottom: 0; }
-            .m-label { font-weight: 800; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); }
-            .m-value { font-weight: 600; color: var(--secondary); text-align: right; font-size: 0.95rem; }
-            
-            .m-footer-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-            .m-footer-actions .btn-main { width: 100%; justify-content: center; }
+    .btn-sm { padding: 7px 12px; border-radius: 8px; font-size: 0.75rem; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-info { background: var(--info); color: #fff; }
+    .btn-warning { background: var(--warning); color: #000; }
 
-            .menu-btn { display: block; }
-            nav { display: none; }
-        }
+    .action-group { display: flex; gap: 10px; flex-wrap: wrap; }
 
-        /* ----------------------- 5. PREMIUM MODAL ----------------------- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
-            display: none; align-items: center; justify-content: center; z-index: 5000;
-        }
-        .modal-overlay.active { display: flex; animation: modalIn 0.3s ease; }
-        @keyframes modalIn { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
-        .modal-content { background: #fff; width: 92%; max-width: 420px; padding: 45px 35px; border-radius: 30px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
-        .modal-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
-        .m-btn { padding: 15px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .m-cancel { background: #f1f5f9; color: var(--secondary); }
-        .m-confirm { background: var(--primary); color: #fff; }
+    /* ---------------------------------------------------- */
+    /* 4. MASTER FOOTER */
+    /* ---------------------------------------------------- */
+    footer { background: var(--secondary); color: #fff; padding: 70px 6% 30px; margin-top: auto; border-top: 5px solid var(--primary); }
+    .footer-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 40px; width: 100%; }
+    footer h3 { color: var(--primary); margin-bottom: 22px; font-size: 1.4rem; font-weight: 700; }
+    footer p, footer li { color: #b2bec3; font-size: 0.92rem; margin-bottom: 12px; line-height: 1.7; }
+    footer ul { list-style: none; }
+    footer a { color: #b2bec3; text-decoration: none; transition: 0.3s; }
+    footer a:hover { color: var(--primary); padding-left: 5px; }
 
-        /* ----------------------- 6. UNIVERSAL FOOTER (SSC Match) ----------------------- */
-        footer { background: var(--secondary); color: #fff; padding: 80px 8% 40px; margin-top: auto; border-top: 6px solid var(--primary); }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 50px; }
-        .f-brand h3 { color: var(--primary); font-size: 2rem; font-weight: 800; margin-bottom: 20px; }
-        .f-brand p { color: #b2bec3; font-size: 0.95rem; line-height: 1.8; }
-        .social-links { display: flex; gap: 15px; margin-top: 20px; }
-        .social-links a { color: var(--primary); font-size: 1.3rem; }
-        .f-section h4 { color: #fff; margin-bottom: 25px; font-size: 1.2rem; }
-        .f-section ul { list-style: none; }
-        .f-section a { color: #b2bec3; text-decoration: none; display: block; margin-bottom: 12px; font-size: 0.95rem; transition: 0.3s; }
-        .f-section a:hover { color: var(--primary); padding-left: 8px; }
-        .copyright { text-align: center; padding-top: 40px; margin-top: 60px; border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.85rem; }
-    </style>
+    footer form input, footer form textarea {
+      width: 100%; padding: 13px; border-radius: 10px; border: none; background: #2d2d44; color: #fff; margin-bottom: 12px; outline: none; transition: 0.3s;
+    }
+    footer form input:focus { background: #353555; box-shadow: 0 0 0 2px var(--primary); }
+    footer form button {
+      background: var(--primary); width: 100%; padding: 13px; border: none; color: #fff; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.3s;
+    }
+    footer form button:hover { background: var(--primary-dark); transform: scale(1.02); }
+    .copyright { text-align: center; margin-top: 50px; padding-top: 25px; border-top: 1px solid #2d2d44; color:#636e72; font-size:0.85rem; }
+
+    /* ---------------------------------------------------- */
+    /* 5. RESPONSIVE MAGIC (THE FIX) */
+    /* ---------------------------------------------------- */
+    @media (max-width: 992px) {
+      /* Hide desktop headers */
+      table thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100%; }
+      
+      /* Make each row look like a card */
+      table tr { margin-bottom: 20px; background: #fff; border: 1px solid #edf2f7; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+      
+      /* Format cells to show label and value side-by-side */
+      table td { 
+        text-align: right; 
+        padding: 15px 20px; 
+        padding-left: 45%; 
+        position: relative; 
+        border-bottom: 1px dashed #f1f5f9; 
+        min-height: 50px; 
+      }
+      table td:last-child { border-bottom: none; display: flex; justify-content: flex-end; }
+      
+      /* Insert the Label */
+      table td::before {
+        content: attr(data-label); position: absolute; left: 20px; top: 18px;
+        font-weight: 700; text-transform: uppercase; font-size: 0.7rem; color: var(--text-muted);
+      }
+      
+      .action-group { justify-content: flex-end; width: 100%; }
+      form { margin: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      nav {
+        display: none; flex-direction: column; position: absolute; top: 60px; left: 0;
+        width: 100%; background: var(--secondary); padding: 25px; box-shadow: 0 15px 20px rgba(0,0,0,0.3); border-top: 1px solid #2d2d44;
+      }
+      nav.active { display: flex; }
+      .section-header { flex-direction: column; align-items: flex-start; }
+      header h1 { font-size: 1.5rem; }
+    }
+  </style>
 </head>
 <body>
 
-    <header class="navbar">
-        <a href="/" class="brand">Bike<span>Rental</span></a>
-        <div class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
-        <nav class="nav-links">
-            <a href="/">Public Site</a>
-            <a href="/admin/dashboard" class="nav-active">Operations Hub</a>
-            <a href="/logout" class="logout-btn">Log Out</a>
-        </nav>
-    </header>
+  <header>
+    <h1>Bike<span>Rental</span></h1>
+    <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+    <nav id="navMenu">
+      <a href="/">Home</a>
+      <a href="/admin/dashboard" class="nav-active">Operations</a>
+      <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </header>
 
-    <div class="mobile-overlay" id="mobileNav">
-        <div class="close-btn" onclick="toggleMenu()"><i class="fas fa-times"></i></div>
-        <a href="/" onclick="toggleMenu()">Public View</a>
-        <a href="/admin/dashboard" onclick="toggleMenu()">Dashboard</a>
-        <a href="/logout" onclick="toggleMenu()">Admin Logout</a>
+  <main class="container">
+    
+    <div class="welcome-banner">
+      <h2>Welcome Back, Admin</h2>
+      <p>Here is what is happening with your rental business today.</p>
     </div>
 
-    <main class="container">
-        <div class="header-section">
-            <h2>Administrative Operations</h2>
-            <p style="color:var(--text-muted);">Monitoring fleet health and customer lifecycle management.</p>
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #e3f2fd; color: #1976d2;"><i class="fas fa-motorcycle"></i></div>
+        <div class="stat-info">
+          <h3><%= bikes.length %></h3>
+          <p>Total Fleet</p>
         </div>
-
-        <% 
-            let totalRev = 0; 
-            bookings.filter(b => b.status === 'completed' || b.status === 'ongoing').forEach(b => totalRev += b.totalPrice); 
-        %>
-
-        <section class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #e3f2fd; color: #1976d2;"><i class="fas fa-motorcycle"></i></div>
-                <div><h3><%= bikes.length %></h3><p>Total Fleet</p></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #e6fcf5; color: #0ca678;"><i class="fas fa-route"></i></div>
-                <div><h3><%= bookings.filter(b => b.status === 'ongoing').length %></h3><p>Live Trips</p></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #fff5f5; color: #fa5252;"><i class="fas fa-hand-holding-dollar"></i></div>
-                <div><h3>₹ <%= totalRev %></h3><p>Earnings</p></div>
-            </div>
-        </section>
-
-        <div class="section-header">
-            <h3>Inventory Management</h3>
-            <a href="/admin/add-bike" class="btn-main btn-primary"><i class="fas fa-plus-circle"></i> Add Vehicle</a>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #e6fcf5; color: #0ca678;"><i class="fas fa-route"></i></div>
+        <div class="stat-info">
+          <h3><%= bookings.filter(b => b.status === 'ongoing').length %></h3>
+          <p>Live Trips</p>
         </div>
-
-        <div class="table-card">
-            <table>
-                <thead><tr><th>Model</th><th>Rate</th><th>Status</th><th>Ops</th></tr></thead>
-                <tbody>
-                    <% bikes.forEach(b => { %>
-                        <tr>
-                            <td style="font-weight: 700; color: var(--secondary);"><%= b.name %></td>
-                            <td>₹ <%= b.pricePerDay %></td>
-                            <td><b style="color: <%= b.isAvailable ? 'var(--success)' : 'var(--danger)' %>"><%= b.isAvailable ? '● Listed' : '● Hidden' %></b></td>
-                            <td class="action-cell">
-                                <a href="/admin/edit-bike/<%= b._id %>" class="icon-btn i-edit"><i class="fas fa-edit"></i></a>
-                                <button onclick="openConfirmModal('<%= b._id %>', 'bike')" class="icon-btn i-delete"><i class="fas fa-trash-can"></i></button>
-                            </td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #fff9db; color: #f08c00;"><i class="fas fa-clock"></i></div>
+        <div class="stat-info">
+          <h3><%= bookings.filter(b => b.status === 'pending').length %></h3>
+          <p>New Inquiries</p>
         </div>
-
-        <div class="mobile-list-view">
-            <% bikes.forEach(b => { %>
-                <div class="independent-card">
-                    <div class="m-row"><span class="m-label">Model</span><span class="m-val"><%= b.name %></span></div>
-                    <div class="m-row"><span class="m-label">Rate</span><span class="m-val">₹ <%= b.pricePerDay %></span></div>
-                    <div class="m-footer-actions">
-                        <a href="/admin/edit-bike/<%= b._id %>" class="btn-main btn-outline">Edit</a>
-                        <button onclick="openConfirmModal('<%= b._id %>', 'bike')" class="btn-main" style="background:var(--danger); color:#fff;">Delete</button>
-                    </div>
-                </div>
-            <% }) %>
+      </div>
+      <div class="stat-card" style="border-right: 5px solid var(--primary);">
+        <div class="stat-icon" style="background: #fff5f5; color: #fa5252;"><i class="fas fa-hand-holding-dollar"></i></div>
+        <div class="stat-info">
+          <% let totalRev = 0; bookings.filter(b => b.status === 'completed' || b.status === 'ongoing').forEach(b => totalRev += b.totalPrice); %>
+          <h3>₹ <%= totalRev %></h3>
+          <p>Total Revenue</p>
         </div>
+      </div>
+    </section>
 
-        <div class="section-header" style="margin-top: 50px;">
-            <h3>Booking & Customer Logs</h3>
-            <a href="/admin/export-bookings" class="btn-main btn-outline"><i class="fas fa-file-csv"></i> Financial Export</a>
-        </div>
-
-        <div class="table-card">
-            <table>
-                <thead><tr><th>Customer</th><th>Vehicle</th><th>Schedule</th><th>Bill</th><th>Status</th><th>Operation</th></tr></thead>
-                <tbody>
-                    <% bookings.forEach(bk => { %>
-                        <tr>
-                            <td><strong><%= bk.user ? bk.user.name : "Guest" %></strong><br><small><%= bk.user ? bk.user.email : "" %></small></td>
-                            <td><%= bk.bike ? bk.bike.name : "N/A" %></td>
-                            <td style="font-size: 0.8rem;">
-                                <% if(bk.pickupDateTime) { %>
-                                    <div style="color:var(--success);"><i class="far fa-calendar-check"></i> <%= new Date(bk.pickupDateTime).toLocaleString() %></div>
-                                    <div style="color:var(--danger);"><i class="far fa-calendar-times"></i> <%= new Date(bk.returnDateTime).toLocaleString() %></div>
-                                <% } else { %> <span class="text-muted">No Dates Provided</span> <% } %>
-                            </td>
-                            <td style="font-weight:700;">₹ <%= bk.totalPrice %></td>
-                            <td><span class="status-pill pill-<%= bk.status %>"><%= bk.status %></span></td>
-                            <td class="action-cell">
-                                <% if(bk.status === 'pending') { %>
-                                    <a href="/admin/approve/<%= bk._id %>" class="icon-btn i-ok"><i class="fas fa-circle-check"></i></a>
-                                    <a href="/admin/reject/<%= bk._id %>" class="icon-btn i-no"><i class="fas fa-circle-xmark"></i></a>
-                                <% } else if(bk.status === 'approved') { %>
-                                    <a href="/admin/start-trip/<%= bk._id %>" class="icon-btn i-key"><i class="fas fa-motorcycle"></i></a>
-                                <% } else if(bk.status === 'ongoing') { %>
-                                    <a href="/admin/complete-trip/<%= bk._id %>" class="icon-btn" style="background:var(--info); color:#fff;"><i class="fas fa-flag-checkered"></i></a>
-                                <% } else { %>
-                                    <button onclick="openConfirmModal('<%= bk._id %>', 'booking')" class="icon-btn i-delete"><i class="fas fa-trash-alt"></i></button>
-                                <% } %>
-                            </td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="mobile-list-view">
-            <% bookings.forEach(bk => { %>
-                <div class="independent-card" style="border-left: 6px solid var(--secondary);">
-                    <div class="m-row"><span class="m-label">Customer</span><span class="m-val"><%= bk.user ? bk.user.name : "Guest" %></span></div>
-                    <div class="m-row"><span class="m-label">Ride</span><span class="m-val"><%= bk.bike ? bk.bike.name : "N/A" %></span></div>
-                    
-                    <div class="m-row" style="flex-direction: column; align-items: flex-start; gap: 5px;">
-                        <span class="m-label">Trip Schedule</span>
-                        <div class="m-val" style="width: 100%; text-align: left; font-size: 0.8rem;">
-                            <% if(bk.pickupDateTime) { %>
-                                <div style="color:var(--success);">In: <%= new Date(bk.pickupDateTime).toLocaleString() %></div>
-                                <div style="color:var(--danger);">Out: <%= new Date(bk.returnDateTime).toLocaleString() %></div>
-                            <% } else { %> <span class="text-muted">No Dates Provided</span> <% } %>
-                        </div>
-                    </div>
-
-                    <div class="m-row"><span class="m-label">Amount</span><span class="m-val" style="color:var(--primary); font-size:1.1rem;">₹ <%= bk.totalPrice %></span></div>
-                    <div class="m-row"><span class="m-label">Current Status</span><span class="m-val"><span class="status-pill pill-<%= bk.status %>"><%= bk.status %></span></span></div>
-                    
-                    <div class="m-footer-actions" style="grid-template-columns: 1fr;">
-                        <% if(bk.status === 'pending') { %>
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                                <a href="/admin/approve/<%= bk._id %>" class="btn-main" style="background:var(--success); color:#fff;">Approve Ride</a>
-                                <a href="/admin/reject/<%= bk._id %>" class="btn-main" style="background:var(--danger); color:#fff;">Reject</a>
-                            </div>
-                        <% } else if(bk.status === 'approved') { %>
-                            <a href="/admin/start-trip/<%= bk._id %>" class="btn-main" style="background:var(--warning); color:#000;">Handover Bike</a>
-                        <% } else if(bk.status === 'ongoing') { %>
-                            <a href="/admin/complete-trip/<%= bk._id %>" class="btn-main" style="background:var(--info); color:#fff;">Complete Trip</a>
-                        <% } else { %>
-                            <button onclick="openConfirmModal('<%= bk._id %>', 'booking')" class="btn-main btn-outline">Remove Record</button>
-                        <% } %>
-                    </div>
-                </div>
-            <% }) %>
-        </div>
-    </main>
-
-    <div class="modal-overlay" id="deleteModal">
-        <div class="modal-content">
-            <i class="fas fa-triangle-exclamation"></i>
-            <h3>Confirm Action?</h3>
-            <p>This will permanently remove the record from your secure logs. Do you want to proceed?</p>
-            <div class="modal-footer">
-                <button class="m-btn m-cancel" onclick="closeModal()">Dismiss</button>
-                <button class="m-btn m-confirm" id="confirmDeleteBtn">Confirm Delete</button>
-            </div>
-        </div>
+    <div class="section-header">
+        <h2>Bike Inventory</h2>
+        <a class="btn btn-add" href="/admin/add-bike"><i class="fas fa-plus"></i> Add New Bike</a>
     </div>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="f-brand">
-                <h3>BikeRental</h3>
-                <p>Enterprise Mobility Edition. Managed solutions for premium city commuters and fleet owners.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    <div class="data-card">
+      <% if (!bikes || bikes.length === 0) { %>
+        <p style="padding: 40px; text-align: center; color: var(--text-muted); font-style: italic;">Inventory is currently empty.</p>
+      <% } else { %>
+        <table>
+          <thead>
+              <tr><th>Bike Name</th><th>Day Rate</th><th>Public Visibility</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+          <% bikes.forEach(b => { %>
+            <tr>
+              <td data-label="Bike Name"><div style="font-weight: 700; color: var(--secondary);"><%= b.name %></div></td>
+              <td data-label="Day Rate">₹ <%= b.pricePerDay %></td>
+              <td data-label="Public Visibility">
+                  <span class="status <%= b.isAvailable ? 'status-ongoing' : 'status-rejected' %>">
+                      <%= b.isAvailable ? "Listed" : "Hidden" %>
+                  </span>
+              </td>
+              <td data-label="Actions">
+                <div class="action-group">
+                    <a class="btn btn-sm btn-info" href="/admin/edit-bike/<%= b._id %>" title="Edit Bike"><i class="fas fa-pen"></i></a>
+                    <form action="/admin/delete-bike/<%= b._id %>" method="POST" style="display:inline;" onsubmit="return confirm('Delete this bike permanently?')">
+                      <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash-can"></i></button>
+                    </form>
                 </div>
-            </div>
-            <div class="f-section">
-                <h4>Admin Navigation</h4>
-                <ul>
-                    <li><a href="/admin/dashboard">Operations Hub</a></li>
-                    <li><a href="/admin/export-bookings">Revenue Reports</a></li>
-                    <li><a href="/logout">Logout Portal</a></li>
-                </ul>
-            </div>
-            <div class="f-section">
-                <h4>Direct Support</h4>
-                <p style="color:#b2bec3; font-size:0.95rem; margin-bottom:12px;"><i class="fas fa-envelope" style="color:var(--primary);"></i> help@bikerental.com</p>
-                <p style="color:#b2bec3; font-size:0.95rem;"><i class="fas fa-location-dot" style="color:var(--primary);"></i> Civil Lines, Jabalpur</p>
-            </div>
-            <div class="f-section">
-                <h4>Log Feedback</h4>
-                <form action="/feedback" method="POST" style="display:flex; flex-direction:column; gap:10px;">
-                    <input type="text" placeholder="Subject" style="width:100%; padding:10px; border-radius:10px; border:none; background:#2d2d44; color:#fff;">
-                    <button type="submit" style="background:var(--primary); color:#fff; padding:10px; border:none; border-radius:10px; font-weight:700;">Submit Note</button>
-                </form>
-            </div>
+              </td>
+            </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+
+    <div class="section-header">
+        <h2>Customer Operations</h2>
+        <a href="/admin/export-bookings" class="btn btn-download"><i class="fas fa-file-export"></i> Download CSV</a>
+    </div>
+
+    <div class="data-card">
+      <% if (!bookings || bookings.length === 0) { %>
+        <p style="padding: 40px; text-align: center; color: var(--text-muted);">No booking history found.</p>
+      <% } else { %>
+        <table>
+          <thead>
+              <tr>
+                <th>Customer Details</th>
+                <th>Bike Model</th>
+                <th>Trip Schedule</th>
+                <th>Earnings</th>
+                <th>Status</th>
+                <th>Operations</th>
+              </tr>
+          </thead>
+          <tbody>
+          <% bookings.forEach(bk => { %>
+            <tr>
+              <td data-label="Customer">
+                <div style="font-weight: 600;"><%= bk.user ? bk.user.name : "System User" %></div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);"><%= bk.user ? bk.user.email : "" %></div>
+              </td>
+              <td data-label="Bike Model"><%= bk.bike ? bk.bike.name : "N/A" %></td>
+              <td data-label="Schedule">
+                <div style="font-size: 0.8rem; display: flex; flex-direction: column; gap: 3px;">
+                  <% if (bk.pickupDateTime && !isNaN(new Date(bk.pickupDateTime))) { %>
+                    <span><i class="far fa-calendar-check" style="color: var(--success); width: 18px;"></i> <%= new Date(bk.pickupDateTime).toLocaleString() %></span>
+                    <span><i class="far fa-calendar-times" style="color: var(--danger); width: 18px;"></i> <%= new Date(bk.returnDateTime).toLocaleString() %></span>
+                  <% } else { %>
+                    <span class="text-muted">No Dates Provided</span>
+                  <% } %>
+                </div>
+              </td>
+              <td data-label="Earnings"><strong style="color: var(--secondary);">₹ <%= bk.totalPrice %></strong></td>
+              <td data-label="Status">
+                  <span class="status status-<%= bk.status %>"><%= bk.status %></span>
+              </td>
+              <td data-label="Operations">
+                <div class="action-group">
+                  
+                  <% if (bk.status === 'pending') { %>
+                    <a class="btn btn-sm btn-success" href="/admin/approve/<%= bk._id %>"><i class="fas fa-check"></i> Approve</a>
+                    <a class="btn btn-sm btn-danger" href="/admin/reject/<%= bk._id %>"><i class="fas fa-xmark"></i></a>
+                    
+                  <% } else if (bk.status === 'approved') { %>
+                    <a class="btn btn-sm btn-warning" href="/admin/start-trip/<%= bk._id %>" style="color: #000;"><i class="fas fa-motorcycle"></i> Handover</a>
+                    <a class="btn btn-sm btn-danger" href="/admin/reject/<%= bk._id %>" title="User No Show"><i class="fas fa-user-slash"></i></a>
+
+                  <% } else if (bk.status === 'ongoing') { %>
+                    <a class="btn btn-sm btn-info" href="/admin/complete-trip/<%= bk._id %>"><i class="fas fa-flag-checkered"></i> Finish Trip</a>
+
+                  <% } else { %>
+                    <form action="/admin/delete-booking/<%= bk._id %>" method="POST" style="display:inline;">
+                      <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this record?')"><i class="fas fa-trash-alt"></i></button>
+                    </form>
+                  <% } %>
+
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>BikeRental</h3>
+        <p>Advanced fleet management and real-time booking automation system. Designed for high-performance rental businesses.</p>
+        <div style="display: flex; gap: 15px; margin-top: 25px;">
+            <a href="#" style="font-size: 1.3rem;"><i class="fab fa-facebook-square"></i></a>
+            <a href="#" style="font-size: 1.3rem;"><i class="fab fa-instagram"></i></a>
+            <a href="#" style="font-size: 1.3rem;"><i class="fab fa-linkedin"></i></a>
         </div>
-        <div class="copyright">
-            <p>© <%= new Date().getFullYear() %> BikeRental System | Premium Mobility Management | Built by Aniket Kumar Gupta</p>
-        </div>
-    </footer>
+      </div>
 
-    <script>
-        function toggleMenu() { document.getElementById("mobileNav").classList.toggle("active"); }
+      <div class="footer-section">
+        <h3>Admin Links</h3>
+        <ul>
+          <li><a href="/admin/dashboard">Operations Dashboard</a></li>
+          <li><a href="/admin/export-bookings">Revenue Analytics</a></li>
+          <li><a href="/admin/add-bike">Inventory Control</a></li>
+          <li><a href="/">Public Site Preview</a></li>
+        </ul>
+      </div>
 
-        let deleteId = null; let deleteType = null;
-        const modal = document.getElementById('deleteModal');
+      <div class="footer-section">
+        <h3>Emergency Support</h3>
+        <p><i class="fas fa-envelope-open-text" style="color: var(--primary); margin-right: 10px;"></i> tech-support@bikerental.com</p>
+        <p><i class="fas fa-headset" style="color: var(--primary); margin-right: 10px;"></i> +91 98765 43210 (Dev Team)</p>
+        <p><i class="fas fa-location-dot" style="color: var(--primary); margin-right: 10px;"></i> Jabalpur HQ, India</p>
+      </div>
 
-        function openConfirmModal(id, type) {
-            deleteId = id; deleteType = type;
-            modal.classList.add('active');
-        }
+      <div class="footer-section">
+        <h3>System Feedback</h3>
+        <form action="/feedback" method="POST">
+          <input type="text" name="name" placeholder="Admin Name" required>
+          <textarea name="message" placeholder="Log internal feedback or bugs..." rows="2" required></textarea>
+          <button type="submit">Submit Note</button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p>© <%= new Date().getFullYear() %> BikeRental Enterprise Edition | Built with ❤️ by Aniket Kumar Gupta | SRIT Jabalpur</p>
+    </div>
+  </footer>
+  
+  <script>
+    // Mobile Navbar Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
 
-        function closeModal() { modal.classList.remove('active'); deleteId = null; }
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      const icon = menuToggle.querySelector('i');
+      if (navMenu.classList.contains('active')) {
+          icon.classList.replace('fa-bars', 'fa-times');
+      } else {
+          icon.classList.replace('fa-times', 'fa-bars');
+      }
+    });
 
-        document.getElementById('confirmDeleteBtn').onclick = function() {
-            if (deleteId) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = deleteType === 'bike' ? `/admin/delete-bike/${deleteId}` : `/admin/delete-booking/${deleteId}`;
-                document.body.appendChild(form);
-                form.submit();
-            }
-        };
+    // Fade-in animation
+    window.onload = () => {
+        document.querySelectorAll('.data-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = `all 0.6s ease ${index * 0.2}s`;
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 50);
+        });
+    }
+  </script>
 
-        window.onload = () => {
-            document.querySelectorAll('.stat-card').forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = `all 0.6s ease ${index * 0.15}s`;
-                setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 50);
-            });
-        }
-    </script>
 </body>
 </html>
