@@ -35,5 +35,6 @@ app.use("/", require("./routes/userRoutes"));     // user actions
 app.use("/", require("./routes/adminRoutes"));    // admin actions
 app.use(chatRoutes);
 
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log("Server running on port", PORT));

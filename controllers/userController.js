@@ -7,17 +7,16 @@ exports.dashboard = async (req, res) => {
     const userId = req.session.user._id;
 
     // --- PAGINATION LOGIC ---
-    const page = parseInt(req.query.page) || 1; // Default page 1
-    const limit = 4; // Ek page par sirf 4 bookings dikhayenge (Clean UI ke liye)
+    const page = parseInt(req.query.page) || 1; 
+    const limit = 4; 
     const skip = (page - 1) * limit;
 
-    // Total bookings count (Frontend pe buttons calculate karne ke liye)
     const totalBookings = await Booking.countDocuments({ user: userId });
     const totalPages = Math.ceil(totalBookings / limit);
 
     const requests = await Booking.find({ user: userId })
       .populate("bike")
-      .sort({ createdAt: -1 }) // Latest booking sabse upar
+      .sort({ createdAt: -1 }) 
       .skip(skip)
       .limit(limit);
 
@@ -38,33 +37,24 @@ exports.dashboard = async (req, res) => {
   }
 };
 
-// 2. Industry Level Booking Logic (Date + Time)
+// 2. Industry Level Booking Logic
 exports.bookBike = async (req, res) => {
   try {
     const bike = await Bike.findById(req.params.id);
     if (!bike) return res.redirect("/");
 
-    // 1. Get Date-Time from Frontend
     const { pickupDateTime, returnDateTime } = req.body;
-    
     const start = new Date(pickupDateTime);
     const end = new Date(returnDateTime);
 
-    // 2. Logic: Return time pickup se pehle nahi ho sakta
     if (end <= start) {
       return res.redirect(`/bike/${bike._id}?error=invalid_dates`);
     }
 
-    // 3. Exact Duration Calculation
     const diffInMs = Math.abs(end - start);
-    
-    // Industry Standard: Math.ceil taaki partial days full day count hon
     const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24)); 
-
-    // 4. Final Price Calculation
     const totalPrice = diffInDays * bike.pricePerDay;
 
-    // 5. Save to Database
     await Booking.create({
       user: req.session.user._id,
       bike: bike._id,
@@ -77,5 +67,29 @@ exports.bookBike = async (req, res) => {
   } catch (err) {
     console.error("Booking Error:", err);
     res.redirect("/");
+  }
+};
+
+// 3. NAYA: User Side Cancellation Logic
+exports.cancelBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+    
+    // Security: Check if booking exists and belongs to the logged-in user
+    if (!booking || booking.user.toString() !== req.session.user._id.toString()) {
+      return res.redirect("/user/dashboard");
+    }
+
+    // Logic: Only "pending" or "approved" rides can be cancelled. 
+    // "ongoing" rides can't be cancelled by user for security reasons.
+    if (booking.status === "pending" || booking.status === "approved") {
+      booking.status = "cancelled";
+      await booking.save();
+    }
+
+    res.redirect("/user/dashboard");
+  } catch (err) {
+    console.error("Cancel Error:", err);
+    res.redirect("/user/dashboard");
   }
 };
