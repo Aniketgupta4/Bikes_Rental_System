@@ -28,7 +28,7 @@
     }
 
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-    html, body { height:100%; scroll-behavior: smooth; } /* Added smooth scroll */
+    html, body { height:100%; scroll-behavior: smooth; } 
     body { background: var(--bg-body); color: var(--text-main); display:flex; flex-direction:column; overflow-x: hidden; width: 100vw; max-width: 100%; }
 
     /* ---------------------------------------------------- */
@@ -102,7 +102,7 @@
     table tr:hover { background-color: #fcfdfe; }
 
     /* Status Pills */
-    .status { padding: 6px 14px; border-radius: 30px; font-size: 0.75rem; font-weight: 600; display: inline-block; text-transform: capitalize; text-align: center;}
+    .status { padding: 6px 14px; border-radius: 30px; font-size: 0.75rem; font-weight: 600; display: inline-block; text-transform: capitalize; text-align: center; }
     .status-pending { background: #fff9db; color: #f08c00; }
     .status-approved { background: #e3f2fd; color: #1976d2; }
     .status-ongoing { background: #e6fcf5; color: #0ca678; }
@@ -129,26 +129,33 @@
 
     .action-group { display: flex; gap: 8px; flex-wrap: wrap; }
 
+    /* PAGINATION CSS */
+    .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 20px; background: #fff; border-top: 1px solid #edf2f7; flex-wrap: wrap; }
+    .page-btn { padding: 8px 14px; border-radius: 8px; background: #f8fafc; color: var(--secondary); border: 1px solid #edf2f7; text-decoration: none; font-weight: 600; transition: 0.3s; font-size: 0.85rem; }
+    .page-btn:hover:not(.disabled) { background: var(--primary); color: #fff; border-color: var(--primary); transform: translateY(-2px); }
+    .page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3); }
+    .page-btn.disabled { opacity: 0.5; cursor: not-allowed; background: #f1f5f9; color: #cbd5e0; }
+
     /* ---------------------------------------------------- */
     /* 4. MASTER FOOTER */
     /* ---------------------------------------------------- */
-    footer { background: var(--secondary); color: #fff; padding: 70px 6% 30px; margin-top: auto; border-top: 5px solid var(--primary); text-align: left; }
-    .footer-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 40px; width: 100%; }
-    footer h3 { color: var(--primary); margin-bottom: 22px; font-size: 1.4rem; font-weight: 700; text-align: left; }
-    footer p, footer li { color: #b2bec3; font-size: 0.92rem; margin-bottom: 12px; line-height: 1.7; text-align: left; }
-    footer ul { list-style: none; padding-left: 0; }
-    footer a { color: #b2bec3; text-decoration: none; transition: 0.3s; display: inline-block; }
+    footer { background: var(--secondary); color: #fff; padding: 50px 6% 30px; margin-top: auto; border-top: 5px solid var(--primary); text-align: left; }
+    .footer-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 30px; width: 100%; text-align: left;}
+    footer h3 { color: var(--primary); margin-bottom: 20px; font-size: 1.3rem; font-weight: 700; text-align: left; }
+    footer p, footer li { color: #b2bec3; font-size: 0.9rem; margin-bottom: 12px; line-height: 1.6; text-align: left; }
+    footer ul { list-style: none; padding-left: 0; text-align: left;}
+    footer a { color: #b2bec3; text-decoration: none; transition: 0.3s; display: inline-block; text-align: left;}
     footer a:hover { color: var(--primary); padding-left: 5px; }
 
     footer form input, footer form textarea {
-      width: 100%; padding: 13px; border-radius: 10px; border: none; background: #2d2d44; color: #fff; margin-bottom: 12px; outline: none; transition: 0.3s;
+      width: 100%; padding: 12px; border-radius: 8px; border: none; background: #2d2d44; color: #fff; margin-bottom: 12px; outline: none; transition: 0.3s;
     }
     footer form input:focus, footer form textarea:focus { background: #353555; box-shadow: 0 0 0 2px var(--primary); }
     footer form button {
-      background: var(--primary); width: 100%; padding: 13px; border: none; color: #fff; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.3s; text-align: center;
+      background: var(--primary); width: 100%; padding: 12px; border: none; color: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; text-align: center;
     }
     footer form button:hover { background: var(--primary-dark); transform: scale(1.02); }
-    .copyright { text-align: left; margin-top: 50px; padding-top: 25px; border-top: 1px solid #2d2d44; color:#636e72; font-size:0.85rem; }
+    .copyright { text-align: left; margin-top: 40px; padding-top: 20px; border-top: 1px solid #2d2d44; color:#636e72; font-size:0.8rem; }
 
     /* ---------------------------------------------------- */
     /* 5. RESPONSIVE MAGIC */
@@ -162,7 +169,7 @@
       
       table tr { 
         margin-bottom: 20px; background: #fff; border: 1px solid #edf2f7; 
-        border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); padding: 15px; 
+        border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 15px; 
       }
       
       table td { 
@@ -190,6 +197,7 @@
       }
 
       .action-group { justify-content: flex-end; width: 100%; gap: 8px;}
+      .pagination { border-radius: 12px; border: 1px solid #edf2f7; }
       form { margin: 0; }
     }
 
@@ -198,21 +206,22 @@
       .menu-toggle { display: block; }
       nav {
         display: none; flex-direction: column; position: absolute; top: 60px; left: 0;
-        width: 100%; background: var(--secondary); padding: 25px; box-shadow: 0 15px 20px rgba(0,0,0,0.3); border-top: 1px solid #2d2d44;
+        width: 100%; background: var(--secondary); padding: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); border-top: 1px solid #2d2d44;
       }
       nav.active { display: flex; }
+      
       .section-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-      header h1 { font-size: 1.5rem; }
+      .section-header h2 { font-size: 1.3rem; }
       .btn-add, .btn-download { width: 100%; justify-content: center; }
 
       .stats-grid { grid-template-columns: 1fr; gap: 15px; }
       .stat-card { border-right: none !important; border-bottom: 4px solid transparent; padding: 20px; }
       .stat-card:last-child { border-bottom-color: var(--primary); }
 
-      /* FOOTER FIXES FOR MOBILE: Force left alignment */
+      /* FOOTER FIXES FOR MOBILE: Strictly Left Aligned */
       .footer-container { grid-template-columns: 1fr; gap: 30px; text-align: left; }
       .footer-container h3, .footer-container p, .footer-container li { text-align: left; }
-      .footer-contact p { justify-content: flex-start; }
+      .footer-contact p { justify-content: flex-start; text-align: left;}
       .footer-section .social-icons { justify-content: flex-start; margin-top: 15px; }
       .copyright { text-align: left; }
     }
@@ -248,28 +257,32 @@
       <div class="stat-card">
         <div class="stat-icon" style="background: #e3f2fd; color: #1976d2;"><i class="fas fa-motorcycle"></i></div>
         <div class="stat-info">
-          <h3><%= bikes.length %></h3>
+          <h3><%= typeof allBikesCount !== 'undefined' ? allBikesCount : 0 %></h3>
           <p>Total Fleet</p>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon" style="background: #e6fcf5; color: #0ca678;"><i class="fas fa-route"></i></div>
         <div class="stat-info">
-          <h3><%= bookings.filter(b => b.status === 'ongoing').length %></h3>
+          <h3><%= typeof allBookings !== 'undefined' ? allBookings.filter(b => b.status === 'ongoing').length : 0 %></h3>
           <p>Live Trips</p>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon" style="background: #fff9db; color: #f08c00;"><i class="fas fa-clock"></i></div>
         <div class="stat-info">
-          <h3><%= bookings.filter(b => b.status === 'pending').length %></h3>
+          <h3><%= typeof allBookings !== 'undefined' ? allBookings.filter(b => b.status === 'pending').length : 0 %></h3>
           <p>New Inquiries</p>
         </div>
       </div>
       <div class="stat-card" style="border-right: 5px solid var(--primary);">
         <div class="stat-icon" style="background: #fff5f5; color: #fa5252;"><i class="fas fa-hand-holding-dollar"></i></div>
         <div class="stat-info">
-          <% let totalRev = 0; bookings.filter(b => b.status === 'completed' || b.status === 'ongoing').forEach(b => totalRev += b.totalPrice); %>
+          <% let totalRev = 0; 
+             if(typeof allBookings !== 'undefined') {
+                allBookings.filter(b => b.status === 'completed' || b.status === 'ongoing').forEach(b => totalRev += b.totalPrice); 
+             }
+          %>
           <h3>₹ <%= totalRev %></h3>
           <p>Total Revenue</p>
         </div>
@@ -317,6 +330,22 @@
           <% }) %>
           </tbody>
         </table>
+
+        <% if (typeof totalBikePages !== 'undefined' && totalBikePages > 1) { %>
+          <div class="pagination">
+              <a href="/admin/dashboard?bikePage=<%= currentBikePage > 1 ? currentBikePage - 1 : 1 %>&page=<%= typeof currentPage !== 'undefined' ? currentPage : 1 %>" class="page-btn <%= currentBikePage === 1 ? 'disabled' : '' %>">
+                  <i class="fas fa-chevron-left"></i> Prev
+              </a>
+              
+              <% for(let i = 1; i <= totalBikePages; i++) { %>
+                  <a href="/admin/dashboard?bikePage=<%= i %>&page=<%= typeof currentPage !== 'undefined' ? currentPage : 1 %>" class="page-btn <%= currentBikePage === i ? 'active' : '' %>"><%= i %></a>
+              <% } %>
+              
+              <a href="/admin/dashboard?bikePage=<%= currentBikePage < totalBikePages ? currentBikePage + 1 : totalBikePages %>&page=<%= typeof currentPage !== 'undefined' ? currentPage : 1 %>" class="page-btn <%= currentBikePage === totalBikePages ? 'disabled' : '' %>">
+                  Next <i class="fas fa-chevron-right"></i>
+              </a>
+          </div>
+        <% } %>
       <% } %>
     </div>
 
@@ -393,6 +422,22 @@
           <% }) %>
           </tbody>
         </table>
+
+        <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+          <div class="pagination">
+              <a href="/admin/dashboard?page=<%= currentPage > 1 ? currentPage - 1 : 1 %>&bikePage=<%= typeof currentBikePage !== 'undefined' ? currentBikePage : 1 %>" class="page-btn <%= currentPage === 1 ? 'disabled' : '' %>">
+                  <i class="fas fa-chevron-left"></i> Prev
+              </a>
+              
+              <% for(let i = 1; i <= totalPages; i++) { %>
+                  <a href="/admin/dashboard?page=<%= i %>&bikePage=<%= typeof currentBikePage !== 'undefined' ? currentBikePage : 1 %>" class="page-btn <%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+              <% } %>
+              
+              <a href="/admin/dashboard?page=<%= currentPage < totalPages ? currentPage + 1 : totalPages %>&bikePage=<%= typeof currentBikePage !== 'undefined' ? currentBikePage : 1 %>" class="page-btn <%= currentPage === totalPages ? 'disabled' : '' %>">
+                  Next <i class="fas fa-chevron-right"></i>
+              </a>
+          </div>
+        <% } %>
       <% } %>
     </div>
   </main>

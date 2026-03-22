@@ -1,8 +1,8 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
 const chatRoutes = require('./routes/chatRoutes');
-require("dotenv").config();
 
 const connectDB = require("./config/db");
 connectDB();
