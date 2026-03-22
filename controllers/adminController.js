@@ -7,8 +7,8 @@ const nodemailer = require("nodemailer");
 // 👇 Secure Email Setup using Environment Variables 👇
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 465,
-  secure: true, // Use TLS
+  port: 587, // PORT 587 IS BETTER FOR RENDER/CLOUD
+  secure: false, // secure: false for port 587
   auth: {
     user: process.env.SENDER_EMAIL, 
     pass: process.env.SENDER_PASSWORD 
@@ -177,7 +177,7 @@ exports.approveBooking = async (req, res) => {
     booking.status = "approved";
     await booking.save();
 
-    // 👇 NAYA: EMAIL BHEJNE KA LOGIC 👇
+    // 👇 NAYA: AWAIT WALA EMAIL LOGIC 👇
     if (booking.user && booking.user.email) {
       const mailOptions = {
         from: `"BikeRental Admin" <${process.env.SENDER_EMAIL}>`,
@@ -203,13 +203,13 @@ exports.approveBooking = async (req, res) => {
         `
       };
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error("Email Error:", error);
-        } else {
-          console.log("Email Sent to: " + booking.user.email);
-        }
-      });
+      // MAGIC HERE: Server wait karega jab tak email chala na jaye
+      try {
+          const info = await transporter.sendMail(mailOptions);
+          console.log("SUCCESS! Render Email Sent ID: " + info.messageId);
+      } catch (emailError) {
+          console.error("RENDER EMAIL SEND FAILED:", emailError);
+      }
     }
     // 👆 EMAIL LOGIC END 👆
 
