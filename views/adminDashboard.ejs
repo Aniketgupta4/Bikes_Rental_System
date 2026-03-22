@@ -28,7 +28,7 @@
     }
 
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-    html, body { height:100%; }
+    html, body { height:100%; scroll-behavior: smooth; } /* Added smooth scroll */
     body { background: var(--bg-body); color: var(--text-main); display:flex; flex-direction:column; overflow-x: hidden; }
 
     /* ---------------------------------------------------- */
@@ -108,6 +108,7 @@
     .status-ongoing { background: #e6fcf5; color: #0ca678; }
     .status-completed { background: #f1f3f5; color: #495057; }
     .status-rejected { background: #fff5f5; color: #fa5252; }
+    .status-maintenance { background: #e2e8f0; color: #4a5568; } /* Added from previous step */
 
     /* Action Buttons */
     .btn {
@@ -150,17 +151,12 @@
     .copyright { text-align: center; margin-top: 50px; padding-top: 25px; border-top: 1px solid #2d2d44; color:#636e72; font-size:0.85rem; }
 
     /* ---------------------------------------------------- */
-    /* 5. RESPONSIVE MAGIC (THE FIX) */
+    /* 5. RESPONSIVE MAGIC */
     /* ---------------------------------------------------- */
     @media (max-width: 992px) {
-      /* Hide desktop headers */
       table thead { display: none; }
       table, tbody, tr, td { display: block; width: 100%; }
-      
-      /* Make each row look like a card */
       table tr { margin-bottom: 20px; background: #fff; border: 1px solid #edf2f7; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-      
-      /* Format cells to show label and value side-by-side */
       table td { 
         text-align: right; 
         padding: 15px 20px; 
@@ -170,13 +166,10 @@
         min-height: 50px; 
       }
       table td:last-child { border-bottom: none; display: flex; justify-content: flex-end; }
-      
-      /* Insert the Label */
       table td::before {
         content: attr(data-label); position: absolute; left: 20px; top: 18px;
         font-weight: 700; text-transform: uppercase; font-size: 0.7rem; color: var(--text-muted);
       }
-      
       .action-group { justify-content: flex-end; width: 100%; }
       form { margin: 0; }
     }
@@ -262,15 +255,21 @@
             <tr>
               <td data-label="Bike Name"><div style="font-weight: 700; color: var(--secondary);"><%= b.name %></div></td>
               <td data-label="Day Rate">₹ <%= b.pricePerDay %></td>
+              
               <td data-label="Public Visibility">
-                  <span class="status <%= b.isAvailable ? 'status-ongoing' : 'status-rejected' %>">
-                      <%= b.isAvailable ? "Listed" : "Hidden" %>
-                  </span>
+                  <% if (b.isMaintenance) { %>
+                    <span class="status status-maintenance">Under Maintenance</span>
+                  <% } else if (b.isAvailable) { %>
+                    <span class="status status-ongoing">Listed (Available)</span>
+                  <% } else { %>
+                    <span class="status status-rejected">On Rent (Hidden)</span>
+                  <% } %>
               </td>
+
               <td data-label="Actions">
                 <div class="action-group">
-                    <a class="btn btn-sm btn-info" href="/admin/edit-bike/<%= b._id %>" title="Edit Bike"><i class="fas fa-pen"></i></a>
-                    <form action="/admin/delete-bike/<%= b._id %>" method="POST" style="display:inline;" onsubmit="return confirm('Delete this bike permanently?')">
+                    <a class="btn btn-sm btn-info save-scroll" href="/admin/edit-bike/<%= b._id %>" title="Edit Bike"><i class="fas fa-pen"></i></a>
+                    <form action="/admin/delete-bike/<%= b._id %>" method="POST" style="display:inline;" onsubmit="saveScrollPos(); return confirm('Delete this bike permanently?');">
                       <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash-can"></i></button>
                     </form>
                 </div>
@@ -328,19 +327,19 @@
                 <div class="action-group">
                   
                   <% if (bk.status === 'pending') { %>
-                    <a class="btn btn-sm btn-success" href="/admin/approve/<%= bk._id %>"><i class="fas fa-check"></i> Approve</a>
-                    <a class="btn btn-sm btn-danger" href="/admin/reject/<%= bk._id %>"><i class="fas fa-xmark"></i></a>
+                    <a class="btn btn-sm btn-success save-scroll" href="/admin/approve/<%= bk._id %>"><i class="fas fa-check"></i> Approve</a>
+                    <a class="btn btn-sm btn-danger save-scroll" href="/admin/reject/<%= bk._id %>"><i class="fas fa-xmark"></i></a>
                     
                   <% } else if (bk.status === 'approved') { %>
-                    <a class="btn btn-sm btn-warning" href="/admin/start-trip/<%= bk._id %>" style="color: #000;"><i class="fas fa-motorcycle"></i> Handover</a>
-                    <a class="btn btn-sm btn-danger" href="/admin/reject/<%= bk._id %>" title="User No Show"><i class="fas fa-user-slash"></i></a>
+                    <a class="btn btn-sm btn-warning save-scroll" href="/admin/start-trip/<%= bk._id %>" style="color: #000;"><i class="fas fa-motorcycle"></i> Handover</a>
+                    <a class="btn btn-sm btn-danger save-scroll" href="/admin/reject/<%= bk._id %>" title="User No Show"><i class="fas fa-user-slash"></i></a>
 
                   <% } else if (bk.status === 'ongoing') { %>
-                    <a class="btn btn-sm btn-info" href="/admin/complete-trip/<%= bk._id %>"><i class="fas fa-flag-checkered"></i> Finish Trip</a>
+                    <a class="btn btn-sm btn-info save-scroll" href="/admin/complete-trip/<%= bk._id %>"><i class="fas fa-flag-checkered"></i> Finish Trip</a>
 
                   <% } else { %>
-                    <form action="/admin/delete-booking/<%= bk._id %>" method="POST" style="display:inline;">
-                      <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this record?')"><i class="fas fa-trash-alt"></i></button>
+                    <form action="/admin/delete-booking/<%= bk._id %>" method="POST" style="display:inline;" onsubmit="saveScrollPos(); return confirm('Delete this record?');">
+                      <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
                     </form>
                   <% } %>
 
@@ -399,7 +398,50 @@
   </footer>
   
   <script>
-    // Mobile Navbar Toggle
+    // ---------------------------------------------------------
+    // 1. SMART SCROLL MEMORY LOGIC (Fixes the page jump issue)
+    // ---------------------------------------------------------
+    
+    // Jab koi bhi action link click ho, tabhi position save karo
+    document.querySelectorAll('.save-scroll').forEach(link => {
+        link.addEventListener('click', () => {
+            localStorage.setItem('adminScrollPosition', window.scrollY);
+        });
+    });
+
+    // Form submit (Delete) ke liye scroll save karne ka function
+    function saveScrollPos() {
+        localStorage.setItem('adminScrollPosition', window.scrollY);
+    }
+
+    // Jab page load ho, check karo kya koi scroll position bachi hui hai
+    window.addEventListener('load', () => {
+        const savedScrollPos = localStorage.getItem('adminScrollPosition');
+        if (savedScrollPos) {
+            // Scroll to saved position smoothly
+            window.scrollTo({
+                top: parseInt(savedScrollPos),
+                behavior: 'auto' // Instant jump so user doesn't see it scrolling down
+            });
+            // Clear it after using so regular reloads act normal
+            localStorage.removeItem('adminScrollPosition');
+        }
+
+        // Fade-in animation logic (Tere pehle se tha)
+        document.querySelectorAll('.data-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = `all 0.6s ease ${index * 0.2}s`;
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 50);
+        });
+    });
+
+    // ---------------------------------------------------------
+    // 2. MOBILE NAVBAR LOGIC
+    // ---------------------------------------------------------
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');
 
@@ -413,18 +455,6 @@
       }
     });
 
-    // Fade-in animation
-    window.onload = () => {
-        document.querySelectorAll('.data-card').forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = `all 0.6s ease ${index * 0.2}s`;
-            setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 50);
-        });
-    }
   </script>
 
 </body>

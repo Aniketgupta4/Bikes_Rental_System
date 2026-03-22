@@ -18,6 +18,7 @@
             --card-bg: #ffffff;
             --text-main: #2d3436;
             --text-muted: #636e72;
+            --danger: #d63031;
             --shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
@@ -85,11 +86,14 @@
 
         /* Custom Switch Label */
         .switch-container {
-            display: flex; align-items: center; gap: 12px; padding: 15px;
-            background: #f8fafc; border-radius: 15px; margin: 25px 0; cursor: pointer;
+            display: flex; align-items: center; gap: 12px; padding: 18px;
+            background: #f8fafc; border-radius: 15px; cursor: pointer; border: 2px solid #edf2f7; margin: 25px 0;
+            transition: 0.3s;
         }
-        .switch-container input { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; }
-        .switch-container label { font-weight: 600; color: var(--secondary); margin: 0; cursor: pointer; }
+        .switch-container:hover { border-color: var(--primary); }
+        .switch-container input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--primary); cursor: pointer; }
+        .switch-container label { font-weight: 700; color: var(--secondary); margin: 0; cursor: pointer; flex: 1; font-size: 1.05rem;}
+        .switch-container p { font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; font-weight: 400; line-height: 1.4;}
 
         /* Image Preview Section */
         .upload-area { margin-top: 30px; }
@@ -192,9 +196,18 @@
                     <textarea name="description" rows="4" required placeholder="Engine, Mileage, Top Speed..."><%= bike.description %></textarea>
                 </div>
 
+                <% if (bike.isAvailable === false && bike.isMaintenance === false) { %>
+                    <div style="background: #fff5f5; border: 1px solid #fed7d7; padding: 15px; border-radius: 12px; margin: 20px 0; color: var(--danger); font-weight: 500; font-size: 0.9rem;">
+                        <i class="fas fa-lock" style="margin-right: 8px;"></i> This bike is currently out on rent (Booked). Checkbox logic will not disturb the booking.
+                    </div>
+                <% } %>
+
                 <div class="switch-container">
                     <input type="checkbox" id="isAvailable" name="isAvailable" <%= bike.isAvailable ? 'checked' : '' %>> 
-                    <label for="isAvailable">Under Maintainance or Not</label>
+                    <label for="isAvailable">
+                        Available for Rent
+                        <p>Keep ticked to show available. <b>Untick to show "In Service" (Maintenance).</b></p>
+                    </label>
                 </div>
 
                 <div class="upload-area">

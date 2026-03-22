@@ -41,7 +41,8 @@ exports.addBike = async (req, res) => {
         description, 
         pricePerDay, 
         image, 
-        isAvailable: true // Default setting
+        isAvailable: true, // Default Available
+        isMaintenance: false // Default Not in Maintenance
     });
 
     res.redirect("/admin/dashboard");
@@ -64,12 +65,35 @@ exports.editBikePage = async (req, res) => {
 exports.updateBike = async (req, res) => {
   try {
     const { name, description, pricePerDay, isAvailable } = req.body;
-    
+    const bike = await Bike.findById(req.params.id);
+
+    let finalAvailable = false;
+    let finalMaintenance = false;
+
+    // 👇 NAYA SMART LOGIC: Tick = Available, Untick = In Service 👇
+    if (isAvailable === "on") {
+        // Ticked
+        finalAvailable = true;
+        finalMaintenance = false;
+    } else {
+        // Unticked
+        if (bike.isAvailable === false && bike.isMaintenance === false) {
+            // Agar bike pehle se Booked thi, toh usko Booked hi rehne do
+            finalAvailable = false;
+            finalMaintenance = false;
+        } else {
+            // Agar normal untick kiya hai, toh Maintenance mein daal do
+            finalAvailable = false;
+            finalMaintenance = true;
+        }
+    }
+
     const updateData = { 
         name, 
         description, 
         pricePerDay, 
-        isAvailable: isAvailable === "on" 
+        isAvailable: finalAvailable,
+        isMaintenance: finalMaintenance
     };
 
     // Cloudinary update check
@@ -96,7 +120,6 @@ exports.deleteBike = async (req, res) => {
 
 // --- BOOKING OPERATIONS (Lifecycle & Status Sync) ---
 
-// Step 1: Approve Request
 exports.approveBooking = async (req, res) => {
   try {
     await Booking.findByIdAndUpdate(req.params.id, { status: "approved" });
@@ -106,18 +129,16 @@ exports.approveBooking = async (req, res) => {
   }
 };
 
-// Step 2: Handover (Start Trip) -> Syncs with Home Page!
 exports.startTrip = async (req, res) => {
     try {
       const booking = await Booking.findById(req.params.id);
       
-      // 1. Mark booking as ongoing
       booking.status = "ongoing";
       await booking.save();
 
-      // 2. Mark Bike as Unavailable (This fixes the home page issue)
+      // Bike is now Booked (Available=false, Maintenance=false)
       const bikeId = booking.bike._id || booking.bike;
-      await Bike.findByIdAndUpdate(bikeId, { isAvailable: false });
+      await Bike.findByIdAndUpdate(bikeId, { isAvailable: false, isMaintenance: false });
 
       res.redirect("/admin/dashboard");
     } catch (err) {
@@ -126,18 +147,16 @@ exports.startTrip = async (req, res) => {
     }
 };
 
-// Step 3: Return (Complete Trip) -> Syncs with Home Page!
 exports.completeTrip = async (req, res) => {
     try {
       const booking = await Booking.findById(req.params.id);
       
-      // 1. Mark booking as completed
       booking.status = "completed";
       await booking.save();
 
-      // 2. Mark Bike as Available again (Rent button comes back on home page)
+      // Bike is returned, make it Available
       const bikeId = booking.bike._id || booking.bike;
-      await Bike.findByIdAndUpdate(bikeId, { isAvailable: true });
+      await Bike.findByIdAndUpdate(bikeId, { isAvailable: true, isMaintenance: false });
 
       res.redirect("/admin/dashboard");
     } catch (err) {
@@ -146,7 +165,6 @@ exports.completeTrip = async (req, res) => {
     }
 };
 
-// Step 4: Reject
 exports.rejectBooking = async (req, res) => {
   try {
     await Booking.findByIdAndUpdate(req.params.id, { status: "rejected" });
@@ -156,7 +174,6 @@ exports.rejectBooking = async (req, res) => {
   }
 };
 
-// Cleanup
 exports.deleteBooking = async (req, res) => {
   try {
     await Booking.findByIdAndDelete(req.params.id);
@@ -167,7 +184,6 @@ exports.deleteBooking = async (req, res) => {
 };
 
 // --- DATA EXPORT ---
-
 exports.exportBookings = async (req, res) => {
   try {
     const bookings = await Booking.find().populate("user").populate("bike");
