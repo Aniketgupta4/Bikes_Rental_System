@@ -1,33 +1,17 @@
-require('dotenv').config(); // Security ke liye .env load karna zaruri hai
 const Bike = require("../models/Bike");
 const Booking = require("../models/Booking");
 const { Parser } = require("json2csv");
-const nodemailer = require("nodemailer");
-
-// 👇 Secure Email Setup using Environment Variables 👇
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587, // PORT 587 IS BETTER FOR RENDER/CLOUD
-  secure: false, // secure: false for port 587
-  auth: {
-    user: process.env.SENDER_EMAIL, 
-    pass: process.env.SENDER_PASSWORD 
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-});
 
 // 1. Admin Dashboard - Statistics, Data Fetching & DUAL Pagination
 exports.dashboard = async (req, res) => {
   try {
     // --- 1. STATS KE LIYE TOTAL DATA ---
-    const allBikesCount = await Bike.countDocuments(); 
+    const allBikesCount = await Bike.countDocuments(); // Fast counting ke liye
     const allBookings = await Booking.find();
 
     // --- 2. BOOKINGS PAGINATION LOGIC ---
     const page = parseInt(req.query.page) || 1;
-    const limitBookings = 5; 
+    const limitBookings = 5; // Ek page par 5 bookings dikhengi
     const skipBookings = (page - 1) * limitBookings;
 
     const paginatedBookings = await Booking.find()
@@ -41,7 +25,7 @@ exports.dashboard = async (req, res) => {
 
     // --- 3. BIKES PAGINATION LOGIC ---
     const bikePage = parseInt(req.query.bikePage) || 1;
-    const limitBikes = 5; 
+    const limitBikes = 5; // Ek page par 5 bikes dikhengi
     const skipBikes = (bikePage - 1) * limitBikes;
 
     const paginatedBikes = await Bike.find()
@@ -51,6 +35,7 @@ exports.dashboard = async (req, res) => {
       
     const totalBikePages = Math.ceil(allBikesCount / limitBikes);
 
+    // Dhyan de: Ye saare variables ejs mein use ho rahe hain
     res.render("adminDashboard", {
       allBookings: allBookings || [],
       bookings: paginatedBookings || [],
@@ -85,7 +70,7 @@ exports.addBike = async (req, res) => {
   try {
     const { name, description, pricePerDay } = req.body;
     
-    // Cloudinary URL logic
+    // Cloudinary URL logic (Permanent Online Link)
     const image = req.file ? req.file.path : null; 
 
     await Bike.create({ 
@@ -93,8 +78,8 @@ exports.addBike = async (req, res) => {
         description, 
         pricePerDay, 
         image, 
-        isAvailable: true, 
-        isMaintenance: false 
+        isAvailable: true, // Default Available
+        isMaintenance: false // Default Not in Maintenance
     });
 
     res.redirect("/admin/dashboard");
@@ -122,14 +107,19 @@ exports.updateBike = async (req, res) => {
     let finalAvailable = false;
     let finalMaintenance = false;
 
+    // 👇 NAYA SMART LOGIC: Tick = Available, Untick = In Service 👇
     if (isAvailable === "on") {
+        // Ticked
         finalAvailable = true;
         finalMaintenance = false;
     } else {
+        // Unticked
         if (bike.isAvailable === false && bike.isMaintenance === false) {
+            // Agar bike pehle se Booked thi, toh usko Booked hi rehne do
             finalAvailable = false;
             finalMaintenance = false;
         } else {
+            // Agar normal untick kiya hai, toh Maintenance mein daal do
             finalAvailable = false;
             finalMaintenance = true;
         }
@@ -143,6 +133,7 @@ exports.updateBike = async (req, res) => {
         isMaintenance: finalMaintenance
     };
 
+    // Cloudinary update check
     if (req.file && req.file.path) {
         updateData.image = req.file.path;
     }
@@ -168,54 +159,9 @@ exports.deleteBike = async (req, res) => {
 
 exports.approveBooking = async (req, res) => {
   try {
-    const booking = await Booking.findById(req.params.id)
-      .populate("user")
-      .populate("bike");
-
-    if (!booking) return res.redirect("/admin/dashboard");
-
-    booking.status = "approved";
-    await booking.save();
-
-    // 👇 NAYA: AWAIT WALA EMAIL LOGIC 👇
-    if (booking.user && booking.user.email) {
-      const mailOptions = {
-        from: `"BikeRental Admin" <${process.env.SENDER_EMAIL}>`,
-        to: booking.user.email,
-        subject: "🎉 Booking Approved! - BikeRental",
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-            <h2 style="color: #ff6b6b; text-align: center;">BikeRental</h2>
-            <h3>Hello ${booking.user.name},</h3>
-            <p>Great news! Your booking request has been <strong>Approved</strong> by our team.</p>
-            
-            <div style="background: #f4f7fe; padding: 15px; border-radius: 8px; margin: 20px 0;">
-              <p><strong>🏍️ Bike Model:</strong> ${booking.bike.name}</p>
-              <p><strong>📅 Pickup Time:</strong> ${new Date(booking.pickupDateTime).toLocaleString()}</p>
-              <p><strong>🔙 Return Time:</strong> ${new Date(booking.returnDateTime).toLocaleString()}</p>
-              <p><strong>💰 Total Amount Payable:</strong> ₹${booking.totalPrice}</p>
-            </div>
-            
-            <p>Please visit our center at the scheduled pickup time to collect your keys. Have a safe ride!</p>
-            <br>
-            <p>Regards,<br><strong>Admin Team</strong><br>BikeRental System</p>
-          </div>
-        `
-      };
-
-      // MAGIC HERE: Server wait karega jab tak email chala na jaye
-      try {
-          const info = await transporter.sendMail(mailOptions);
-          console.log("SUCCESS! Render Email Sent ID: " + info.messageId);
-      } catch (emailError) {
-          console.error("RENDER EMAIL SEND FAILED:", emailError);
-      }
-    }
-    // 👆 EMAIL LOGIC END 👆
-
+    await Booking.findByIdAndUpdate(req.params.id, { status: "approved" });
     res.redirect("/admin/dashboard");
   } catch (err) {
-    console.error("Approve Error:", err);
     res.redirect("/admin/dashboard");
   }
 };
@@ -223,9 +169,11 @@ exports.approveBooking = async (req, res) => {
 exports.startTrip = async (req, res) => {
     try {
       const booking = await Booking.findById(req.params.id);
+      
       booking.status = "ongoing";
       await booking.save();
 
+      // Bike is now Booked (Available=false, Maintenance=false)
       const bikeId = booking.bike._id || booking.bike;
       await Bike.findByIdAndUpdate(bikeId, { isAvailable: false, isMaintenance: false });
 
@@ -239,9 +187,11 @@ exports.startTrip = async (req, res) => {
 exports.completeTrip = async (req, res) => {
     try {
       const booking = await Booking.findById(req.params.id);
+      
       booking.status = "completed";
       await booking.save();
 
+      // Bike is returned, make it Available
       const bikeId = booking.bike._id || booking.bike;
       await Bike.findByIdAndUpdate(bikeId, { isAvailable: true, isMaintenance: false });
 
