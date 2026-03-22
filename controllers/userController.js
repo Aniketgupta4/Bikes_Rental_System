@@ -1,24 +1,44 @@
 const Booking = require("../models/Booking");
 const Bike = require("../models/Bike");
 
-// User Dashboard: Show personal booking history
+// 1. User Dashboard: Show personal booking history with PAGINATION
 exports.dashboard = async (req, res) => {
   try {
-    const requests = await Booking.find({ user: req.session.user._id })
+    const userId = req.session.user._id;
+
+    // --- PAGINATION LOGIC ---
+    const page = parseInt(req.query.page) || 1; // Default page 1
+    const limit = 4; // Ek page par sirf 4 bookings dikhayenge (Clean UI ke liye)
+    const skip = (page - 1) * limit;
+
+    // Total bookings count (Frontend pe buttons calculate karne ke liye)
+    const totalBookings = await Booking.countDocuments({ user: userId });
+    const totalPages = Math.ceil(totalBookings / limit);
+
+    const requests = await Booking.find({ user: userId })
       .populate("bike")
-      .sort({ createdAt: -1 }); // Latest booking upar dikhegi
+      .sort({ createdAt: -1 }) // Latest booking sabse upar
+      .skip(skip)
+      .limit(limit);
 
     res.render("userDashboard", { 
-      requests, 
-      user: req.session.user || null 
+      requests: requests || [], 
+      user: req.session.user || null,
+      currentPage: page,
+      totalPages: totalPages
     });
   } catch (err) {
     console.error("Dashboard Error:", err);
-    res.render("userDashboard", { requests: [], user: req.session.user || null });
+    res.render("userDashboard", { 
+      requests: [], 
+      user: req.session.user || null,
+      currentPage: 1,
+      totalPages: 1 
+    });
   }
 };
 
-// Industry Level Booking Logic (Date + Time)
+// 2. Industry Level Booking Logic (Date + Time)
 exports.bookBike = async (req, res) => {
   try {
     const bike = await Bike.findById(req.params.id);
@@ -32,20 +52,19 @@ exports.bookBike = async (req, res) => {
 
     // 2. Logic: Return time pickup se pehle nahi ho sakta
     if (end <= start) {
-      // Ideally, yahan ek error message pass karna chahiye details page par
       return res.redirect(`/bike/${bike._id}?error=invalid_dates`);
     }
 
     // 3. Exact Duration Calculation
     const diffInMs = Math.abs(end - start);
     
-    // Industry Standard: Agar 24 ghante se 1 second bhi upar hai, toh next day count hota hai (Math.ceil)
+    // Industry Standard: Math.ceil taaki partial days full day count hon
     const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24)); 
 
     // 4. Final Price Calculation
     const totalPrice = diffInDays * bike.pricePerDay;
 
-    // 5. Save to Database using updated Schema
+    // 5. Save to Database
     await Booking.create({
       user: req.session.user._id,
       bike: bike._id,
@@ -60,4 +79,3 @@ exports.bookBike = async (req, res) => {
     res.redirect("/");
   }
 };
-
