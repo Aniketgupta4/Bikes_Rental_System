@@ -93,3 +93,43 @@ exports.cancelBooking = async (req, res) => {
     res.redirect("/user/dashboard");
   }
 };
+
+
+
+exports.submitReview = async (req, res) => {
+    try {
+        const { rating, comment, bikeId } = req.body;
+        const bookingId = req.params.bookingId;
+        const userId = req.session.user._id;
+
+        // 1. Check if booking belongs to user and is completed
+        const booking = await Booking.findOne({ _id: bookingId, user: userId, status: 'completed' });
+        
+        if (!booking) {
+            return res.status(400).send("Sirf completed rides par review diya ja sakta hai.");
+        }
+        if (booking.isReviewed) {
+            return res.status(400).send("Aap pehle hi is ride ka review de chuke hain.");
+        }
+
+        // 2. Bike dhundo aur review push karo
+        const bike = await Bike.findById(bikeId);
+        bike.reviews.push({ user: userId, rating: Number(rating), comment });
+
+        // 3. Nayi Average Rating Calculate karo
+        const totalReviews = bike.reviews.length;
+        const sumRatings = bike.reviews.reduce((sum, rev) => sum + rev.rating, 0);
+        bike.averageRating = (sumRatings / totalReviews).toFixed(1);
+
+        await bike.save();
+
+        // 4. Booking ko 'Reviewed' mark kar do
+        booking.isReviewed = true;
+        await booking.save();
+
+        res.redirect('/user/dashboard');
+    } catch (err) {
+        console.error("Review Error:", err);
+        res.redirect('/user/dashboard');
+    }
+};

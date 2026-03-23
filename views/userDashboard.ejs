@@ -3,67 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <title>My Bookings - BikeRental Premium Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <style>
         /* ---------------------------------------------------------
-           1. CORE DESIGN SYSTEM & CSS VARIABLES
+           1. CORE DESIGN SYSTEM & REFINED PALETTE
         --------------------------------------------------------- */
         :root {
             --primary: #ff6b6b;
             --primary-dark: #ee5253;
             --secondary: #1e1e2f;
             --secondary-light: #2d2d44;
-            --bg-body: #f4f7fe;
-            --card-bg: #ffffff;
-            --text-main: #2d3436;
-            --text-muted: #636e72;
             --success: #00b894;
+            --info: #0984e3;
             --warning: #f1c40f;
             --danger: #d63031;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1a202c;
+            --text-muted: #718096;
             --white: #ffffff;
-            --shadow-sm: 0 5px 15px rgba(0,0,0,0.05);
+            --shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
             --shadow-md: 0 10px 30px rgba(0,0,0,0.08);
-            --radius-lg: 25px;
-            --radius-md: 15px;
-            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.12);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-xl: 30px;
+            --radius-lg: 20px;
         }
 
-        /* Basic Resets */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
-        html, body { 
-            overflow-x: hidden; 
-            width: 100%; 
-            min-height: 100vh; 
-            scroll-behavior: smooth;
-        }
-
         body { 
             background: var(--bg-body); 
             color: var(--text-main); 
-            display: flex; 
-            flex-direction: column; 
+            overflow-x: hidden; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* ---------------------------------------------------------
-           2. NAVIGATION & MOBILE OVERLAY (WORKING 3-LINE MENU)
+           2. NAVIGATION BAR
         --------------------------------------------------------- */
-        .navbar {
-            background: var(--secondary); padding: 18px 6%;
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 5000; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        .navbar { 
+            background: var(--secondary); 
+            padding: 15px 8%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 5000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        
         .navbar .brand { 
-            font-size: 2rem; font-weight: 800; color: var(--primary); 
-            text-decoration: none; letter-spacing: 1.5px; 
+            font-size: 2rem; 
+            font-weight: 800; 
+            color: var(--primary); 
+            text-decoration: none; 
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         .navbar .brand span { color: var(--white); font-weight: 300; }
-
+        
         .nav-links { display: flex; gap: 15px; align-items: center; }
         .nav-links a {
             color: var(--white); text-decoration: none; padding: 12px 22px; border-radius: 12px;
@@ -71,37 +82,42 @@
         }
         .nav-links a:hover { background: rgba(255, 107, 107, 0.12); color: var(--primary); }
         .active-link { background: rgba(255, 107, 107, 0.18); color: var(--primary) !important; font-weight: 600; }
-        .logout-btn { background: var(--primary); color: var(--white) !important; font-weight: 700; border: none; }
-        .logout-btn:hover { background: var(--primary-dark); transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4); }
-
-        /* Menu Button (Hamburger) */
-        .menu-btn { 
-            display: none; cursor: pointer; color: var(--white); 
-            font-size: 2rem; transition: 0.3s;
+        
+        .logout-pill { 
+            color: var(--white) !important; 
+            text-decoration: none; 
+            font-weight: 700; 
+            padding: 12px 25px; 
+            border-radius: 15px; 
+            background: var(--primary) !important; 
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
         }
+        .logout-pill:hover { background: var(--primary-dark) !important; transform: translateY(-3px) scale(1.03); }
 
-        /* Mobile Menu Sidebar/Overlay */
+        .menu-btn { display: none; cursor: pointer; color: var(--white); font-size: 2rem; transition: 0.3s; }
+
         .mobile-menu-overlay {
             position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
             background: rgba(30, 30, 47, 0.98); z-index: 6000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            backdrop-filter: blur(10px);
         }
         .mobile-menu-overlay.active { right: 0; }
-        
-        .close-menu-btn {
-            position: absolute; top: 30px; right: 40px; color: var(--white);
-            font-size: 3rem; cursor: pointer;
-        }
+        .close-menu-btn { position: absolute; top: 30px; right: 40px; color: var(--white); font-size: 3rem; cursor: pointer; }
         .mobile-links { display: flex; flex-direction: column; gap: 35px; text-align: center; }
-        .mobile-links a {
-            color: var(--white); text-decoration: none; font-size: 1.8rem;
-            font-weight: 600; transition: 0.3s;
-        }
+        .mobile-links a { color: var(--white); text-decoration: none; font-size: 1.8rem; font-weight: 600; transition: 0.3s; }
         .mobile-links a:hover { color: var(--primary); transform: translateY(-5px); }
 
         /* ---------------------------------------------------------
-           3. CUSTOM MODAL SYSTEM (CANCEL & INFO)
+           3. CUSTOM MODAL SYSTEM (CANCEL, INFO & RATING)
         --------------------------------------------------------- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -121,91 +137,78 @@
 
         .modal-card i.warn-icon { font-size: 5rem; color: var(--primary); margin-bottom: 25px; }
         .modal-card h3 { font-size: 1.8rem; color: var(--secondary); margin-bottom: 15px; font-weight: 800; }
-        .modal-card p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 35px; line-height: 1.7; }
+        .modal-card p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 25px; line-height: 1.7; }
 
-        /* Modal Buttons (English) */
         .modal-btn-group { display: flex; gap: 15px; justify-content: center; }
-        
         .btn-confirm-action { 
             background: var(--primary); color: var(--white); padding: 14px 30px; 
             border-radius: 12px; border: none; font-weight: 700; cursor: pointer; 
-            transition: var(--transition); font-size: 1rem;
+            transition: var(--transition); font-size: 1rem; width: 100%;
         }
-        .btn-confirm-action:hover { background: var(--primary-dark); transform: translateY(-5px); }
+        .btn-confirm-action:hover { background: var(--primary-dark); transform: translateY(-3px); }
 
         .btn-cancel-action { 
             background: #f1f2f6; color: #57606f; padding: 14px 30px; 
             border-radius: 12px; border: none; font-weight: 700; cursor: pointer; 
-            transition: var(--transition); font-size: 1rem;
+            transition: var(--transition); font-size: 1rem; width: 100%;
         }
         .btn-cancel-action:hover { background: #dfe4ea; }
 
-        /* ---------------------------------------------------------
-           4. MAIN CONTENT & DASHBOARD COMPONENTS
-        --------------------------------------------------------- */
-        main.container {
-            width: 92%; max-width: 1300px; margin: 50px auto; flex: 1;
-            animation: fadeIn 0.8s ease-out;
+        /* Star Rating */
+        .rating-css { 
+            display: flex; flex-direction: row-reverse; justify-content: center; gap: 10px; margin-bottom: 20px; 
         }
+        .rating-css input { display: none; }
+        .rating-css label { font-size: 2.5rem; color: #cbd5e0; cursor: pointer; transition: 0.2s; }
+        .rating-css input:checked ~ label, .rating-css label:hover, .rating-css label:hover ~ label { color: var(--warning); }
+        .review-textarea { 
+            width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #edf2f7; 
+            margin-bottom: 20px; outline: none; font-family: 'Poppins', sans-serif; resize: vertical; 
+        }
+        .review-textarea:focus { border-color: var(--warning); }
+
+        /* ---------------------------------------------------------
+           4. MAIN CONTENT
+        --------------------------------------------------------- */
+        main.container { width: 92%; max-width: 1300px; margin: 50px auto; flex: 1; animation: fadeIn 0.8s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Summary Cards */
-        .summary-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px; margin-bottom: 50px;
-        }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px; }
         .stat-card {
             background: var(--card-bg); padding: 35px; border-radius: 28px;
             box-shadow: var(--shadow-md); border-left: 8px solid var(--primary);
-            transition: var(--transition); position: relative; overflow: hidden;
+            transition: var(--transition); position: relative; overflow: hidden; border: 1px solid #edf2f7;
         }
-        .stat-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+        .stat-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); border-color: var(--primary); }
         .stat-card p { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.2px; }
         .stat-card h3 { font-size: 2.5rem; color: var(--secondary); margin-top: 10px; font-weight: 800; }
         .stat-card i { position: absolute; right: 25px; bottom: 25px; font-size: 3.5rem; color: rgba(0,0,0,0.03); }
 
         .dashboard-header { margin-bottom: 40px; border-bottom: 3px solid #f0f0f0; padding-bottom: 20px; }
         .dashboard-header h2 { font-size: 2.5rem; font-weight: 800; color: var(--secondary); }
-        .dashboard-header p { color: var(--text-muted); font-size: 1.1rem; margin-top: 8px; }
 
         /* ---------------------------------------------------------
-           5. DATA TABLE & RIDE LIST STYLING
+           5. DATA TABLE
         --------------------------------------------------------- */
-        .data-card {
-            background: var(--card-bg); border-radius: 28px; overflow: hidden;
-            box-shadow: var(--shadow-md); border: 1px solid #edf2f7;
-        }
+        .data-card { background: var(--card-bg); border-radius: 28px; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid #edf2f7; }
         table { width: 100%; border-collapse: collapse; }
-        table th {
-            background: #f8fafc; padding: 25px; text-align: left;
-            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px;
-            color: var(--text-muted); border-bottom: 2px solid #edf2f7;
-        }
+        table th { background: #f8fafc; padding: 25px; text-align: left; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); border-bottom: 2px solid #edf2f7; }
         table td { padding: 25px; border-bottom: 1px solid #f1f5f9; font-size: 1rem; vertical-align: middle; }
         table tr:last-child td { border-bottom: none; }
         table tr:hover { background-color: #fafbff; }
 
-        /* Actions Styling */
         .action-cell { display: flex; flex-direction: column; gap: 10px; max-width: 180px; margin: 0 auto; }
         
         .pdf-btn {
             background: none; border: 2.5px solid var(--primary); color: var(--primary);
-            padding: 10px 18px; border-radius: 12px; cursor: pointer; font-weight: 700;
-            font-size: 0.9rem; transition: var(--transition); display: flex; align-items: center; 
-            gap: 10px; width: 100%; justify-content: center;
+            padding: 10px 18px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: var(--transition); display: flex; align-items: center; gap: 10px; width: 100%; justify-content: center;
         }
         .pdf-btn:hover { background: var(--primary); color: var(--white); box-shadow: 0 6px 15px rgba(255, 107, 107, 0.25); }
         .pdf-btn.locked { border-color: #cbd5e0; color: #94a3b8; cursor: not-allowed; opacity: 0.75; }
 
-        .cancel-btn-trigger {
-            background: #fff5f5; border: 1.5px solid #ff7675; color: var(--danger);
-            padding: 10px 18px; border-radius: 12px; cursor: pointer; font-weight: 600;
-            font-size: 0.9rem; transition: var(--transition); text-align: center;
-            display: block;
-        }
+        .cancel-btn-trigger { background: #fff5f5; border: 1.5px solid #ff7675; color: var(--danger); padding: 10px 18px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: var(--transition); text-align: center; display: block; }
         .cancel-btn-trigger:hover { background: var(--danger); color: var(--white); transform: scale(1.03); }
 
-        /* Status Pills */
         .status { padding: 8px 20px; border-radius: 35px; font-size: 0.8rem; font-weight: 700; display: inline-block; text-transform: uppercase; letter-spacing: 0.8px; }
         .status-pending { background: #fff9db; color: #f08c00; border: 1.5px solid #ffe066; }
         .status-approved { background: #e3f2fd; color: #1976d2; border: 1.5px solid #90caf9; }
@@ -214,75 +217,60 @@
         .status-cancelled { background: #fdf2f2; color: var(--danger); border: 1.5px solid #feb2b2; }
 
         /* ---------------------------------------------------------
-           6. ENHANCED FOOTER SECTION
+           6. PAGINATION (FIXED FOR MOBILE & DESKTOP)
         --------------------------------------------------------- */
-        footer { 
-            background: var(--secondary); color: var(--white); padding: 90px 8% 50px; 
-            margin-top: auto; border-top: 10px solid var(--primary); 
+        .pagination { 
+            display: flex; justify-content: center; align-items: center; gap: 10px; 
+            margin-top: 40px; margin-bottom: 20px; flex-wrap: wrap; /* Allows wrapping on mobile */
         }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 60px; }
-        .footer-brand h3 { color: var(--primary); font-size: 2.2rem; font-weight: 800; margin-bottom: 25px; }
-        .footer-brand p { color: #b2bec3; line-height: 1.9; font-size: 1rem; }
-        
-        .footer-links h4 { font-size: 1.3rem; margin-bottom: 30px; position: relative; padding-bottom: 12px; }
-        .footer-links h4::after { content: ''; position: absolute; left: 0; bottom: 0; width: 50px; height: 4px; background: var(--primary); border-radius: 2px; }
-        .footer-links ul { list-style: none; }
-        .footer-links li { margin-bottom: 18px; }
-        .footer-links a { color: #b2bec3; text-decoration: none; transition: 0.3s; font-size: 1rem; display: flex; align-items: center; gap: 10px; }
-        .footer-links a:hover { color: var(--primary); padding-left: 10px; }
-
-        .footer-form input { 
-            width: 100%; padding: 16px; margin-bottom: 18px; border-radius: 12px; 
-            border: 2.5px solid #2d2d44; background: #2d2d44; color: var(--white); outline: none; transition: 0.3s;
+        .page-btn { 
+            padding: 10px 20px; background: var(--card-bg); border: 1.5px solid #edf2f7; 
+            text-decoration: none; border-radius: 12px; color: var(--secondary); 
+            font-weight: 600; transition: var(--transition); box-shadow: var(--shadow-sm); 
         }
-        .footer-form input:focus { border-color: var(--primary); }
-        .footer-form button { 
-            width: 100%; padding: 16px; background: var(--primary); color: var(--white); 
-            border: none; border-radius: 12px; font-weight: 700; cursor: pointer; 
-            transition: var(--transition); font-size: 1rem;
+        .page-btn:hover:not(.disabled) { 
+            background: var(--primary); color: #fff; border-color: var(--primary); transform: translateY(-2px); 
         }
-        .footer-form button:hover { background: var(--primary-dark); transform: translateY(-4px); }
-
-        .copyright { 
-            text-align: center; padding-top: 50px; margin-top: 70px; 
-            border-top: 1px solid rgba(255,255,255,0.08); color: #636e72; font-size: 0.95rem; 
+        .page-btn.active { 
+            background: var(--secondary); color: #fff; border-color: var(--secondary); font-weight: 700;
+        }
+        .page-btn.disabled { 
+            opacity: 0.5; cursor: not-allowed; pointer-events: none; background: #f8fafc;
         }
 
         /* ---------------------------------------------------------
-           7. MOBILE OPTIMIZATIONS (FIXED RIDICULOUS VIEW)
+           7. FOOTER
         --------------------------------------------------------- */
-        @media (max-width: 1024px) {
-            .navbar { padding: 15px 4%; }
-            .nav-links { display: none; }
-            .menu-btn { display: block; }
-        }
+        footer { background: var(--secondary); color: var(--white); padding: 90px 8% 50px; margin-top: auto; border-top: 10px solid var(--primary); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 60px; }
+        .footer-brand h3 { color: var(--primary); font-size: 2.2rem; font-weight: 800; margin-bottom: 25px; }
+        .footer-brand p { color: #cbd5e0; line-height: 1.9; font-size: 0.95rem; }
+        .footer-links h4 { font-size: 1.3rem; margin-bottom: 30px; position: relative; padding-bottom: 12px; font-weight: 700; }
+        .footer-links h4::after { content: ''; position: absolute; left: 0; bottom: 0; width: 45px; height: 4px; background: var(--primary); border-radius: 2px; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 18px; }
+        .footer-links a { color: #cbd5e0; text-decoration: none; transition: 0.3s; font-size: 1rem; display: flex; align-items: center; gap: 10px; }
+        .footer-links a:hover { color: var(--primary); padding-left: 10px; }
+        .copyright { text-align: center; padding-top: 50px; margin-top: 80px; border-top: 1px solid rgba(255,255,255,0.08); color: #718096; font-size: 0.95rem; }
 
+        /* ---------------------------------------------------------
+           8. RESPONSIVE BREAKPOINTS
+        --------------------------------------------------------- */
+        @media (max-width: 1024px) { 
+            .navbar { padding: 15px 5%; } .nav-links { display: none; } .menu-btn { display: block; } 
+        }
         @media (max-width: 768px) {
-            .summary-grid { grid-template-columns: 1fr; }
-            .data-card { border: none; background: transparent; box-shadow: none; overflow: visible; }
-            
-            /* Responsive Table Conversion */
-            table, thead, tbody, th, td, tr { display: block; }
+            .summary-grid { grid-template-columns: 1fr; gap: 15px; }
+            .data-card { border: none; background: transparent; box-shadow: none; }
+            table, thead, tbody, th, td, tr { display: block; width: 100%; }
             table thead { display: none; }
-            table tr { 
-                background: var(--white); padding: 30px; border-radius: 28px; 
-                margin-bottom: 30px; box-shadow: var(--shadow-md); border: 1px solid #eee;
-                position: relative;
-            }
-            table td { 
-                display: flex; justify-content: space-between; align-items: center;
-                padding: 18px 0; border: none; text-align: right; font-size: 1rem; 
-                border-bottom: 1.5px dashed #f0f0f0; 
-            }
-            table td:last-child { border-bottom: none; flex-direction: column; padding-top: 25px; }
-            table td::before { 
-                content: attr(data-label); font-weight: 800; color: var(--secondary); 
-                text-align: left; text-transform: uppercase; font-size: 0.85rem; 
-                letter-spacing: 0.5px;
-            }
-            
-            .action-cell { max-width: 100%; width: 100%; margin: 0; }
-            .pdf-btn, .cancel-btn-trigger { width: 100%; padding: 14px; font-size: 1rem; }
+            table tr { background: var(--white); padding: 30px; border-radius: 25px; margin-bottom: 25px; box-shadow: var(--shadow-md); border: 1px solid #eee; position: relative; }
+            table td { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border: none; text-align: right; border-bottom: 1.5px dashed #f0f0f0; }
+            table td:last-child { border-bottom: none; flex-direction: column; padding-top: 20px; }
+            table td::before { content: attr(data-label); font-weight: 800; color: var(--secondary); text-align: left; text-transform: uppercase; font-size: 0.8rem; }
+            .action-cell { max-width: 100%; width: 100%; margin-top: 10px; }
+            .pagination { gap: 8px; }
+            .page-btn { padding: 10px 15px; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -291,33 +279,68 @@
     <div class="mobile-menu-overlay" id="mobileMenu">
         <div class="close-menu-btn" onclick="toggleMobileNav()"><i class="fas fa-times"></i></div>
         <div class="mobile-links">
-            <a href="/" onclick="toggleMobileNav()">Browse Bikes</a>
+            <a href="/" onclick="toggleMobileNav()">Browse Fleet</a>
             <a href="/user/dashboard" class="active-link" onclick="toggleMobileNav()">My Bookings</a>
             <a href="/user/profile" onclick="toggleMobileNav()">My Profile</a>
-            <a href="/logout" class="logout-btn" style="padding: 15px 50px; color: white !important;">Logout</a>
+            <a href="/logout" class="logout-pill" style="padding: 15px 40px; display: inline-block;">Logout</a>
         </div>
     </div>
 
     <div class="modal-overlay" id="infoModal">
         <div class="modal-card">
             <i class="fas fa-file-shield warn-icon"></i>
-            <h3>Invoice is Currently Locked</h3>
-            <p>Bhai, aapka digital tax invoice process mein hai. Ye tabhi download hoga jab trip <strong>'Completed'</strong> mark ho jayegi. Dhanyawad!</p>
-            <button class="btn-confirm-action" style="width: 100%;" onclick="closeModal('infoModal')">Theek Hai, Understood</button>
+            <h3>Digital Receipt Locked</h3>
+            <p>Your official tax invoice will be generated and available for download once the trip is marked as <strong>'Completed'</strong> by the administration.</p>
+            <button class="btn-confirm-action" onclick="closeModal('infoModal')">Understood</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="rateInfoModal">
+        <div class="modal-card" style="border-top-color: var(--info);">
+            <i class="fas fa-star-half-stroke warn-icon" style="color: var(--info);"></i>
+            <h3>Rating Unavailable</h3>
+            <p>Bhai, aap ride complete hone ke baad hi apna feedback aur rating submit kar sakte hain. Have a safe trip!</p>
+            <button class="btn-confirm-action" style="background: var(--info);" onclick="closeModal('rateInfoModal')">Okay, Understood</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="cancelConfirmModal">
         <div class="modal-card">
-            <i class="fas fa-motorcycle warn-icon"></i>
+            <i class="fas fa-ban warn-icon" style="color: #fab1a0;"></i>
             <h3>Cancel This Ride?</h3>
-            <p>Bhai, are you sure? The booking for <strong id="bikeNamePop" style="color: var(--secondary);"></strong> will be cancelled and the bike will return to inventory.</p>
+            <p>Are you sure you want to cancel the booking for <strong id="bikeNamePop" style="color: var(--secondary);"></strong>? This action cannot be undone.</p>
             <div class="modal-btn-group">
-                <button class="btn-cancel-action" onclick="closeModal('cancelConfirmModal')">No, Go Back</button>
-                <form id="finalCancelForm" method="POST">
+                <button type="button" class="btn-cancel-action" onclick="closeModal('cancelConfirmModal')" style="flex:1;">No, Keep it</button>
+                <form id="finalCancelForm" method="POST" style="flex: 1;">
                     <button type="submit" class="btn-confirm-action">Yes, Cancel Ride</button>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal-card" style="border-top-color: var(--warning);">
+            <i class="fas fa-star warn-icon" style="color: var(--warning);"></i>
+            <h3>Rate Your Experience</h3>
+            <p>How was your ride with <strong id="reviewBikeName" style="color: var(--secondary);"></strong>?</p>
+            
+            <form id="reviewForm" method="POST">
+                <div class="rating-css">
+                    <input type="radio" name="rating" id="star5" value="5" required><label for="star5" class="fas fa-star"></label>
+                    <input type="radio" name="rating" id="star4" value="4"><label for="star4" class="fas fa-star"></label>
+                    <input type="radio" name="rating" id="star3" value="3"><label for="star3" class="fas fa-star"></label>
+                    <input type="radio" name="rating" id="star2" value="2"><label for="star2" class="fas fa-star"></label>
+                    <input type="radio" name="rating" id="star1" value="1"><label for="star1" class="fas fa-star"></label>
+                </div>
+                
+                <textarea name="comment" class="review-textarea" rows="3" placeholder="Tell us about your trip..." required></textarea>
+                <input type="hidden" name="bikeId" id="reviewBikeId">
+                
+                <div class="modal-btn-group">
+                    <button type="button" class="btn-cancel-action" onclick="closeModal('reviewModal')" style="flex:1;">Cancel</button>
+                    <button type="submit" class="btn-confirm-action" style="flex:1; background: var(--warning);">Submit Review</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -327,7 +350,7 @@
             <a href="/">Browse Bikes</a>
             <a href="/user/dashboard" class="active-link">My Bookings</a>
             <a href="/user/profile">Profile</a>
-            <a href="/logout" class="logout-btn">Logout</a>
+            <a href="/logout" class="logout-pill">Logout</a>
         </nav>
         <div class="menu-btn" onclick="toggleMobileNav()"><i class="fas fa-bars"></i></div>
     </header>
@@ -335,44 +358,45 @@
     <main class="container">
         <div class="summary-grid">
             <div class="stat-card">
-                <i class="fas fa-history"></i>
-                <p>Total Bookings</p>
-                <h3><%= requests.length %></h3>
+                <i class="fas fa-clipboard-list bg-icon"></i>
+                <p class="label">Total Bookings</p>
+                <h3 class="value"><%= requests.length %></h3>
             </div>
-            <div class="stat-card" style="border-color: var(--success);">
-                <i class="fas fa-route"></i>
-                <p>Live Trips</p>
-                <h3><%= requests.filter(r => r.status === 'ongoing' || r.status === 'approved').length %></h3>
+            <div class="stat-card" style="border-left-color: var(--success);">
+                <i class="fas fa-bolt bg-icon"></i>
+                <p class="label">Live Rides</p>
+                <h3 class="value"><%= requests.filter(r => r.status === 'ongoing' || r.status === 'approved').length %></h3>
             </div>
-            <div class="stat-card" style="border-color: var(--warning);">
-                <i class="fas fa-wallet"></i>
-                <p>Total bill</p>
-                <h3>₹ <%= requests.reduce((acc, curr) => acc + curr.totalPrice, 0) %></h3>
+            <div class="stat-card" style="border-left-color: var(--warning);">
+                <i class="fas fa-indian-rupee-sign bg-icon"></i>
+                <p class="label">Total Spending</p>
+                <h3 class="value">₹ <%= requests.reduce((acc, curr) => acc + curr.totalPrice, 0).toLocaleString('en-IN') %></h3>
             </div>
         </div>
 
         <div class="dashboard-header">
-            <h2>My Ride History</h2>
-            <p>Manage your motorcycle rentals, check real-time status, and download tax invoices.</p>
+            <div>
+                <h2>Your Ride History</h2>
+                <p>Manage your rentals, download invoices, and rate your trips.</p>
+            </div>
         </div>
 
         <% if (!requests || requests.length === 0) { %>
-            <div style="text-align: center; padding: 120px 20px; background: #fff; border-radius: 40px; box-shadow: var(--shadow-sm); border: 3px dashed #cbd5e0;">
-                <i class="fas fa-motorcycle fa-6x" style="color: #cbd5e0; margin-bottom: 30px;"></i>
-                <h3 style="color: var(--secondary); font-size: 2.2rem;">No Rides Booked Yet</h3>
-                <p style="color: var(--text-muted); margin-bottom: 40px; font-size: 1.2rem;">Ready for your first adventure? Choose from our premium fleet today!</p>
-                <a href="/" style="background: var(--primary); color:#fff; padding: 20px 50px; border-radius: 20px; text-decoration: none; font-weight: 700; font-size: 1.3rem; box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);">Find Your Bike</a>
+            <div style="text-align: center; padding: 120px 20px; background: #fff; border-radius: 35px; box-shadow: var(--shadow-sm); border: 3px dashed #cbd5e0;">
+                <i class="fas fa-motorcycle fa-5x" style="color: #cbd5e0; margin-bottom: 25px;"></i>
+                <h3 style="color: var(--secondary); font-size: 2rem;">No Rides Booked Yet</h3>
+                <p style="color: var(--text-muted); margin-bottom: 35px; font-size: 1.1rem;">Ready for an adventure? Start by choosing your dream bike today!</p>
+                <a href="/" style="background: var(--primary); color:#fff; padding: 18px 45px; border-radius: 18px; text-decoration: none; font-weight: 700; font-size: 1.2rem; box-shadow: 0 10px 25px rgba(255, 107, 107, 0.35);">Explore Bikes</a>
             </div>
         <% } else { %>
-
             <div class="data-card">
                 <table>
                     <thead>
                         <tr>
                             <th>Vehicle Details</th>
-                            <th>Rental Schedule (Pickup - Return)</th>
-                            <th>Bill Amount</th>
-                            <th>Status</th>
+                            <th>Schedule (Pickup - Return)</th>
+                            <th>Total Amount</th>
+                            <th>Current Status</th>
                             <th style="text-align: center;">Actions</th>
                         </tr>
                     </thead>
@@ -380,28 +404,39 @@
                         <% requests.forEach(r => { %>
                             <tr>
                                 <td data-label="Vehicle" style="font-weight: 700; color: var(--secondary); font-size: 1.1rem;">
-                                    <div style="display:flex; align-items:center; gap: 12px;">
+                                    <div style="display:flex; align-items:center; gap: 10px;">
                                         <i class="fas fa-circle-check" style="color: var(--success); font-size: 0.9rem;"></i>
                                         <%= r.bike ? r.bike.name : 'Premium Bike' %>
                                     </div>
                                 </td>
                                 <td data-label="Schedule" style="font-size: 0.9rem; line-height: 1.8;">
-                                    <div style="color: var(--success); font-weight: 700;"><i class="far fa-calendar-check"></i> Pickup: <%= new Date(r.pickupDateTime).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) %></div>
-                                    <div style="color: var(--text-muted);"><i class="far fa-calendar-times"></i> Return: <%= new Date(r.returnDateTime).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) %></div>
+                                    <div style="color: var(--success); font-weight: 700;"><i class="far fa-calendar-plus"></i> Pickup: <%= new Date(r.pickupDateTime).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) %></div>
+                                    <div style="color: var(--text-muted);"><i class="far fa-calendar-minus"></i> Return: <%= new Date(r.returnDateTime).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) %></div>
                                 </td>
-                                <td data-label="Amount" style="font-weight: 800; color: var(--secondary); font-size: 1.2rem;">₹ <%= r.totalPrice %></td>
+                                <td data-label="Amount" style="font-weight: 800; color: var(--secondary); font-size: 1.2rem;">₹ <%= r.totalPrice.toLocaleString('en-IN') %></td>
                                 <td data-label="Status"><span class="status status-<%= r.status %>"><%= r.status %></span></td>
                                 <td data-label="Actions">
                                     <div class="action-cell">
                                         <button class="pdf-btn <%= r.status !== 'completed' ? 'locked' : '' %>" 
-                                            onclick="handleReceiptAction('<%= r.status %>', '<%= r.bike ? r.bike.name : 'Bike' %>', '<%= r.totalPrice %>', '<%= new Date(r.pickupDateTime).toLocaleDateString() %>')">
+                                            onclick="handleReceiptAction('<%= r.status %>', '<%= r.bike ? r.bike.name : 'Bike' %>', '<%= r.totalPrice %>', '<%= new Date(r.pickupDateTime).toLocaleDateString('en-IN') %>')">
                                             <i class="<%= r.status !== 'completed' ? 'fas fa-lock' : 'fas fa-file-invoice-dollar' %>"></i> 
-                                            <%= r.status === 'completed' ? 'Get Receipt' : 'Locked' %>
+                                            <%= r.status === 'completed' ? 'Download Receipt' : 'Locked' %>
                                         </button>
 
                                         <% if (r.status === 'pending' || r.status === 'approved') { %>
                                             <div class="cancel-btn-trigger" onclick="openCancelConfirmation('<%= r._id %>', '<%= r.bike ? r.bike.name : 'Motorcycle' %>')">
-                                                <i class="fas fa-times-circle"></i> Cancel Ride
+                                                <i class="fas fa-ban"></i> Cancel Booking
+                                            </div>
+                                        <% } %>
+
+                                        <% if (!r.isReviewed) { %>
+                                            <button class="pdf-btn <%= r.status !== 'completed' ? 'locked' : '' %>" style="<%= r.status === 'completed' ? 'background: var(--warning); color: #fff; border-color: var(--warning);' : '' %>"
+                                                onclick="handleRateAction('<%= r.status %>', '<%= r._id %>', '<%= r.bike ? r.bike._id : '' %>', '<%= r.bike ? r.bike.name : 'Bike' %>')">
+                                                <i class="<%= r.status !== 'completed' ? 'fas fa-lock' : 'fas fa-star' %>"></i> Rate Ride
+                                            </button>
+                                        <% } else { %>
+                                            <div style="text-align: center; font-size: 0.85rem; color: var(--success); font-weight: 800; background: rgba(0, 184, 148, 0.1); padding: 8px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                                                <i class="fas fa-check-double"></i> Reviewed
                                             </div>
                                         <% } %>
                                     </div>
@@ -413,172 +448,119 @@
             </div>
 
             <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+                <% const curr = Number(currentPage) || 1; %>
                 <div class="pagination">
-                    <a href="/user/dashboard?page=<%= currentPage > 1 ? currentPage - 1 : 1 %>" class="page-btn <%= currentPage === 1 ? 'disabled' : '' %>"><i class="fas fa-chevron-left"></i> Previous</a>
+                    <a href="/user/dashboard?page=<%= curr > 1 ? curr - 1 : 1 %>" class="page-btn <%= curr === 1 ? 'disabled' : '' %>"><i class="fas fa-chevron-left"></i> Previous</a>
                     <% for(let i = 1; i <= totalPages; i++) { %>
-                        <a href="/user/dashboard?page=<%= i %>" class="page-btn <%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+                        <a href="/user/dashboard?page=<%= i %>" class="page-btn <%= curr === i ? 'active' : '' %>"><%= i %></a>
                     <% } %>
-                    <a href="/user/dashboard?page=<%= currentPage < totalPages ? currentPage + 1 : totalPages %>" class="page-btn <%= currentPage === totalPages ? 'disabled' : '' %>">Next <i class="fas fa-chevron-right"></i></a>
+                    <a href="/user/dashboard?page=<%= curr < totalPages ? curr + 1 : totalPages %>" class="page-btn <%= curr === totalPages ? 'disabled' : '' %>">Next <i class="fas fa-chevron-right"></i></a>
                 </div>
             <% } %>
+
         <% } %>
     </main>
 
     <footer>
         <div class="footer-grid">
             <div class="footer-brand">
-                <h3>Bike<span>Rental</span></h3>
-                <p>Premium mobility solutions for the modern explorer. Experience the freedom of the open road with our top-of-the-line fleet of motorcycles and scooters in Jabalpur.</p>
-                <div style="display: flex; gap: 20px; margin-top: 30px;">
-                    <a href="#" style="color: #fff; font-size: 1.5rem;"><i class="fab fa-facebook"></i></a>
-                    <a href="#" style="color: #fff; font-size: 1.5rem;"><i class="fab fa-instagram"></i></a>
-                    <a href="#" style="color: #fff; font-size: 1.5rem;"><i class="fab fa-linkedin"></i></a>
-                </div>
+                <h3>BikeRental</h3>
+                <p>Premium mobility solutions for the modern explorer. Experience the freedom of the open road with our top-of-the-line fleet.</p>
             </div>
-
             <div class="footer-links">
-                <h4>Navigation</h4>
+                <h4>Quick Links</h4>
                 <ul>
-                    <li><a href="/"><i class="fas fa-angle-right"></i> Browse Fleet</a></li>
-                    <li><a href="/user/profile"><i class="fas fa-angle-right"></i> My Profile</a></li>
-                    <li><a href="/logout"><i class="fas fa-angle-right"></i> Sign Out</a></li>
+                    <li><a href="/">Browse Bikes</a></li>
+                    <li><a href="/user/profile">My Profile</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
                 </ul>
             </div>
-
             <div class="footer-links">
-                <h4>Support & Contact</h4>
-                <p style="color:#b2bec3; font-size:0.95rem; margin-bottom:15px;"><i class="fas fa-envelope" style="color:var(--primary); margin-right:12px;"></i> help@bikerental.com</p>
-                <p style="color:#b2bec3; font-size:0.95rem; margin-bottom:15px;"><i class="fas fa-location-dot" style="color:var(--primary); margin-right:12px;"></i> Civil Lines, Jabalpur, MP</p>
-            </div>
-
-            <div class="footer-form">
-                <h4>Drop Feedback</h4>
-                <form action="/feedback" method="POST">
-                    <input type="text" placeholder="Your Name" required>
-                    <button type="submit">Submit Now</button>
-                </form>
+                <h4>Contact Support</h4>
+                <p style="color:#b2bec3; font-size:0.95rem; margin-bottom:15px;"><i class="fas fa-envelope" style="color:var(--primary); margin-right:12px;"></i> support@bikerental.com</p>
+                <p style="color:#b2bec3; font-size:0.95rem;"><i class="fas fa-phone" style="color:var(--primary); margin-right:12px;"></i> +91 98765 43210</p>
             </div>
         </div>
         <div class="copyright">
-            <p>© <%= new Date().getFullYear() %> BikeRental System | Premium Mobility Provider | Developed by <strong>Aniket Kumar Gupta</strong></p>
+            <p>© <%= new Date().getFullYear() %> BikeRental System | Developed by Aniket Kumar Gupta</p>
         </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
-        // --- 1. MOBILE OVERLAY CONTROL ---
+        function toggleScrollLock(lock) { document.body.style.overflow = lock ? 'hidden' : 'auto'; }
+
         function toggleMobileNav() { 
             const menu = document.getElementById('mobileMenu');
             menu.classList.toggle('active');
-            // Prevent scrolling when menu is open
-            document.body.style.overflow = menu.classList.contains('active') ? "hidden" : "auto";
+            toggleScrollLock(menu.classList.contains('active'));
         }
 
-        // --- 2. MODAL CONTROLS ---
         function openModal(id) { 
             const modal = document.getElementById(id);
             modal.style.display = "flex"; 
-            document.body.style.overflow = "hidden";
+            toggleScrollLock(true);
         }
 
         function closeModal(id) { 
             const modal = document.getElementById(id);
             modal.style.display = "none"; 
-            document.body.style.overflow = "auto";
+            toggleScrollLock(false);
         }
 
-        // --- 3. CANCELLATION MODAL SETUP ---
         function openCancelConfirmation(bookingId, bikeName) {
             document.getElementById('bikeNamePop').innerText = bikeName;
-            const form = document.getElementById('finalCancelForm');
-            form.action = `/user/cancel-booking/${bookingId}`;
+            document.getElementById('finalCancelForm').action = `/user/cancel-booking/${bookingId}`;
             openModal('cancelConfirmModal');
         }
 
-        // --- 4. RECEIPT BUTTON HANDLER ---
-        function handleReceiptAction(status, bike, price, date) {
-            if (status !== 'completed') { 
-                openModal('infoModal'); 
-                return; 
+        // Rating Handling
+        function handleRateAction(status, bookingId, bikeId, bikeName) {
+            if (status !== 'completed') {
+                openModal('rateInfoModal');
+                return;
             }
-            generateBusinessInvoice(bike, price, date);
+            document.getElementById('reviewBikeName').innerText = bikeName;
+            document.getElementById('reviewBikeId').value = bikeId;
+            document.getElementById('reviewForm').action = `/review/${bookingId}`;
+            openModal('reviewModal');
         }
 
-        // --- 5. PREMIUM PDF GENERATOR ---
-        function generateBusinessInvoice(bike, price, date) {
+        // Receipt Handling
+        function handleReceiptAction(status, bike, price, date) {
+            if (status !== 'completed') { openModal('infoModal'); return; }
+            
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            const accent = [255, 107, 107]; 
-            const dark = [30, 30, 47];
-
-            // Header Bar
-            doc.setFillColor(...dark);
-            doc.rect(0, 0, 210, 50, 'F');
+            doc.setFillColor(30, 30, 47); doc.rect(0, 0, 210, 45, 'F');
+            doc.setTextColor(255, 255, 255); doc.setFontSize(26); doc.setFont("helvetica", "bold");
+            doc.text("BikeRental", 15, 25);
+            doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.text("OFFICIAL RIDE INVOICE", 15, 33);
+            doc.setFontSize(20); doc.text("INVOICE", 160, 28);
             
-            // Branding
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(35);
-            doc.setFont("helvetica", "bold");
-            doc.text("BikeRental", 15, 28);
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
-            doc.text("OFFICIAL DIGITAL TAX INVOICE | JABALPUR HUB", 15, 36);
-            doc.setFontSize(24);
-            doc.text("INVOICE", 155, 30);
-            
-            // Customer & Date
-            doc.setTextColor(40, 40, 40);
-            doc.setFontSize(11);
-            doc.setFont("helvetica", "bold");
-            doc.text("BILLED TO:", 15, 65);
-            doc.setFont("helvetica", "normal");
-            doc.text("Registered Premium User", 15, 71);
+            doc.setTextColor(40, 40, 40); doc.setFontSize(11); doc.setFont("helvetica", "bold");
+            doc.text("BILLED TO: Registered Rider", 15, 60);
             
             const invID = "INV-" + Math.floor(Math.random() * 900000 + 100000);
-            doc.setFont("helvetica", "bold");
-            doc.text("INVOICE NO:", 135, 65);
-            doc.text("DATE:", 135, 71);
-            doc.setFont("helvetica", "normal");
-            doc.text(invID, 165, 65);
-            doc.text(date, 165, 71);
+            doc.text("INVOICE NO:", 140, 60); doc.setFont("helvetica", "normal"); doc.text(invID, 170, 60);
+            doc.setFont("helvetica", "bold"); doc.text("DATE:", 140, 66); doc.setFont("helvetica", "normal"); doc.text(date, 170, 66);
 
-            // Table Header
-            doc.setFillColor(245, 247, 254);
-            doc.rect(15, 90, 180, 12, 'F');
-            doc.setFont("helvetica", "bold");
-            doc.text("SERVICE DESCRIPTION", 20, 98);
-            doc.text("AMOUNT (INR)", 160, 98);
+            doc.setFillColor(245, 247, 254); doc.rect(15, 85, 180, 10, 'F');
+            doc.setFont("helvetica", "bold"); doc.text("DESCRIPTION", 20, 92); doc.text("AMOUNT", 165, 92);
+            
+            doc.setFont("helvetica", "normal"); doc.text(`Motorcycle Rental - ${bike}`, 20, 105); doc.text(`Rs. ${price}.00`, 165, 105);
+            doc.line(15, 115, 195, 115);
+            
+            doc.setFontSize(14); doc.setFont("helvetica", "bold"); doc.text("GRAND TOTAL", 110, 135);
+            doc.setTextColor(255, 107, 107); doc.text(`INR ${price}.00`, 160, 135);
 
-            // Row Data
-            doc.setFont("helvetica", "normal");
-            doc.text(`Premium Motorcycle Rental - ${bike}`, 20, 112);
-            doc.text(`Rs. ${price}.00`, 165, 112);
-            doc.line(15, 120, 195, 120);
+            doc.setDrawColor(255, 107, 107); doc.setLineWidth(0.5); doc.roundedRect(160, 145, 30, 12, 2, 2, 'S');
+            doc.setFontSize(12); doc.text("PAID", 170, 153);
 
-            // Grand Total Section
-            doc.setFontSize(15);
-            doc.setFont("helvetica", "bold");
-            doc.text("GRAND TOTAL", 115, 135);
-            doc.setTextColor(...accent);
-            doc.text(`INR ${price}.00`, 165, 135);
+            doc.setTextColor(150, 150, 150); doc.setFontSize(8); doc.setFont("helvetica", "italic");
+            doc.text("Computer generated document. Ride safe!", 105, 280, {align: "center"});
 
-            // PAID STAMP (Professional rounded design)
-            doc.setDrawColor(...accent);
-            doc.setLineWidth(1);
-            doc.roundedRect(155, 150, 35, 15, 3, 3, 'S');
-            doc.setFontSize(14);
-            doc.text("PAID", 166, 160);
-
-            // Footer / Legal
-            doc.setDrawColor(220, 220, 220);
-            doc.line(15, 275, 195, 275);
-            doc.setTextColor(150, 150, 150);
-            doc.setFontSize(8);
-            doc.text("This is a system-generated document. No physical signature required for GST validity.", 105, 282, {align: "center"});
-            doc.text("Thank you for riding with BikeRental! Always wear a helmet.", 105, 287, {align: "center"});
-
-            doc.save(`BikeRental_${invID}.pdf`);
+            doc.save(`${invID}_Receipt.pdf`);
         }
     </script>
 </body>

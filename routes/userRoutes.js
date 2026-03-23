@@ -22,4 +22,6 @@ router.post("/user/cancel-booking/:id", ensureUser, userController.cancelBooking
 // Ab ye kar do (Consistency ke liye /user/ jodo aur ensureUser middleware bhi lagao):
 router.post("/user/cancel-booking/:id", ensureUser, userController.cancelBooking);
 
+router.post('/review/:bookingId', ensureUser, userController.submitReview);
+
 module.exports = router;
