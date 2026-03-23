@@ -1,5 +1,7 @@
 const Bike = require("../models/Bike");
 const Booking = require("../models/Booking");
+const Coupon = require("../models/Coupon");
+
 
 // ---------------------------------------------------------
 // Home Page: List all bikes with ADVANCED FILTERS & AUTO-availability
@@ -113,4 +115,82 @@ exports.details = async (req, res) => {
     console.error("Details Page Error:", err);
     res.redirect("/");
   }
+};
+
+
+exports.validateCoupon = async (req, res) => {
+    try {
+        const { code, totalAmount } = req.body;
+        const user = req.session.user;
+
+        // 1. Coupon dhoondo
+        const coupon = await Coupon.findOne({ code: code.toUpperCase(), isActive: true });
+
+        if (!coupon) {
+            return res.json({ success: false, message: "Invalid Coupon Code!" });
+        }
+
+        // 2. Expiry check
+        if (new Date() > coupon.expiryDate) {
+            return res.json({ success: false, message: "This coupon has expired!" });
+        }
+
+        // 3. First-time user check
+        if (coupon.isFirstTimeOnly && !user.isFirstTimeUser) {
+            return res.json({ success: false, message: "This is for new users only!" });
+        }
+
+        // 4. Min amount check (Optionally)
+        if (totalAmount < coupon.minBookingAmount) {
+            return res.json({ success: false, message: `Min amount should be ₹${coupon.minBookingAmount}` });
+        }
+
+        // 5. Discount calculate karo
+        let discount = 0;
+        if (coupon.discountType === "percentage") {
+            discount = (totalAmount * coupon.discountValue) / 100;
+        } else {
+            discount = coupon.discountValue;
+        }
+
+        res.json({ 
+            success: true, 
+            discount: discount, 
+            finalPrice: totalAmount - discount,
+            message: "Coupon Applied Successfully!" 
+        });
+
+    } catch (err) {
+        res.json({ success: false, message: "Server Error!" });
+    }
+};
+
+
+
+// bikeController.js ke andar exports.details function dhoondo
+exports.details = async (req, res) => {
+    try {
+        const bikeId = req.params.id;
+        const bike = await Bike.findById(bikeId).populate('reviews.user');
+        
+        if (!bike) {
+            return res.redirect("/");
+        }
+
+        // --- NAYA: Dynamic Coupons Fetch Karo (Varna page crash hoga) ---
+        const activeCoupons = await Coupon.find({ 
+            expiryDate: { $gt: new Date() } 
+        });
+
+        // --- UPDATE: res.render mein 'coupons' pass karo ---
+        res.render("bikeDetails", { 
+            bike: bike, 
+            coupons: activeCoupons, // Yeh line missing thi, isliye error aa rahi thi
+            user: req.session.user || null 
+        });
+
+    } catch (err) {
+        console.error("Bike Details Error:", err);
+        res.redirect("/");
+    }
 };

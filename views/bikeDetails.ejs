@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= bike.name %> - Premium Ride | BikeRental</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
@@ -19,6 +19,7 @@
             --text-main: #2d3436;
             --text-muted: #636e72;
             --warning: #f1c40f;
+            --success: #00b894;
             --shadow: 0 10px 30px rgba(0,0,0,0.08);
             --shadow-sm: 0 5px 15px rgba(0,0,0,0.05);
         }
@@ -55,6 +56,30 @@
         .mobile-overlay.active { right: 0; }
         .mobile-overlay a { color: #fff; text-decoration: none; font-size: 1.4rem; font-weight: 600; }
         .close-menu { position: absolute; top: 25px; right: 25px; color: #fff; font-size: 2rem; cursor: pointer; }
+
+        /* ----------------------- NEW: WELCOME POPUP STYLES ----------------------- */
+        .welcome-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center;
+            z-index: 9999; backdrop-filter: blur(8px);
+        }
+        .modal-content {
+            background: #fff; padding: 40px; border-radius: 35px; text-align: center;
+            max-width: 450px; width: 90%; position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalPop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-content i.fa-gift { font-size: 5rem; color: var(--primary); margin-bottom: 20px; display: block; filter: drop-shadow(0 10px 20px rgba(255,107,107,0.3)); }
+        .modal-content h3 { font-size: 1.8rem; font-weight: 800; color: var(--secondary); margin-bottom: 10px; }
+        .modal-content p { color: var(--text-muted); line-height: 1.6; margin-bottom: 30px; font-size: 1rem; }
+        .btn-claim {
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: #fff; border: none; padding: 15px 40px; border-radius: 15px;
+            font-weight: 700; cursor: pointer; width: 100%; font-size: 1.1rem;
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3); transition: 0.3s;
+        }
+        .btn-claim:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(255, 107, 107, 0.4); }
 
         /* ----------------------- 3. LAYOUT GRID ----------------------- */
         .container {
@@ -114,6 +139,10 @@
         .desc-text { color: var(--text-muted); line-height: 1.7; margin-bottom: 30px; font-size: 0.95rem; }
 
         .booking-form-box { background: #f8fafc; padding: 20px; border-radius: 20px; border: 1.5px solid #e2e8f0; }
+        
+        /* Welcome Offer Badge */
+        .welcome-auto-badge { background: #e6fcf5; color: #0ca678; padding: 12px; border-radius: 12px; border: 1px solid #c3fae8; margin-bottom: 20px; font-size: 0.85rem; font-weight: 600; display: none; border-left: 5px solid #0ca678; }
+
         .input-wrap { margin-bottom: 15px; }
         .input-wrap label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--secondary); margin-bottom: 8px; text-transform: uppercase; }
         .input-wrap input {
@@ -121,6 +150,13 @@
             font-size: 1rem; outline: none; transition: 0.3s;
         }
         .input-wrap input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1); }
+
+        /* --- COUPON STYLING --- */
+        .coupon-box { margin-top: 15px; display: flex; gap: 10px; }
+        .coupon-input { flex: 1; padding: 10px 15px; border: 2px dashed #cbd5e0; border-radius: 10px; font-weight: 600; text-transform: uppercase; outline: none; background: #fff; }
+        .coupon-input:focus { border-color: var(--primary); }
+        .btn-coupon { padding: 10px 20px; background: var(--secondary); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
+        .coupon-msg { font-size: 0.8rem; margin-top: 8px; font-weight: 600; display: none; }
 
         .price-summary {
             background: var(--secondary); color: #fff; padding: 20px; border-radius: 15px;
@@ -152,7 +188,6 @@
         .review-scroll-container::-webkit-scrollbar { width: 8px; }
         .review-scroll-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
         .review-scroll-container::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
-        .review-scroll-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         .review-grid { display: flex; flex-direction: column; gap: 20px; }
         
@@ -160,18 +195,11 @@
             background: var(--card-bg); padding: 25px; border-radius: 20px;
             box-shadow: var(--shadow-sm); border: 1px solid #edf2f7; transition: 0.3s;
         }
-        .review-card:hover { border-color: var(--primary); }
         .review-stars { color: var(--warning); margin-bottom: 12px; font-size: 1.1rem; }
         .review-text { color: var(--text-muted); font-size: 0.95rem; font-style: italic; line-height: 1.6; margin-bottom: 20px; }
         
-        /* Updated Review Author Styling */
-        .review-author {
-            display: flex; align-items: center; gap: 15px; border-top: 1px solid #f1f5f9; padding-top: 15px;
-        }
-        .user-avatar {
-            width: 45px; height: 45px; border-radius: 50%; background: var(--secondary); color: #fff;
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 700;
-        }
+        .review-author { display: flex; align-items: center; gap: 15px; border-top: 1px solid #f1f5f9; padding-top: 15px; }
+        .user-avatar { width: 45px; height: 45px; border-radius: 50%; background: var(--secondary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 700; }
         .user-details { display: flex; flex-direction: column; }
         .user-name { font-weight: 800; color: var(--secondary); font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
         .user-time { color: #94a3b8; font-size: 0.8rem; font-weight: 500; margin-top: 2px; }
@@ -180,11 +208,8 @@
         footer { background: var(--secondary); color: #fff; padding: 60px 6% 30px; margin-top: auto; border-top: 5px solid var(--primary); }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 40px; }
         .footer-brand h3 { color: var(--primary); font-size: 1.6rem; font-weight: 700; margin-bottom: 15px; }
-        .footer-brand p { color: #b2bec3; font-size: 0.95rem; line-height: 1.6; }
-        .footer-links h4 { color: #fff; margin-bottom: 15px; font-size: 1.1rem; }
         .footer-links ul { list-style: none; }
         .footer-links a { color: #b2bec3; text-decoration: none; display: block; margin-bottom: 10px; font-size: 0.9rem; }
-        .footer-links a:hover { color: var(--primary); }
         .footer-form input, .footer-form textarea { width: 100%; padding: 10px; border-radius: 8px; border: none; background: #2d2d44; color: #fff; margin-bottom: 8px; }
         .footer-form button { width: 100%; padding: 10px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
         .copyright { text-align: center; padding-top: 30px; margin-top: 40px; border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.8rem; }
@@ -200,12 +225,19 @@
             .navbar { padding: 15px 5%; }
             .nav-links { display: none; }
             .menu-btn { display: block; }
-            .reviews-header { flex-direction: column; align-items: flex-start; }
-            .review-scroll-container { max-height: 350px; }
         }
     </style>
 </head>
 <body>
+
+    <div id="welcomeModal" class="welcome-modal">
+        <div class="modal-content">
+            <i class="fas fa-gift"></i>
+            <h3>Surprise Gift! 🎁</h3>
+            <p>Bhai, aapki pehli ride hai! Isliye BikeRental ki taraf se aapko <b>₹100 OFF</b> mil raha hai. Ye discount aapke bill mein automatically apply ho jayega!</p>
+            <button class="btn-claim" onclick="closeModal()">Maza Aa Gaya!</button>
+        </div>
+    </div>
 
     <header class="navbar">
         <a href="/" class="brand">Bike<span>Rental</span></a>
@@ -278,6 +310,11 @@
                     <% if (user && user.role === 'user') { %>
                         <div class="booking-form-box">
                             <form action="/user/book/<%= bike._id %>" method="POST" id="bookingForm">
+                                
+                                <div id="welcomeOfferIndicator" class="welcome-auto-badge">
+                                    <i class="fas fa-sparkles"></i> <b>Welcome Offer Applied!</b> ₹100 Deducted from your first ride.
+                                </div>
+
                                 <div class="input-wrap">
                                     <label><i class="far fa-calendar-alt"></i> Pick-up Date & Time</label>
                                     <input type="datetime-local" name="pickupDateTime" id="pickupDate" required>
@@ -288,22 +325,42 @@
                                     <input type="datetime-local" name="returnDateTime" id="returnDate" required>
                                 </div>
 
+                                <div id="couponSection" style="display: none;">
+                                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--secondary); text-transform: uppercase;">Apply Manual Coupon</label>
+                                    <div class="coupon-box">
+                                        <input type="text" id="couponCode" class="coupon-input" placeholder="e.g. SUMMER20">
+                                        <button type="button" id="btnApplyCoupon" class="btn-coupon">Apply</button>
+                                    </div>
+                                    <div id="couponMsg" class="coupon-msg"></div>
+                                </div>
+
                                 <div class="price-summary" id="priceSummary">
                                     <div class="summary-line">
                                         <span>Duration:</span>
                                         <span id="displayDays">0 Days</span>
                                     </div>
+
+                                    <div class="summary-line" id="welcomeDiscountLine" style="display: none; color: #0ca678; font-weight: 700;">
+                                        <span>Welcome Discount:</span><span>- ₹ 100</span>
+                                    </div>
+
+                                    <div class="summary-line" id="discountLine" style="display: none; color: var(--success); font-weight: 700;">
+                                        <span>Coupon Savings:</span>
+                                        <span id="displayDiscount">- ₹ 0</span>
+                                    </div>
                                     <div class="summary-line total-line">
-                                        <span>Total Estimate:</span>
+                                        <span>Amount to Pay:</span>
                                         <span id="displayTotal">₹ 0</span>
                                     </div>
                                 </div>
+
+                                <input type="hidden" name="appliedCoupon" id="hiddenCouponCode">
 
                                 <button class="btn-submit" type="submit">Reserve This Ride</button>
                             </form>
                         </div>
                     <% } else { %>
-                        <div style="background: #fff5f5; padding: 25px; border-radius: 20px; border: 1.5px solid #feb2b2; text-align: center;">
+                        <div style="background: #fff5f5; padding: 25px; border-radius: 20px; border: 1px solid #feb2b2; text-align: center;">
                             <p style="color: #c53030; font-weight: 700; margin-bottom: 10px;">Ready to ride?</p>
                             <a href="/login" style="color: var(--primary); font-weight: 800; text-decoration: underline;">Login to complete booking</a>
                         </div>
@@ -312,13 +369,45 @@
             </div>
         </div>
 
+        <% if (coupons && coupons.length > 0) { %>
+        <section class="container" style="margin-bottom: 40px; margin-top: 50px;">
+            <h3 style="margin-bottom: 15px; color: var(--secondary); font-weight: 800;">
+                <i class="fas fa-fire" style="color: #e67e22;"></i> Exclusive Offers for You
+            </h3>
+            <div style="display: flex; gap: 15px; overflow-x: auto; padding: 10px 5px; scrollbar-width: none;">
+                <% coupons.forEach(coupon => { %>
+                    <div style="min-width: 280px; background: #fff; padding: 20px; border-radius: 20px; border: 2px dashed var(--primary); position: relative; overflow: hidden; box-shadow: var(--shadow-sm);">
+                        <div style="position: absolute; left: -15px; top: 50%; width: 30px; height: 30px; background: var(--bg-body); border-radius: 50%; transform: translateY(-50%); border-right: 2px dashed var(--primary);"></div>
+                        <div style="position: absolute; right: -15px; top: 50%; width: 30px; height: 30px; background: var(--bg-body); border-radius: 50%; transform: translateY(-50%); border-left: 2px dashed var(--primary);"></div>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                            <i class="fas fa-ticket-alt" style="color: var(--primary); font-size: 1.2rem;"></i>
+                            <span style="font-weight: 800; font-size: 1.1rem; color: var(--secondary);">
+                                <%= coupon.discountType === 'percentage' ? coupon.discountValue + '%' : '₹' + coupon.discountValue %> OFF
+                            </span>
+                        </div>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;">
+                            <%= coupon.isFirstTimeOnly ? 'Valid on your first ride only' : 'Valid on all rentals' %>
+                        </p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="background: #f4f7fe; padding: 5px 12px; border-radius: 8px; font-family: monospace; font-weight: 800; color: var(--primary); border: 1px solid #e2e8f0; letter-spacing: 1px;">
+                                <%= coupon.code %>
+                            </div>
+                            <button onclick="copyCode('<%= coupon.code %>')" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.9rem;" title="Copy Code">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
+        <% } %>
+
         <div class="reviews-section">
             <div class="reviews-header">
                 <div>
                     <h3>Rider Reviews</h3>
                     <p style="color: var(--text-muted); font-size: 0.95rem;">See what others are saying about this bike.</p>
                 </div>
-                
                 <div class="rating-badge">
                     <i class="fas fa-star"></i> 
                     <%= bike.averageRating ? bike.averageRating : '0.0' %> 
@@ -335,29 +424,15 @@
                             <div class="review-card">
                                 <div class="review-stars">
                                     <% for(let i=1; i<=5; i++) { %>
-                                        <% if(i <= review.rating) { %>
-                                            <i class="fas fa-star"></i>
-                                        <% } else { %>
-                                            <i class="far fa-star"></i>
-                                        <% } %>
+                                        <i class="<%= i <= review.rating ? 'fas' : 'far' %> fa-star"></i>
                                     <% } %>
                                 </div>
-                                
                                 <p class="review-text">"<%= review.comment %>"</p>
-                                
                                 <div class="review-author">
-                                    <div class="user-avatar">
-                                        <%= review.user && review.user.name ? review.user.name.charAt(0).toUpperCase() : 'V' %>
-                                    </div>
+                                    <div class="user-avatar"><%= review.user && review.user.name ? review.user.name.charAt(0).toUpperCase() : 'V' %></div>
                                     <div class="user-details">
-                                        <span class="user-name">
-                                            <%= review.user && review.user.name ? review.user.name : 'Verified Rider' %>
-                                            <i class="fas fa-check-circle" style="color: var(--success); font-size: 0.85rem;"></i>
-                                        </span>
-                                        <span class="user-time">
-                                            <i class="far fa-clock" style="margin-right: 4px;"></i>
-                                            <%= new Date(review.createdAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }) %>
-                                        </span>
+                                        <span class="user-name"><%= review.user ? review.user.name : 'Verified Rider' %> <i class="fas fa-check-circle" style="color: var(--success); font-size: 0.85rem;"></i></span>
+                                        <span class="user-time"><%= new Date(review.createdAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
                                     </div>
                                 </div>
                             </div>
@@ -367,8 +442,8 @@
             <% } else { %>
                 <div style="text-align: center; padding: 50px 20px; background: #fff; border-radius: 20px; border: 2px dashed #edf2f7;">
                     <i class="fas fa-comment-slash fa-3x" style="color: #cbd5e0; margin-bottom: 15px;"></i>
-                    <h4 style="color: var(--secondary); font-weight: 700; font-size: 1.3rem;">No Reviews Yet</h4>
-                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 5px;">Be the first one to ride and rate this bike!</p>
+                    <h4 style="color: var(--secondary); font-weight: 700;">No Reviews Yet</h4>
+                    <p style="color: var(--text-muted);">Be the first one to ride and rate this bike!</p>
                 </div>
             <% } %>
         </div>
@@ -378,29 +453,19 @@
         <div class="footer-grid">
             <div class="footer-brand">
                 <h3>BikeRental</h3>
-                <p>Providing the best rental experience with high-quality bikes and 24/7 support. Join our community of riders today.</p>
-                <div style="display: flex; gap: 15px; margin-top: 20px;">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-x-twitter"></i></a>
-                </div>
+                <p>Providing the best rental experience with high-quality bikes and 24/7 support.</p>
             </div>
-
             <div class="footer-links">
                 <h4>Explore</h4>
                 <ul>
                     <li><a href="/">Browse Fleet</a></li>
-                    <li><a href="/user/dashboard">Booking Status</a></li>
                     <li><a href="/login">User Access</a></li>
                 </ul>
             </div>
-
             <div class="footer-links">
                 <h4>Contact</h4>
-                <p style="color:#b2bec3; font-size:0.9rem; margin-bottom:10px;"><i class="fas fa-envelope" style="color:var(--primary);"></i> support@bikerental.com</p>
-                <p style="color:#b2bec3; font-size:0.9rem;"><i class="fas fa-phone" style="color:var(--primary);"></i> +91 98765 43210</p>
+                <p style="color:#b2bec3; font-size:0.9rem;"><i class="fas fa-envelope" style="color:var(--primary);"></i> support@bikerental.com</p>
             </div>
-
             <div class="footer-form">
                 <h4>Feedback</h4>
                 <form action="/feedback" method="POST">
@@ -411,23 +476,46 @@
             </div>
         </div>
         <div class="copyright">
-            <p>© <%= new Date().getFullYear() %> BikeRental System | Premium Mobility Solution | Developed by Aniket Kumar Gupta</p>
+            <p>© <%= new Date().getFullYear() %> BikeRental System | Developed by Aniket Kumar Gupta</p>
         </div>
     </footer>
 
     <script>
-        function toggleMenu() {
-            document.getElementById("mobileNav").classList.toggle("active");
+        function toggleMenu() { document.getElementById("mobileNav").classList.toggle("active"); }
+        function closeModal() { document.getElementById("welcomeModal").style.display = "none"; }
+        function copyCode(code) {
+            navigator.clipboard.writeText(code);
+            alert("Code " + code + " copied! Use it at checkout.");
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             const pickupInput = document.getElementById('pickupDate');
             const returnInput = document.getElementById('returnDate');
             const priceSummary = document.getElementById('priceSummary');
-            const displayDays = document.getElementById('displayDays');
-            const displayTotal = document.getElementById('displayTotal');
+            const couponSection = document.getElementById('couponSection');
             
+            const displayTotal = document.getElementById('displayTotal');
+            const discountLine = document.getElementById('discountLine');
+            const welcomeDiscountLine = document.getElementById('welcomeDiscountLine');
+            const welcomeAutoBadge = document.getElementById('welcomeOfferIndicator');
+            const displayDiscount = document.getElementById('displayDiscount');
+            
+            const btnApply = document.getElementById('btnApplyCoupon');
+            const couponInput = document.getElementById('couponCode');
+            const couponMsg = document.getElementById('couponMsg');
+
             const pricePerDay = Number('<%= bike.pricePerDay %>') || 0;
+            const isFirstTimeUser = <%= (user && user.isFirstTimeUser) ? 'true' : 'false' %>;
+
+            // --- NAYA: PAGE LOAD PAR TURANT POPUP DIKHAO ---
+            if(isFirstTimeUser) {
+                setTimeout(() => {
+                    document.getElementById('welcomeModal').style.display = 'flex';
+                }, 800); // 0.8s delay for a premium feel
+            }
+
+            let currentBaseTotal = 0;
+            let currentManualDiscount = 0;
 
             if(pickupInput && returnInput) {
                 const now = new Date();
@@ -441,21 +529,68 @@
                     if (pickupInput.value && returnInput.value && end > start) {
                         const diffInMs = Math.abs(end - start);
                         const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24)); 
-                        const total = diffInDays * pricePerDay;
+                        currentBaseTotal = diffInDays * pricePerDay;
 
-                        displayDays.innerText = `${diffInDays} Day(s)`;
-                        displayTotal.innerText = `₹ ${total}`;
+                        document.getElementById('displayDays').innerText = `${diffInDays} Day(s)`;
+                        updateFinalDisplay();
+                        
                         priceSummary.style.display = 'block';
+                        couponSection.style.display = 'block';
+
+                        if(isFirstTimeUser) {
+                            welcomeAutoBadge.style.display = 'block';
+                            welcomeDiscountLine.style.display = 'flex';
+                        }
                     } else {
                         priceSummary.style.display = 'none';
+                        couponSection.style.display = 'none';
                     }
                 }
 
-                pickupInput.addEventListener('change', () => {
-                    returnInput.min = pickupInput.value;
-                    calculatePrice();
-                });
+                function updateFinalDisplay() {
+                    let autoDiscount = isFirstTimeUser ? 100 : 0;
+                    let totalDeduction = autoDiscount + currentManualDiscount;
+                    const final = Math.max(0, currentBaseTotal - totalDeduction);
+                    
+                    if(currentManualDiscount > 0) {
+                        discountLine.style.display = 'flex';
+                        displayDiscount.innerText = `- ₹ ${currentManualDiscount}`;
+                    } else {
+                        discountLine.style.display = 'none';
+                    }
+                    displayTotal.innerText = `₹ ${final}`;
+                }
+
+                pickupInput.addEventListener('change', () => { returnInput.min = pickupInput.value; calculatePrice(); });
                 returnInput.addEventListener('change', calculatePrice);
+
+                btnApply.addEventListener('click', async () => {
+                    const code = couponInput.value.trim();
+                    if(!code) return;
+                    btnApply.innerText = "...";
+                    try {
+                        const response = await fetch('/api/validate-coupon', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ code: code, totalAmount: currentBaseTotal })
+                        });
+                        const data = await response.json();
+                        couponMsg.style.display = 'block';
+                        if(data.success) {
+                            currentManualDiscount = data.discount;
+                            couponMsg.innerText = "✅ Code Applied!";
+                            couponMsg.style.color = "var(--success)";
+                            document.getElementById('hiddenCouponCode').value = code;
+                            updateFinalDisplay();
+                        } else {
+                            couponMsg.innerText = "❌ " + data.message;
+                            couponMsg.style.color = "var(--danger)";
+                            currentManualDiscount = 0;
+                            updateFinalDisplay();
+                        }
+                    } catch (err) { console.error(err); }
+                    finally { btnApply.innerText = "Apply"; }
+                });
             }
         });
     </script>

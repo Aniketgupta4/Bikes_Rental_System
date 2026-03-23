@@ -42,4 +42,10 @@ router.post("/admin/delete-booking/:id", ensureAdmin, adminController.deleteBook
 // Analytics Page Route - AB YE SAHI CHALEGA!
 router.get("/admin/analytics", ensureAdmin, adminController.getAnalytics);
 
+router.get("/manage-coupons", ensureAdmin, adminController.manageCoupons);
+router.post("/add-coupon", ensureAdmin, adminController.addCoupon);
+// AJAX delete ke liye
+router.delete("/delete-coupon/:id", ensureAdmin, adminController.deleteCoupon);
+
+
 module.exports = router;

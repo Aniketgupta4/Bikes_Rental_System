@@ -6,7 +6,11 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   // Industry Requirement: Bike rental ke liye phone number compulsory hona chahiye
   phone: { type: String }, 
-  role: { type: String, enum: ["user", "admin"], default: "user" }
+  role: { type: String, enum: ["user", "admin"], default: "user" },
+  isFirstTimeUser: { 
+    type: Boolean, 
+    default: true 
+}
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", UserSchema);

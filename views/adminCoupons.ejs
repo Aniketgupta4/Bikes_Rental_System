@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon Center - Admin Control</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* ----------------------- 1. DESIGN SYSTEM ----------------------- */
+        :root {
+            --primary: #ff6b6b;
+            --primary-dark: #ee5253;
+            --secondary: #1e1e2f;
+            --bg-body: #f4f7fe;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --success: #00b894;
+            --warning: #f1c40f; 
+            --danger: #d63031;
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg-body); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* ----------------------- 2. NAVBAR ----------------------- */
+        .navbar {
+            background: var(--secondary); padding: 15px 6%;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .navbar .brand { font-size: 1.6rem; font-weight: 800; color: var(--primary); text-decoration: none; letter-spacing: 1px; }
+        .navbar .brand span { color: #fff; font-weight: 300; }
+        .nav-link { color: #fff; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
+        .nav-link:hover { color: var(--primary); }
+
+        /* ----------------------- 3. MAIN CONTENT ----------------------- */
+        .container { width: 92%; max-width: 1200px; margin: 40px auto; flex: 1; }
+
+        .page-header { margin-bottom: 30px; }
+        .page-header h2 { font-size: 1.8rem; font-weight: 800; color: var(--secondary); }
+        .page-header p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* FORM CARD */
+        .card {
+            background: var(--card-bg); border-radius: 20px; padding: 30px;
+            box-shadow: var(--shadow); border: 1px solid #edf2f7; margin-bottom: 40px;
+        }
+        .card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 25px; color: var(--secondary); display: flex; align-items: center; gap: 10px; }
+        .card h3 i { color: var(--primary); }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .form-control {
+            width: 100%; padding: 12px 15px; border-radius: 12px; border: 2px solid #e2e8f0;
+            font-size: 0.95rem; font-family: inherit; outline: none; transition: 0.3s; background: #f8fafc;
+        }
+        .form-control:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1); }
+
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 10px; cursor: pointer; width: fit-content; }
+        .checkbox-group input { width: 18px; height: 18px; accent-color: var(--primary); }
+        .checkbox-group span { font-size: 0.9rem; font-weight: 600; color: var(--secondary); }
+
+        .btn-save {
+            background: var(--primary); color: #fff; border: none; padding: 14px 30px; border-radius: 12px;
+            font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 25px; width: 100%; max-width: 200px;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.2);
+        }
+        .btn-save:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        /* TABLE SECTION */
+        .data-card { background: #fff; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid #edf2f7; }
+        table { width: 100%; border-collapse: collapse; }
+        table th { background: #f8fafc; padding: 18px 20px; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
+        table td { padding: 18px 20px; border-top: 1px solid #f1f5f9; font-size: 0.95rem; vertical-align: middle; }
+        table tr:hover { background: #fcfdfe; }
+
+        .coupon-tag { background: #f1f5f9; padding: 5px 12px; border-radius: 8px; font-weight: 700; color: var(--secondary); border: 1px solid #e2e8f0; font-size: 0.85rem; }
+        .discount-val { color: var(--success); font-weight: 800; font-size: 1.1rem; }
+        
+        .badge { padding: 5px 12px; border-radius: 30px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .badge-new { background: #e6fcf5; color: #0ca678; }
+        .badge-all { background: #e3f2fd; color: #1976d2; }
+
+        .btn-delete { color: var(--danger); background: #fff5f5; border: none; width: 35px; height: 35px; border-radius: 10px; cursor: pointer; transition: 0.3s; }
+        .btn-delete:hover { background: var(--danger); color: #fff; transform: scale(1.1); }
+
+        /* ----------------------- 4. NEW: ENTERPRISE FOOTER ----------------------- */
+        footer {
+            background: var(--secondary);
+            color: #fff;
+            padding: 70px 6% 30px;
+            margin-top: 80px;
+            border-top: 5px solid var(--primary);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .footer-col h3 { color: var(--primary); font-size: 1.8rem; font-weight: 800; margin-bottom: 20px; }
+        .footer-col h4 { color: var(--primary); font-size: 1.2rem; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-col p { color: #cbd5e0; line-height: 1.7; font-size: 0.95rem; margin-bottom: 20px; }
+
+        /* Social Icons */
+        .social-links { display: flex; gap: 15px; margin-top: 20px; }
+        .social-links a {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 8px; font-size: 1.1rem; transition: 0.3s;
+        }
+        .social-links a:hover { background: var(--primary); transform: translateY(-3px); }
+
+        /* Links List */
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 15px; }
+        .footer-links a { color: #cbd5e0; text-decoration: none; transition: 0.3s; font-size: 0.95rem; }
+        .footer-links a:hover { color: var(--primary); padding-left: 5px; }
+
+        /* Contact Items */
+        .contact-item { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; color: #cbd5e0; font-size: 0.95rem; }
+        .contact-item i { color: var(--primary); font-size: 1.1rem; }
+
+        /* Feedback Form In Footer */
+        .feedback-form input, .feedback-form textarea {
+            width: 100%;
+            padding: 12px;
+            background: #2d2d44;
+            border: 1px solid #3d3d5c;
+            border-radius: 8px;
+            color: #fff;
+            margin-bottom: 12px;
+            outline: none;
+            font-family: inherit;
+        }
+        .btn-submit-note {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-submit-note:hover { background: var(--primary-dark); }
+
+        /* Copyright Bar */
+        .copyright-bar {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 60px;
+            border-top: 1px solid #2d2d44;
+            color: #636e72;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 15px 5%; }
+            footer { padding: 50px 5% 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="/" class="brand">Bike<span>Rental</span></a>
+        <nav>
+            <a href="/admin/dashboard" class="nav-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Offers & Coupons</h2>
+            <p>Create and manage festive discounts or welcome offers for your riders.</p>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-magic"></i> Create New Coupon</h3>
+            <form action="/admin/add-coupon" method="POST">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Coupon Code</label>
+                        <input type="text" name="code" class="form-control" placeholder="e.g. SUMMER2026" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Discount Type</label>
+                        <select name="discountType" class="form-control">
+                            <option value="fixed">Fixed Amount (₹)</option>
+                            <option value="percentage">Percentage (%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Discount Value</label>
+                        <input type="number" name="discountValue" class="form-control" placeholder="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Expiry Date</label>
+                        <input type="date" name="expiryDate" class="form-control" required>
+                    </div>
+                </div>
+
+                <label class="checkbox-group" for="ft">
+                    <input type="checkbox" name="isFirstTimeOnly" id="ft"> 
+                    <span>Only for New User's First Ride</span>
+                </label>
+
+                <button type="submit" class="btn-save">Create Offer</button>
+            </form>
+        </div>
+
+        <div class="data-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Coupon Code</th>
+                        <th>Discount Value</th>
+                        <th>Valid Until</th>
+                        <th>Applicable To</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(typeof coupons !== 'undefined' && coupons.length > 0) { %>
+                        <% coupons.forEach(c => { %>
+                            <tr id="row-<%= c._id %>">
+                                <td data-label="Coupon Code"><span class="coupon-tag"># <%= c.code %></span></td>
+                                <td data-label="Discount Value" class="discount-val">
+                                    <%= c.discountType === 'fixed' ? '₹' : '' %><%= c.discountValue %><%= c.discountType === 'percentage' ? '%' : '' %>
+                                </td>
+                                <td data-label="Valid Until">
+                                    <%= new Date(c.expiryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                                </td>
+                                <td data-label="Applicable To">
+                                    <span class="badge <%= c.isFirstTimeOnly ? 'badge-new' : 'badge-all' %>">
+                                        <%= c.isFirstTimeOnly ? 'New Riders' : 'All Riders' %>
+                                    </span>
+                                </td>
+                                <td data-label="Action">
+                                    <button onclick="deleteCoupon('<%= c._id %>')" class="btn-delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+                                No active coupons found.
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>BikeRental</h3>
+                <p>Advanced fleet management and real-time booking automation system. Designed for high-performance rental businesses.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Admin Links</h4>
+                <ul class="footer-links">
+                    <li><a href="/admin/dashboard">Operations Dashboard</a></li>
+                    <li><a href="/admin/analytics">Revenue Analytics</a></li>
+                    <li><a href="/admin/manage-coupons">Coupon Center</a></li>
+                    <li><a href="/">Public Site Preview</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Emergency Support</h4>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>tech-support@bikerental.com</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>+91 98765 43210</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Jabalpur HQ, India</span>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>System Feedback</h4>
+                <form class="feedback-form" action="/admin/feedback" method="POST">
+                    <input type="text" name="adminName" placeholder="Admin Name" required>
+                    <textarea name="feedback" rows="2" placeholder="Log internal feedback or bugs..." required></textarea>
+                    <button type="submit" class="btn-submit-note">Submit Note</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="copyright-bar">
+            <p>© <%= new Date().getFullYear() %> BikeRental Enterprise Edition | Built with ❤️ by Aniket Kumar Gupta | SRIT Jabalpur</p>
+        </div>
+    </footer>
+    <script>
+        async function deleteCoupon(id) {
+            if(!confirm('Delete this coupon?')) return;
+            try {
+                const res = await fetch(`/admin/delete-coupon/${id}`, { method: 'DELETE' });
+                if(res.ok) {
+                    const row = document.getElementById(`row-${id}`);
+                    row.style.opacity = '0';
+                    setTimeout(() => row.remove(), 300);
+                }
+            } catch (err) { console.error(err); }
+        }
+        document.querySelector('input[type="date"]').min = new Date().toISOString().split("T")[0];
+    </script>
+</body>
+</html>

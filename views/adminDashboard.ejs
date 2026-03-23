@@ -121,6 +121,10 @@
     .btn-download { background: #fff; color: var(--secondary); border: 1.5px solid #cbd5e0; }
     .btn-download:hover { background: #f8fafc; border-color: var(--secondary); }
 
+    /* New Coupon Style Button */
+    .btn-coupon { background: #fff; color: var(--primary); border: 1.5px solid var(--primary); }
+    .btn-coupon:hover { background: var(--primary); color: #fff; }
+
     .btn-sm { padding: 7px 12px; border-radius: 8px; font-size: 0.75rem; }
     .btn-success { background: var(--success); color: #fff; }
     .btn-danger { background: var(--danger); color: #fff; }
@@ -162,75 +166,24 @@
     /* ---------------------------------------------------- */
     @media (max-width: 992px) {
       .data-card { background: transparent; box-shadow: none; border: none; padding: 0;}
-      
       table { border: 0; width: 100%; }
       table thead { display: none; }
       table, tbody, tr, td { display: block; width: 100%; }
-      
-      table tr { 
-        margin-bottom: 20px; background: #fff; border: 1px solid #edf2f7; 
-        border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 15px; 
-      }
-      
-      table td { 
-        text-align: right; 
-        padding: 12px 0 12px 40%; 
-        position: relative; 
-        border-bottom: 1px dashed #f1f5f9; 
-        min-height: unset; 
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        justify-content: center;
-      }
-      
+      table tr { margin-bottom: 20px; background: #fff; border: 1px solid #edf2f7; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 15px; }
+      table td { text-align: right; padding: 12px 0 12px 40%; position: relative; border-bottom: 1px dashed #f1f5f9; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; }
       table td:last-child { border-bottom: none; display: flex; justify-content: flex-end; padding-bottom: 0; margin-top: 10px; }
-      
-      table td::before {
-        content: attr(data-label); position: absolute; left: 0; top: 12px;
-        font-weight: 700; text-transform: uppercase; font-size: 0.75rem; 
-        color: var(--text-muted); text-align: left; width: 35%;
-      }
-
-      td[data-label="Customer"] > div, td[data-label="Schedule"] > div { 
-        text-align: right; width: 100%; display: flex; flex-direction: column; align-items: flex-end;
-      }
-
+      table td::before { content: attr(data-label); position: absolute; left: 0; top: 12px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; color: var(--text-muted); text-align: left; width: 35%; }
       .action-group { justify-content: flex-end; width: 100%; gap: 8px;}
-      .pagination { border-radius: 12px; border: 1px solid #edf2f7; }
-      form { margin: 0; }
     }
 
     @media (max-width: 768px) {
       header { padding: 10px 5%; }
       .menu-toggle { display: block; }
-      nav {
-        display: none; flex-direction: column; position: absolute; top: 60px; left: 0;
-        width: 100%; background: var(--secondary); padding: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); border-top: 1px solid #2d2d44;
-      }
+      nav { display: none; flex-direction: column; position: absolute; top: 60px; left: 0; width: 100%; background: var(--secondary); padding: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); border-top: 1px solid #2d2d44; }
       nav.active { display: flex; }
-      
       .section-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .section-header h2 { font-size: 1.3rem; }
-      .btn-add, .btn-download { width: 100%; justify-content: center; }
-
+      .btn-add, .btn-download, .btn-coupon { width: 100%; justify-content: center; }
       .stats-grid { grid-template-columns: 1fr; gap: 15px; }
-      .stat-card { border-right: none !important; border-bottom: 4px solid transparent; padding: 20px; }
-      .stat-card:last-child { border-bottom-color: var(--primary); }
-
-      /* FOOTER FIXES FOR MOBILE: Strictly Left Aligned */
-      .footer-container { grid-template-columns: 1fr; gap: 30px; text-align: left; }
-      .footer-container h3, .footer-container p, .footer-container li { text-align: left; }
-      .footer-contact p { justify-content: flex-start; text-align: left;}
-      .footer-section .social-icons { justify-content: flex-start; margin-top: 15px; }
-      .copyright { text-align: left; }
-    }
-
-    @media (max-width: 480px) {
-      table td { padding-left: 0; align-items: flex-start; text-align: left; padding-top: 30px;}
-      table td::before { top: 8px; width: 100%; }
-      td[data-label="Customer"] > div, td[data-label="Schedule"] > div { align-items: flex-start; text-align: left;}
-      .action-group { justify-content: flex-start; }
     }
   </style>
 </head>
@@ -242,6 +195,7 @@
     <nav id="navMenu">
       <a href="/">Home</a>
       <a href="/admin/dashboard" class="nav-active">Operations</a>
+      <a href="/admin/manage-coupons" style="border: 1px dashed var(--primary);"><i class="fas fa-ticket-alt"></i> Coupons</a>
       <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </nav>
   </header>
@@ -254,11 +208,11 @@
     </div>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <h2>Main Dashboard</h2>
-    <a href="/admin/analytics" style="background: var(--secondary); color: #fff; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: 600;">
-        <i class="fas fa-chart-bar"></i> View Full Analytics
-    </a>
-</div>
+      <h2>Main Dashboard</h2>
+      <a href="/admin/analytics" style="background: var(--secondary); color: #fff; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: 600;">
+          <i class="fas fa-chart-bar"></i> View Full Analytics
+      </a>
+    </div>
 
     <section class="stats-grid">
       <div class="stat-card">
@@ -282,6 +236,15 @@
           <p>New Inquiries</p>
         </div>
       </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #f3e5f5; color: #8e24aa;"><i class="fas fa-percent"></i></div>
+        <div class="stat-info">
+          <h3><%= typeof coupons !== 'undefined' ? coupons.length : 0 %></h3>
+          <p>Active Offers</p>
+        </div>
+      </div>
+
       <div class="stat-card" style="border-right: 5px solid var(--primary);">
         <div class="stat-icon" style="background: #fff5f5; color: #fa5252;"><i class="fas fa-hand-holding-dollar"></i></div>
         <div class="stat-info">
@@ -298,7 +261,10 @@
 
     <div class="section-header">
         <h2>Bike Inventory</h2>
-        <a class="btn btn-add" href="/admin/add-bike"><i class="fas fa-plus"></i> Add New Bike</a>
+        <div class="action-group">
+            <a class="btn btn-coupon" href="/admin/manage-coupons"><i class="fas fa-gift"></i> Festive Coupons</a>
+            <a class="btn btn-add" href="/admin/add-bike"><i class="fas fa-plus"></i> Add New Bike</a>
+        </div>
     </div>
 
     <div class="data-card">
@@ -466,7 +432,7 @@
         <ul>
           <li><a href="/admin/dashboard">Operations Dashboard</a></li>
           <li><a href="/admin/export-bookings">Revenue Analytics</a></li>
-          <li><a href="/admin/add-bike">Inventory Control</a></li>
+          <li><a href="/admin/manage-coupons">Coupon Center</a></li>
           <li><a href="/">Public Site Preview</a></li>
         </ul>
       </div>
@@ -494,9 +460,7 @@
   </footer>
   
   <script>
-    // ---------------------------------------------------------
     // 1. SMART SCROLL MEMORY LOGIC 
-    // ---------------------------------------------------------
     document.querySelectorAll('.save-scroll').forEach(link => {
         link.addEventListener('click', () => {
             localStorage.setItem('adminScrollPosition', window.scrollY);
@@ -525,9 +489,7 @@
         });
     });
 
-    // ---------------------------------------------------------
     // 2. MOBILE NAVBAR LOGIC
-    // ---------------------------------------------------------
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');
 
@@ -540,7 +502,6 @@
           icon.classList.replace('fa-times', 'fa-bars');
       }
     });
-
   </script>
 
 </body>

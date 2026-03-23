@@ -1,6 +1,7 @@
 const Bike = require("../models/Bike");
 const Booking = require("../models/Booking");
 const { Parser } = require("json2csv");
+const Coupon = require("../models/Coupon");
 
 // 1. Admin Dashboard - Statistics, Analytics & DUAL Pagination
 exports.dashboard = async (req, res) => {
@@ -323,5 +324,47 @@ exports.getAnalytics = async (req, res) => {
     } catch (err) {
         console.error(err);
         res.redirect("/admin/dashboard");
+    }
+};
+
+
+// 1. Get All Coupons (Dashboard pe dikhane ke liye)
+exports.manageCoupons = async (req, res) => {
+    try {
+        const coupons = await Coupon.find().sort({ createdAt: -1 });
+        res.render("adminCoupons", { coupons, user: req.session.user });
+    } catch (err) {
+        res.redirect("/admin/dashboard");
+    }
+};
+
+// 2. Create New Coupon Logic
+exports.addCoupon = async (req, res) => {
+    try {
+        const { code, discountType, discountValue, expiryDate, isFirstTimeOnly, minAmount } = req.body;
+        
+        await Coupon.create({
+            code,
+            discountType,
+            discountValue,
+            expiryDate,
+            minBookingAmount: minAmount || 0,
+            isFirstTimeOnly: isFirstTimeOnly === 'on' ? true : false
+        });
+
+        res.redirect("/admin/manage-coupons");
+    } catch (err) {
+        console.error("Coupon Error:", err);
+        res.redirect("/admin/dashboard");
+    }
+};
+
+// 3. Delete Coupon
+exports.deleteCoupon = async (req, res) => {
+    try {
+        await Coupon.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: "Deleted" });
+    } catch (err) {
+        res.status(500).send();
     }
 };

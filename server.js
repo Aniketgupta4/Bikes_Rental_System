@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session");
 const chatRoutes = require('./routes/chatRoutes');
+const adminRoutes = require("./routes/adminRoutes");
 
 const connectDB = require("./config/db");
 connectDB();
@@ -34,6 +35,7 @@ app.use("/", require("./routes/authRoutes"));     // login/signup/logout
 app.use("/", require("./routes/userRoutes"));     // user actions
 app.use("/", require("./routes/adminRoutes"));    // admin actions
 app.use(chatRoutes);
+app.use("/admin", adminRoutes);
 
 
 const PORT = process.env.PORT || 5000;

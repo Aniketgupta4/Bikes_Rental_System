@@ -1,12 +1,12 @@
 const Booking = require("../models/Booking");
 const Bike = require("../models/Bike");
+const Coupon = require("../models/Coupon");
+const User = require("../models/User");
 
-// 1. User Dashboard: Show personal booking history with PAGINATION
+// 1. User Dashboard (PAGINATION ke sath)
 exports.dashboard = async (req, res) => {
   try {
     const userId = req.session.user._id;
-
-    // --- PAGINATION LOGIC ---
     const page = parseInt(req.query.page) || 1; 
     const limit = 4; 
     const skip = (page - 1) * limit;
@@ -28,22 +28,17 @@ exports.dashboard = async (req, res) => {
     });
   } catch (err) {
     console.error("Dashboard Error:", err);
-    res.render("userDashboard", { 
-      requests: [], 
-      user: req.session.user || null,
-      currentPage: 1,
-      totalPages: 1 
-    });
+    res.render("userDashboard", { requests: [], user: req.session.user || null, currentPage: 1, totalPages: 1 });
   }
 };
 
-// 2. Industry Level Booking Logic
+// 2. Updated Booking Logic: AUTOMATIC WELCOME DISCOUNT + MANUAL COUPON
 exports.bookBike = async (req, res) => {
   try {
     const bike = await Bike.findById(req.params.id);
     if (!bike) return res.redirect("/");
 
-    const { pickupDateTime, returnDateTime } = req.body;
+    const { pickupDateTime, returnDateTime, appliedCoupon } = req.body;
     const start = new Date(pickupDateTime);
     const end = new Date(returnDateTime);
 
@@ -51,17 +46,59 @@ exports.bookBike = async (req, res) => {
       return res.redirect(`/bike/${bike._id}?error=invalid_dates`);
     }
 
+    // A. Base Price Calculation
     const diffInMs = Math.abs(end - start);
     const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24)); 
-    const totalPrice = diffInDays * bike.pricePerDay;
+    let baseTotal = diffInDays * bike.pricePerDay;
+    
+    let totalDiscount = 0;
 
+    // B. Fetch Latest User Data (Flag check karne ke liye)
+    const user = await User.findById(req.session.user._id);
+
+    // C. Logic 1: AUTOMATIC ₹100 WELCOME DISCOUNT
+    if (user.isFirstTimeUser) {
+      totalDiscount += 100;
+    }
+
+    // D. Logic 2: MANUAL COUPON DISCOUNT (Agar user ne dala ho)
+    if (appliedCoupon && appliedCoupon.trim() !== "") {
+      const coupon = await Coupon.findOne({ 
+        code: appliedCoupon.toUpperCase().trim(), 
+        isActive: true 
+      });
+
+      if (coupon) {
+        // Check expiry
+        if (new Date() <= coupon.expiryDate) {
+           let manualDisc = 0;
+           if (coupon.discountType === "percentage") {
+             manualDisc = (baseTotal * coupon.discountValue) / 100;
+           } else {
+             manualDisc = coupon.discountValue;
+           }
+           totalDiscount += manualDisc;
+        }
+      }
+    }
+
+    // E. Final Price calculation
+    const finalPrice = Math.max(0, baseTotal - totalDiscount);
+
+    // F. Create Booking
     await Booking.create({
-      user: req.session.user._id,
+      user: user._id,
       bike: bike._id,
       pickupDateTime: start,
       returnDateTime: end,
-      totalPrice
+      totalPrice: finalPrice
     });
+
+    // G. UPDATE USER FLAG: Discount use ho gaya, ab 'false' kar do
+    if (user.isFirstTimeUser) {
+      await User.findByIdAndUpdate(user._id, { isFirstTimeUser: false });
+      req.session.user.isFirstTimeUser = false; // Update session
+    }
 
     res.redirect("/user/dashboard");
   } catch (err) {
@@ -70,66 +107,46 @@ exports.bookBike = async (req, res) => {
   }
 };
 
-// 3. NAYA: User Side Cancellation Logic
+// 3. Cancellation Logic
 exports.cancelBooking = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
-    
-    // Security: Check if booking exists and belongs to the logged-in user
     if (!booking || booking.user.toString() !== req.session.user._id.toString()) {
       return res.redirect("/user/dashboard");
     }
-
-    // Logic: Only "pending" or "approved" rides can be cancelled. 
-    // "ongoing" rides can't be cancelled by user for security reasons.
     if (booking.status === "pending" || booking.status === "approved") {
       booking.status = "cancelled";
       await booking.save();
     }
-
     res.redirect("/user/dashboard");
   } catch (err) {
-    console.error("Cancel Error:", err);
     res.redirect("/user/dashboard");
   }
 };
 
-
-
+// 4. Review Logic
 exports.submitReview = async (req, res) => {
     try {
         const { rating, comment, bikeId } = req.body;
         const bookingId = req.params.bookingId;
         const userId = req.session.user._id;
 
-        // 1. Check if booking belongs to user and is completed
         const booking = await Booking.findOne({ _id: bookingId, user: userId, status: 'completed' });
-        
-        if (!booking) {
-            return res.status(400).send("Sirf completed rides par review diya ja sakta hai.");
-        }
-        if (booking.isReviewed) {
-            return res.status(400).send("Aap pehle hi is ride ka review de chuke hain.");
-        }
+        if (!booking || booking.isReviewed) return res.redirect('/user/dashboard');
 
-        // 2. Bike dhundo aur review push karo
         const bike = await Bike.findById(bikeId);
         bike.reviews.push({ user: userId, rating: Number(rating), comment });
 
-        // 3. Nayi Average Rating Calculate karo
         const totalReviews = bike.reviews.length;
         const sumRatings = bike.reviews.reduce((sum, rev) => sum + rev.rating, 0);
         bike.averageRating = (sumRatings / totalReviews).toFixed(1);
 
         await bike.save();
-
-        // 4. Booking ko 'Reviewed' mark kar do
         booking.isReviewed = true;
         await booking.save();
 
         res.redirect('/user/dashboard');
     } catch (err) {
-        console.error("Review Error:", err);
         res.redirect('/user/dashboard');
     }
 };

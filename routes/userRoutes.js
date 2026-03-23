@@ -3,6 +3,7 @@ const router = express.Router();
 const userCtrl = require("../controllers/userController");
 const { ensureUser } = require("../middleware/auth");
 const userController = require("../controllers/userController");
+const bikeController = require("../controllers/bikeController");
 
 // Dashboard & Profile
 router.get("/user/dashboard", ensureUser, userCtrl.dashboard);
@@ -23,5 +24,7 @@ router.post("/user/cancel-booking/:id", ensureUser, userController.cancelBooking
 router.post("/user/cancel-booking/:id", ensureUser, userController.cancelBooking);
 
 router.post('/review/:bookingId', ensureUser, userController.submitReview);
+
+router.post("/api/validate-coupon", bikeController.validateCoupon);
 
 module.exports = router;
