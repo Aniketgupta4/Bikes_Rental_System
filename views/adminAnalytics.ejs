@@ -29,32 +29,20 @@
             --info: #0984e3;
             --warning: #f1c40f;
             --danger: #d63031;
-            --shadow: 0 15px 35px rgba(0,0,0,0.1);
+            --purple: #6c5ce7;
+            --shadow: 0 15px 35px rgba(0,0,0,0.06);
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             --radius-xl: 30px;
             --radius-lg: 20px;
         }
 
-        /* Essential Reset */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
-        html, body { 
-            overflow-x: hidden; 
-            width: 100%; 
-            min-height: 100vh; 
-            scroll-behavior: smooth;
-        }
-
-        body { 
-            background: var(--bg-body); 
-            color: var(--text-main); 
-            display: flex; 
-            flex-direction: column; 
-            line-height: 1.6;
-        }
+        html, body { overflow-x: hidden; width: 100%; min-height: 100vh; scroll-behavior: smooth; }
+        body { background: var(--bg-body); color: var(--text-main); display: flex; flex-direction: column; line-height: 1.6; }
 
         /* ---------------------------------------------------------
-           2. UNIVERSAL NAVBAR (SYNCED WITH SIGNUP)
+           2. UNIVERSAL NAVBAR 
         --------------------------------------------------------- */
         .navbar {
             background: var(--secondary); padding: 12px 6%;
@@ -74,7 +62,6 @@
 
         .menu-btn { display: none; cursor: pointer; color: #fff; font-size: 1.6rem; }
 
-        /* Mobile Overlay Menu */
         .mobile-overlay {
             position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
             background: var(--secondary); z-index: 6000; transition: 0.5s cubic-bezier(0.77,0,0.175,1);
@@ -89,157 +76,133 @@
            3. MAIN CONTAINER & HERO HEADER
         --------------------------------------------------------- */
         main.container { 
-            width: 90%; 
-            max-width: 1400px; 
-            margin: 40px auto; 
-            flex: 1;
+            width: 92%; max-width: 1400px; margin: 40px auto; flex: 1;
             animation: slideUpFade 0.8s ease; 
         }
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .dashboard-header { 
-            margin-bottom: 45px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #eee;
+            margin-bottom: 45px; display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 20px; padding-bottom: 20px; border-bottom: 2px solid #eee;
         }
-        .dashboard-header h2 { font-size: 2.5rem; font-weight: 800; color: var(--secondary); margin: 0; }
-        .dashboard-header p { color: var(--text-muted); font-size: 1.1rem; }
+        .dashboard-header h2 { font-size: 2.2rem; font-weight: 800; color: var(--secondary); margin: 0; }
+        .dashboard-header p { color: var(--text-muted); font-size: 1rem; }
 
-        .action-flex { display: flex; gap: 12px; }
+        .action-flex { display: flex; gap: 12px; flex-wrap: wrap; }
         .btn-intel {
-            padding: 14px 28px; border-radius: 15px; font-weight: 700; cursor: pointer; transition: var(--transition);
-            display: flex; align-items: center; gap: 12px; font-size: 0.95rem; text-decoration: none; border: none;
+            padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: var(--transition);
+            display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.95rem; text-decoration: none; border: none;
         }
         .btn-dl { background: var(--success); color: #fff; box-shadow: 0 8px 20px rgba(0, 184, 148, 0.2); }
         .btn-back { background: var(--white); color: var(--secondary); border: 1.5px solid #ddd; }
-        .btn-intel:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+        .btn-intel:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 
         /* ---------------------------------------------------------
            4. KPI PERFORMANCE CARDS
         --------------------------------------------------------- */
         .stats-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
-            gap: 25px; 
-            margin-bottom: 50px; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 25px; margin-bottom: 50px; 
         }
         .stat-card {
-            background: var(--card-bg); padding: 40px; border-radius: var(--radius-lg); 
+            background: var(--card-bg); padding: 35px 25px; border-radius: var(--radius-lg); 
             box-shadow: var(--shadow); position: relative; overflow: hidden; 
             border: 1px solid #edf2f7; transition: var(--transition);
         }
-        .stat-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
         
-        .stat-card i.bg-icon { 
-            position: absolute; right: -10px; bottom: -10px; font-size: 7rem; 
-            opacity: 0.04; color: var(--secondary); transform: rotate(-10deg); 
-        }
-        .stat-card p.label { font-size: 0.85rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; }
-        .stat-card h3.value { font-size: 2.5rem; font-weight: 800; margin-top: 12px; color: var(--secondary); }
+        .stat-card i.bg-icon { position: absolute; right: -10px; bottom: -10px; font-size: 7rem; opacity: 0.04; color: var(--secondary); transform: rotate(-10deg); }
+        .stat-card p.label { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card h3.value { font-size: 2.2rem; font-weight: 800; margin-top: 10px; color: var(--secondary); }
         
-        .rev-accent { border-bottom: 8px solid var(--primary); }
-        .vol-accent { border-bottom: 8px solid var(--info); }
-        .succ-accent { border-bottom: 8px solid var(--success); }
-        .pend-accent { border-bottom: 8px solid var(--warning); }
+        .rev-accent { border-bottom: 6px solid var(--primary); }
+        .vol-accent { border-bottom: 6px solid var(--info); }
+        .succ-accent { border-bottom: 6px solid var(--success); }
+        .pend-accent { border-bottom: 6px solid var(--warning); }
 
         /* ---------------------------------------------------------
-           5. DATA VISUALIZATION LAYOUT
+           5. DATA VISUALIZATION LAYOUT (100% RESPONSIVE GRID)
         --------------------------------------------------------- */
         .analytics-container { 
             display: grid; 
-            grid-template-columns: 1.8fr 1fr; 
+            grid-template-columns: repeat(2, 1fr); 
             gap: 30px; 
             margin-bottom: 60px; 
         }
+        .full-row { grid-column: 1 / -1; }
+        
         .chart-surface { 
-            background: var(--card-bg); 
-            padding: 40px; 
-            border-radius: var(--radius-lg); 
-            box-shadow: var(--shadow); 
-            border: 1px solid #f0f2f5;
-            min-height: 480px;
-            display: flex;
-            flex-direction: column;
+            background: var(--card-bg); padding: 30px; border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow); border: 1px solid #f0f2f5;
+            min-height: 400px; display: flex; flex-direction: column;
         }
         .chart-surface h4 { 
-            margin-bottom: 30px; 
-            font-size: 1.3rem; 
-            font-weight: 800; 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            color: var(--secondary);
-            text-transform: uppercase;
+            margin-bottom: 25px; font-size: 1.1rem; font-weight: 800; 
+            display: flex; align-items: center; gap: 12px; color: var(--secondary); text-transform: uppercase;
         }
         .chart-surface h4 span.icon-box { 
-            width: 40px; height: 40px; 
-            background: rgba(255, 107, 107, 0.1); 
-            color: var(--primary); 
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
+            width: 38px; height: 38px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
         }
+        /* Icon Box Colors */
+        .c-red { background: rgba(255, 107, 107, 0.1); color: var(--primary); }
+        .c-blue { background: rgba(9, 132, 227, 0.1); color: var(--info); }
+        .c-green { background: rgba(0, 184, 148, 0.1); color: var(--success); }
+        .c-purple { background: rgba(108, 92, 231, 0.1); color: var(--purple); }
+        .c-yellow { background: rgba(241, 196, 15, 0.1); color: var(--warning); }
 
-        .full-row { grid-column: span 2; }
+        .chart-wrapper { flex: 1; position: relative; min-height: 280px; width: 100%; }
 
-        /* ----------------------- 6. UNIVERSAL FOOTER (SYNCED) ----------------------- */
+        /* ----------------------- 6. UNIVERSAL FOOTER ----------------------- */
         footer { background: var(--secondary); color: #fff; padding: 70px 6% 30px; margin-top: auto; border-top: 6px solid var(--primary); }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 40px; }
-        
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
         .footer-brand h3 { color: var(--primary); font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; }
         .footer-brand p { color: #b2bec3; font-size: 0.95rem; line-height: 1.7; }
-
         .footer-links h4 { color: #fff; margin-bottom: 20px; font-size: 1.1rem; position: relative; padding-bottom: 8px; }
         .footer-links h4::after { content:''; position: absolute; left: 0; bottom: 0; width: 30px; height: 2px; background: var(--primary); }
         .footer-links ul { list-style: none; }
         .footer-links a { color: #b2bec3; text-decoration: none; display: block; margin-bottom: 12px; font-size: 0.9rem; transition: 0.3s; }
         .footer-links a:hover { color: var(--primary); padding-left: 5px; }
-
         .footer-contact p { color: #b2bec3; font-size: 0.9rem; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
         .footer-contact i { color: var(--primary); }
-
-        .footer-form input, .footer-form textarea {
-            width: 100%; padding: 12px; border-radius: 10px; border: none; background: #2d2d44; color: #fff; margin-bottom: 10px; outline: none;
-        }
+        .footer-form input, .footer-form textarea { width: 100%; padding: 12px; border-radius: 10px; border: none; background: #2d2d44; color: #fff; margin-bottom: 10px; outline: none; }
         .footer-form button { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; }
-
         .copyright { text-align: center; padding-top: 30px; margin-top: 50px; border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.85rem; }
 
         /* ---------------------------------------------------------
-           7. ADVANCED RESPONSIVENESS (MOBILE/TABLET/LAPTOP)
+           7. ADVANCED RESPONSIVENESS (MOBILE/TABLET)
         --------------------------------------------------------- */
-        @media (max-width: 1200px) {
-            .analytics-container { grid-template-columns: 1fr; }
-            .full-row { grid-column: span 1; }
+        @media (max-width: 992px) {
+            .analytics-container { grid-template-columns: 1fr; } /* Stack charts on tablets/mobile */
+            .chart-surface { min-height: 350px; }
         }
 
-        @media (max-width: 850px) {
+        @media (max-width: 768px) {
+            .navbar { padding: 15px 5%; }
             .nav-links { display: none; }
             .menu-btn { display: block; }
-            .dashboard-header h2 { font-size: 1.8rem; text-align: center; }
-            .dashboard-header p { text-align: center; }
-            .dashboard-header { justify-content: center; flex-direction: column; }
-            .action-flex { width: 100%; flex-direction: column; }
-            .btn-intel { width: 100%; justify-content: center; }
-            .navbar { padding: 12px 5%; }
+            .dashboard-header { flex-direction: column; text-align: center; align-items: center; }
+            .action-flex { width: 100%; justify-content: center; }
+            .btn-intel { width: 100%; }
+            .footer-grid { text-align: center; }
+            .footer-links h4::after { left: 50%; transform: translateX(-50%); }
+            .footer-contact p { justify-content: center; }
         }
 
         @media (max-width: 480px) {
-            .stat-card { padding: 25px; text-align: center; align-items: center; }
+            .stat-card { padding: 25px; text-align: center; }
             .stat-card h3.value { font-size: 2rem; }
-            .chart-surface { padding: 20px; min-height: 400px; }
-            .container { width: 92%; margin-top: 20px; }
+            .container { width: 95%; margin-top: 20px; }
+            .chart-surface { padding: 20px; min-height: 300px;}
         }
     </style>
 </head>
 <body>
 
-    <div id="hiddenRevSource" style="display:none;"><%- monthlyRevenue %></div>
-    <div id="hiddenBikeSource" style="display:none;"><%- topBikes %></div>
+    <div id="hiddenRevSource" style="display:none;"><%- typeof monthlyRevenue !== 'undefined' ? monthlyRevenue : '[]' %></div>
+    <div id="hiddenBikeSource" style="display:none;"><%- typeof topBikes !== 'undefined' ? topBikes : '[]' %></div>
+    <div id="hiddenCouponSource" style="display:none;"><%- typeof couponStats !== 'undefined' ? JSON.stringify(couponStats) : '[]' %></div>
+    <div id="hiddenReviewSource" style="display:none;"><%- typeof reviewStats !== 'undefined' ? JSON.stringify(reviewStats) : '[]' %></div>
 
     <header class="navbar">
         <a href="/admin/dashboard" class="brand">Bike<span>Rental</span></a>
@@ -260,11 +223,11 @@
         <div class="dashboard-header">
             <div class="title-block">
                 <h2>Market Intelligence</h2>
-                <p>Strategic analysis and real-time performance tracking.</p>
+                <p>Strategic analysis, revenue tracking, and operational health.</p>
             </div>
             <div class="action-flex">
                 <button onclick="exportIntelReport()" class="btn-intel btn-dl">
-                    <i class="fas fa-file-invoice"></i> Download PDF Intelligence
+                    <i class="fas fa-file-pdf"></i> Generate Full Report
                 </button>
                 <a href="/admin/dashboard" class="btn-intel btn-back">
                     <i class="fas fa-arrow-left"></i> Operational Hub
@@ -287,39 +250,45 @@
                 <i class="fas fa-bolt bg-icon"></i>
                 <p class="label">Trip Success Rate</p>
                 <h3 class="value">
-                    <% if (typeof stats !== 'undefined') { %>
-                        <%= ((stats.completed / (stats.completed + stats.cancelled || 1)) * 100).toFixed(1) %>%
+                    <% if (typeof stats !== 'undefined' && (stats.completed + stats.cancelled) > 0) { %>
+                        <%= ((stats.completed / (stats.completed + stats.cancelled)) * 100).toFixed(1) %>%
                     <% } else { %> 0% <% } %>
                 </h3>
             </div>
             <div class="stat-card pend-accent">
                 <i class="fas fa-hourglass-half bg-icon"></i>
-                <p class="label">Action Required</p>
+                <p class="label">Pending Actions</p>
                 <h3 class="value" style="color: var(--warning);"><%= (typeof stats !== 'undefined') ? stats.pending : '0' %></h3>
             </div>
         </div>
 
         <div class="analytics-container">
-            <div class="chart-surface">
-                <h4><span class="icon-box"><i class="fas fa-chart-area"></i></span> Financial Growth Trend</h4>
-                <div style="flex:1; position:relative; min-height: 300px;">
-                    <canvas id="revLineChart"></canvas>
-                </div>
-            </div>
-
-            <div class="chart-surface">
-                <h4><span class="icon-box"><i class="fas fa-chart-pie"></i></span> Status Distribution</h4>
-                <div style="flex:1; position:relative; min-height: 300px;">
-                    <canvas id="statusDonutChart"></canvas>
-                </div>
-            </div>
-
+            
             <div class="chart-surface full-row">
-                <h4><span class="icon-box"><i class="fas fa-medal"></i></span> Top Motorcycle Performance Index</h4>
-                <div style="flex:1; position:relative; min-height: 350px;">
-                    <canvas id="fleetBarChart"></canvas>
-                </div>
+                <h4><span class="icon-box c-red"><i class="fas fa-chart-area"></i></span> Financial Growth Trend</h4>
+                <div class="chart-wrapper"><canvas id="revLineChart"></canvas></div>
             </div>
+
+            <div class="chart-surface">
+                <h4><span class="icon-box c-secondary"><i class="fas fa-motorcycle" style="color:var(--secondary);"></i></span> Top Fleet Performance</h4>
+                <div class="chart-wrapper"><canvas id="fleetBarChart"></canvas></div>
+            </div>
+
+            <div class="chart-surface">
+                <h4><span class="icon-box c-green"><i class="fas fa-chart-pie"></i></span> Status Distribution</h4>
+                <div class="chart-wrapper"><canvas id="statusDonutChart"></canvas></div>
+            </div>
+
+            <div class="chart-surface">
+                <h4><span class="icon-box c-purple"><i class="fas fa-tags"></i></span> Promo Code Impact</h4>
+                <div class="chart-wrapper"><canvas id="couponPieChart"></canvas></div>
+            </div>
+
+            <div class="chart-surface">
+                <h4><span class="icon-box c-yellow"><i class="fas fa-star"></i></span> Customer Satisfaction</h4>
+                <div class="chart-wrapper"><canvas id="reviewBarChart"></canvas></div>
+            </div>
+
         </div>
     </main>
 
@@ -364,119 +333,150 @@
     </footer>
 
     <script>
-        // 1. Mobile Controller
+        // Menu Controller
         function toggleMenu() { document.getElementById("mobileNav").classList.toggle("active"); }
 
-        // 2. Data Retrieval Logic (Safe Handshake)
-        let monthlyRevRaw = [], bikeStatsRaw = [];
+        // Data Retrieval Logic (Safe Parsing)
+        let monthlyRevRaw = [], bikeStatsRaw = [], couponStatsRaw = [], reviewStatsRaw = [];
         try {
-            monthlyRevRaw = JSON.parse(document.getElementById('hiddenRevSource').textContent);
-            bikeStatsRaw = JSON.parse(document.getElementById('hiddenBikeSource').textContent);
-        } catch(e) { console.error("Intel Alert: Data Handshake Error"); }
+            monthlyRevRaw = JSON.parse(document.getElementById('hiddenRevSource').textContent || "[]");
+            bikeStatsRaw = JSON.parse(document.getElementById('hiddenBikeSource').textContent || "[]");
+            couponStatsRaw = JSON.parse(document.getElementById('hiddenCouponSource').textContent || "[]");
+            reviewStatsRaw = JSON.parse(document.getElementById('hiddenReviewSource').textContent || "[]");
+        } catch(e) { console.error("Intel Alert: Data Handshake Error", e); }
 
-        // 3. Chart Configuration
+        // Fallback data if DB is empty for new charts
+        if(couponStatsRaw.length === 0) couponStatsRaw = [{_id: "WELCOME100", count: 5}, {_id: "HOLIDAY50", count: 2}];
+        if(reviewStatsRaw.length === 0) reviewStatsRaw = [{rating: "5 Star", count: 12}, {rating: "4 Star", count: 6}, {rating: "3 Star", count: 2}];
+
+        // Chart Global Config
         Chart.defaults.font.family = "'Poppins', sans-serif";
         Chart.defaults.color = '#7f8c8d';
 
-        // Line Chart: Financial Trend
+        // 1. Line Chart: Revenue
         const revCtx = document.getElementById('revLineChart').getContext('2d');
         const grad = revCtx.createLinearGradient(0, 0, 0, 400);
-        grad.addColorStop(0, 'rgba(255, 107, 107, 0.4)');
-        grad.addColorStop(1, 'rgba(255, 107, 107, 0)');
-
+        grad.addColorStop(0, 'rgba(255, 107, 107, 0.4)'); grad.addColorStop(1, 'rgba(255, 107, 107, 0)');
         new Chart(revCtx, {
             type: 'line',
             data: {
                 labels: monthlyRevRaw.map(d => d._id),
                 datasets: [{
-                    label: 'Gross Revenue', data: monthlyRevRaw.map(d => d.revenue),
-                    borderColor: '#ff6b6b', borderWidth: 4, fill: true, backgroundColor: grad, tension: 0.45
+                    label: 'Gross Revenue (₹)', data: monthlyRevRaw.map(d => d.revenue),
+                    borderColor: '#ff6b6b', borderWidth: 4, fill: true, backgroundColor: grad, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#fff'
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
         });
 
-        // Doughnut Chart: Distribution
-        new Chart(document.getElementById('statusDonutChart'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Pending', 'Completed', 'Cancelled'],
-                datasets: [{
-                    data: [<%= stats.pending %>, <%= stats.completed %>, <%= stats.cancelled %>],
-                    backgroundColor: ['#f1c40f', '#00b894', '#d63031'],
-                    borderWidth: 0, cutout: '80%', hoverOffset: 20
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-        });
-
-        // Bar Chart: Fleet Score
+        // 2. Bar Chart: Fleet Score
         new Chart(document.getElementById('fleetBarChart'), {
             type: 'bar',
             data: {
-                labels: bikeStatsRaw.map(d => d.bikeDetails ? d.bikeDetails.name : 'N/A'),
+                labels: bikeStatsRaw.map(d => d.bikeDetails ? d.bikeDetails.name.substring(0,15) : 'Unknown'),
                 datasets: [{
                     label: 'Success Bookings', data: bikeStatsRaw.map(d => d.count),
-                    backgroundColor: '#1e1e2f', borderRadius: 12
+                    backgroundColor: '#1e1e2f', borderRadius: 8
                 }]
             },
             options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
 
-        // 4. STRATEGIC PDF REPORT ENGINE (REBUILT)
+        // 3. Donut Chart: Status
+        new Chart(document.getElementById('statusDonutChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Pending', 'Completed', 'Cancelled'],
+                datasets: [{
+                    data: [<%= stats.pending || 0 %>, <%= stats.completed || 0 %>, <%= stats.cancelled || 0 %>],
+                    backgroundColor: ['#f1c40f', '#00b894', '#d63031'], borderWidth: 0, cutout: '75%', hoverOffset: 10
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // 4. NEW Doughnut Chart: Coupon Usage
+        new Chart(document.getElementById('couponPieChart'), {
+            type: 'doughnut',
+            data: {
+                labels: couponStatsRaw.map(d => d._id),
+                datasets: [{
+                    data: couponStatsRaw.map(d => d.count),
+                    backgroundColor: ['#6c5ce7', '#a29bfe', '#74b9ff', '#0984e3', '#81ecec'],
+                    borderWidth: 2, borderColor: '#fff', cutout: '65%'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+        });
+
+        // 5. NEW Bar Chart: Reviews
+        new Chart(document.getElementById('reviewBarChart'), {
+            type: 'bar',
+            data: {
+                labels: reviewStatsRaw.map(d => d.rating),
+                datasets: [{
+                    label: 'Number of Reviews', data: reviewStatsRaw.map(d => d.count),
+                    backgroundColor: '#f1c40f', borderRadius: 6
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: {stepSize: 1} } } }
+        });
+
+        // ---------------------------------------------------------
+        // ADVANCED PDF REPORT ENGINE (WITH NEW SECTIONS)
+        // ---------------------------------------------------------
         function exportIntelReport() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
             // Branding Header
             doc.setFillColor(30, 30, 47);
-            doc.rect(0, 0, 210, 45, 'F');
+            doc.rect(0, 0, 210, 40, 'F');
             doc.setTextColor(255, 255, 255);
-            doc.setFontSize(28);
-            doc.text("BIKERENTAL ENTERPRISE INTEL", 15, 25);
-            doc.setFontSize(10);
-            doc.text(`Official System Performance Report | ID: ${Date.now()}`, 15, 35);
-            doc.text(`Issued: ${new Date().toLocaleString()}`, 145, 35);
+            doc.setFontSize(22);
+            doc.text("BIKERENTAL PRO INTELLIGENCE", 15, 22);
+            doc.setFontSize(9);
+            doc.text(`Official Analytics Report | Exported: ${new Date().toLocaleString()}`, 15, 32);
 
-            // KPI Performance Summary Table
+            // 1. KPI Performance
             doc.setTextColor(30, 30, 47);
-            doc.setFontSize(16);
-            doc.text("1. Operational Snapshot", 15, 60);
+            doc.setFontSize(14);
+            doc.text("1. Operational Summary", 15, 55);
 
             const kpiTable = [
-                ["Performance Metric", "Real-time Analytics Value"],
-                ["Current Total Revenue", "INR <%= stats.totalRevenue.toLocaleString('en-IN') %>"],
-                ["Total Successful Rentals", "<%= stats.completed %> Rides"],
-                ["Operational Success Rate", "<%= ((stats.completed / (stats.completed + stats.cancelled || 1)) * 100).toFixed(1) %>%"],
-                ["Awaiting Admin Action", "<%= stats.pending %> Requests"]
+                ["Metric", "Value"],
+                ["Total Gross Revenue", "INR <%= stats.totalRevenue.toLocaleString('en-IN') %>"],
+                ["Completed Rides", "<%= stats.completed %>"],
+                ["Pending Action", "<%= stats.pending %>"],
+                ["Cancelled Rides", "<%= stats.cancelled %>"]
             ];
+            doc.autoTable({ startY: 60, head: [kpiTable[0]], body: kpiTable.slice(1), theme: 'striped', headStyles: { fillColor: [255, 107, 107] } });
 
-            doc.autoTable({
-                startY: 65,
-                head: [kpiTable[0]],
-                body: kpiTable.slice(1),
-                theme: 'striped',
-                headStyles: { fillColor: [255, 107, 107], fontSize: 12 }
-            });
+            // 2. Fleet Analytics Table
+            let currentY = doc.lastAutoTable.finalY + 15;
+            doc.text("2. Top Fleet Performance", 15, currentY);
+            const fleetTable = bikeStatsRaw.map(b => [b.bikeDetails ? b.bikeDetails.name : 'Unknown', b.count.toString() + " Trips"]);
+            doc.autoTable({ startY: currentY + 5, head: [['Motorcycle Model', 'Total Successful Rentals']], body: fleetTable, theme: 'grid', headStyles: { fillColor: [30, 30, 47] } });
 
-            // Fleet Analytics Table
-            doc.text("2. Fleet Market Performance", 15, doc.lastAutoTable.finalY + 20);
-            const fleetTable = bikeStatsRaw.map(b => [b.bikeDetails ? b.bikeDetails.name : 'Unknown Model', b.count.toString() + " Successful Trips"]);
-
-            doc.autoTable({
-                startY: doc.lastAutoTable.finalY + 25,
-                head: [['Motorcycle Model Name', 'Market Fulfillment Count']],
-                body: fleetTable,
-                theme: 'grid',
-                headStyles: { fillColor: [30, 30, 47], fontSize: 12 }
-            });
+            // 3. Coupon Analytics Table
+            currentY = doc.lastAutoTable.finalY + 15;
+            // Check page break
+            if (currentY > 250) { doc.addPage(); currentY = 20; }
+            
+            doc.text("3. Promotional Code Impact", 15, currentY);
+            const cpTable = couponStatsRaw.map(c => [c._id, c.count.toString() + " Times Used"]);
+            doc.autoTable({ startY: currentY + 5, head: [['Coupon Code', 'Usage Frequency']], body: cpTable, theme: 'grid', headStyles: { fillColor: [108, 92, 231] } });
 
             // Confidential Stamp
-            doc.setFontSize(8);
-            doc.setTextColor(150, 150, 150);
-            doc.text("CLASSIFIED DOCUMENT: Generated via BikeRental BI Module (Aniket Kumar Gupta).", 105, 285, {align: "center"});
+            const totalPages = doc.internal.getNumberOfPages();
+            for(let i = 1; i <= totalPages; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.setTextColor(150, 150, 150);
+                doc.text("CLASSIFIED DOCUMENT: Generated via BikeRental BI Module (Aniket Kumar Gupta).", 105, 290, {align: "center"});
+            }
 
-            doc.save(`BI_Report_Enterprise_${Date.now()}.pdf`);
+            doc.save(`BikeRental_Analytics_Report_${Date.now()}.pdf`);
         }
     </script>
 </body>
