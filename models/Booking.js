@@ -15,7 +15,8 @@ const BookingSchema = new mongoose.Schema({
     enum: ["pending", "approved", "ongoing", "completed", "rejected", 'cancelled'], 
     default: "pending" 
   },
-  isReviewed: { type: Boolean, default: false }
+  isReviewed: { type: Boolean, default: false },
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("Booking", BookingSchema);
