@@ -92,6 +92,11 @@
         #toast-container.show { bottom: 30px; }
         #toast-container.error { background: var(--danger); box-shadow: 0 10px 30px rgba(214, 48, 49, 0.4); }
 
+        /* PAYMENT MODAL ANIMATIONS */
+        @keyframes modalBounce { from { transform: translateY(100px) scale(0.8); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+        .pay-spinner { width: 60px; height: 60px; border: 6px solid #f3f3f3; border-top: 6px solid #ff6b6b; border-radius: 50%; margin: 0 auto; animation: spinPay 1s linear infinite; }
+        @keyframes spinPay { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         /* ----------------------- 4. LAYOUT & VISUALS ----------------------- */
         .container { width: 90%; max-width: 1200px; margin: 30px auto; flex: 1; animation: fadeIn 0.6s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -175,20 +180,8 @@
         .user-time { color: #94a3b8; font-size: 0.8rem; font-weight: 500; margin-top: 2px; }
 
         /* ----------------------- 8. NEW ENTERPRISE FOOTER ----------------------- */
-        footer {
-            background: var(--secondary);
-            color: #fff;
-            padding: 70px 6% 30px;
-            margin-top: 80px;
-            border-top: 5px solid var(--primary);
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        footer { background: var(--secondary); color: #fff; padding: 70px 6% 30px; margin-top: 80px; border-top: 5px solid var(--primary); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
         .footer-col h3 { color: var(--primary); font-size: 1.8rem; font-weight: 800; margin-bottom: 20px; }
         .footer-col h4 { color: #fff; font-size: 1.2rem; font-weight: 700; margin-bottom: 25px; position: relative; padding-bottom: 10px; }
         .footer-col h4::after { content: ''; position: absolute; left: 0; bottom: 0; width: 35px; height: 3px; background: var(--primary); border-radius: 10px; }
@@ -196,13 +189,7 @@
 
         /* Social Icons */
         .social-links { display: flex; gap: 15px; margin-top: 20px; }
-        .social-links a {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.1);
-            width: 40px; height: 40px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 8px; font-size: 1.1rem; transition: var(--transition);
-        }
+        .social-links a { color: #fff; background: rgba(255, 255, 255, 0.1); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 1.1rem; transition: var(--transition); }
         .social-links a:hover { background: var(--primary); transform: translateY(-3px); }
 
         /* Links List */
@@ -216,14 +203,8 @@
         .contact-item i { color: var(--primary); font-size: 1.1rem; }
 
         /* Feedback Form In Footer */
-        .feedback-form input, .feedback-form textarea {
-            width: 100%; padding: 12px; background: #2d2d44; border: 1px solid #3d3d5c;
-            border-radius: 8px; color: #fff; margin-bottom: 12px; outline: none; font-family: inherit;
-        }
-        .btn-submit-note {
-            width: 100%; padding: 12px; background: var(--primary); color: #fff;
-            border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: var(--transition);
-        }
+        .feedback-form input, .feedback-form textarea { width: 100%; padding: 12px; background: #2d2d44; border: 1px solid #3d3d5c; border-radius: 8px; color: #fff; margin-bottom: 12px; outline: none; font-family: inherit; }
+        .btn-submit-note { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: var(--transition); }
         .btn-submit-note:hover { background: var(--primary-dark); }
 
         /* Copyright Bar */
@@ -242,7 +223,6 @@
             .nav-links { display: none; }
             .menu-btn { display: block; }
             
-            /* Make layout stack properly on mobile */
             .container { width: 95%; margin: 20px auto; }
             .bike-details-grid { gap: 20px; }
             
@@ -254,7 +234,6 @@
             .info-card h2 { font-size: 1.6rem; }
             .price-row .amt { font-size: 1.5rem; }
             
-            /* Form adaptations */
             .booking-form-box { padding: 15px; }
             .coupon-box { flex-direction: column; }
             .btn-coupon { width: 100%; padding: 12px; }
@@ -262,7 +241,6 @@
             .reviews-header { flex-direction: column; align-items: flex-start; }
             .rating-badge { width: 100%; justify-content: center; }
             
-            /* Enterprise Footer adaptations */
             footer { padding: 50px 5% 30px; text-align: center; }
             .footer-col h4::after { left: 50%; transform: translateX(-50%); }
             .social-links { justify-content: center; }
@@ -287,6 +265,43 @@
     <div id="toast-container">
         <i id="toastIcon" class="fas fa-check-circle"></i>
         <span id="toastMsg">Notification</span>
+    </div>
+
+    <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 15, 26, 0.9); align-items: center; justify-content: center; z-index: 10000; backdrop-filter: blur(10px); padding: 20px;">
+        <div style="background: #ffffff; width: 100%; max-width: 420px; border-radius: 30px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.5); animation: modalBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+            <div style="background: #1e1e2f; padding: 25px; color: #fff; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h4 style="margin: 0; font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px;"><i class="fas fa-shield-alt" style="color: #00b894;"></i> Secure Checkout</h4>
+                    <p style="margin: 5px 0 0 0; font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">Enterprise Grade Gateway</p>
+                </div>
+                <i class="fas fa-times" onclick="closePayment()" style="cursor: pointer; opacity: 0.5; transition: 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5"></i>
+            </div>
+            <div id="paymentContent" style="padding: 30px;">
+                <div style="text-align: center; margin-bottom: 30px; background: #f8fafc; padding: 20px; border-radius: 20px; border: 1px solid #edf2f7;">
+                    <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Total Payable Amount</p>
+                    <h1 id="modalTotal" style="font-size: 3rem; font-weight: 800; color: #1e1e2f; margin: 0;">₹ 0</h1>
+                </div>
+                <div style="margin-bottom: 30px;">
+                    <p style="font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px;">Select Payment Method</p>
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #fff; border: 2px solid var(--primary); border-radius: 18px; margin-bottom: 12px; cursor: pointer; position: relative;">
+                        <div style="width: 45px; height: 45px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center;"><i class="fab fa-google-pay" style="font-size: 1.8rem; color: #5f6368;"></i></div>
+                        <div><p style="margin: 0; font-weight: 700; font-size: 0.95rem; color: #1e1e2f;">UPI / Google Pay</p><p style="margin: 0; font-size: 0.75rem; color: #00b894; font-weight: 600;">Verified & Fast</p></div>
+                        <i class="fas fa-check-circle" style="position: absolute; right: 15px; color: var(--primary); font-size: 1.2rem;"></i>
+                    </div>
+                </div>
+                <button onclick="startProcessing()" id="mainPayBtn" style="background: var(--primary); color: #fff; width: 100%; padding: 18px; border-radius: 18px; border: none; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(255,107,107,0.3);">Pay Securely Now</button>
+            </div>
+            <div id="paymentLoader" style="display: none; padding: 80px 40px; text-align: center;">
+                <div class="pay-spinner"></div>
+                <h3 style="color: #1e1e2f; font-weight: 700; margin-top: 25px;">Verifying with Bank...</h3>
+                <p style="color: #64748b; font-size: 0.9rem; margin-top: 10px;">Please do not close this window.</p>
+            </div>
+            <div id="paymentSuccess" style="display: none; padding: 80px 40px; text-align: center;">
+                <div style="width: 100px; height: 100px; background: #e6fcf5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;"><i class="fas fa-check-circle" style="font-size: 4rem; color: #00b894;"></i></div>
+                <h2 style="color: #1e1e2f; font-weight: 800; margin-bottom: 10px;">Payment Received!</h2>
+                <p style="color: #64748b;">Redirecting to your dashboard...</p>
+            </div>
+        </div>
     </div>
 
     <header class="navbar">
@@ -411,6 +426,27 @@
                             <a href="/login" style="color: var(--primary); font-weight: 800; text-decoration: underline;">Login to complete booking</a>
                         </div>
                     <% } %>
+
+                    <div style="margin-top: 30px; padding-top: 25px; border-top: 1.5px dashed #e2e8f0;">
+                        <p style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px;">Have questions? Contact Owner</p>
+                        
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                            <a href="https://wa.me/918770191425?text=Hi!%20I'm%20interested%20in%20renting%20the%20<%= encodeURIComponent(bike.name) %>." 
+                               target="_blank" 
+                               style="flex: 1; min-width: 140px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; background: #25D366; color: #fff; text-decoration: none; border-radius: 15px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.25); transition: all 0.3s ease;"
+                               onmouseover="this.style.transform='translateY(-3px)'"
+                               onmouseout="this.style.transform='translateY(0)'">
+                                <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> WhatsApp
+                            </a>
+
+                            <a href="tel:+918770191425" 
+                               style="flex: 1; min-width: 140px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; background: #0984e3; color: #fff; text-decoration: none; border-radius: 15px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 10px 20px rgba(9, 132, 227, 0.25); transition: all 0.3s ease;"
+                               onmouseover="this.style.transform='translateY(-3px)'"
+                               onmouseout="this.style.transform='translateY(0)'">
+                                <i class="fas fa-phone-alt" style="font-size: 1.1rem;"></i> Call Now
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -445,11 +481,6 @@
             </div>
         </section>
         <% } %>
-
-
-
-         
-<script src="/js/paymentHandler.js"></script>
 
         <div class="reviews-section">
             <div class="reviews-header">
@@ -497,7 +528,6 @@
             <% } %>
         </div>
     </main>
-
 
     <footer>
         <div class="footer-grid">
@@ -547,12 +577,13 @@
             <p>© <%= new Date().getFullYear() %> BikeRental System | Built with ❤️ by Aniket Kumar Gupta | SRIT Jabalpur</p>
         </div>
     </footer>
+
     <script>
         // Menu & Modals
         function toggleMenu() { document.getElementById("mobileNav").classList.toggle("active"); }
         function closeModal() { document.getElementById("welcomeModal").style.display = "none"; }
         
-        // Advanced Toast Notification (Replaces Browser Alert)
+        // Advanced Toast Notification
         function showToast(message, isError = false) {
             const toast = document.getElementById("toast-container");
             const icon = document.getElementById("toastIcon");
@@ -571,7 +602,7 @@
             setTimeout(() => { toast.classList.remove("show"); }, 3000);
         }
 
-        // Copy Code to Clipboard & Auto-fill
+        // Copy Code to Clipboard
         function copyCode(code) {
             navigator.clipboard.writeText(code).then(() => {
                 showToast(`Code ${code} copied! Use it above.`);
@@ -583,6 +614,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // --- 1. PRICING & COUPON LOGIC ---
             const pickupInput = document.getElementById('pickupDate');
             const returnInput = document.getElementById('returnDate');
             const priceSummary = document.getElementById('priceSummary');
@@ -602,7 +634,10 @@
 
             // Welcome Modal Trigger
             if(isFirstTimeUser) {
-                setTimeout(() => { document.getElementById('welcomeModal').style.display = 'flex'; }, 800); 
+                setTimeout(() => { 
+                    const wModal = document.getElementById('welcomeModal');
+                    if(wModal) wModal.style.display = 'flex'; 
+                }, 800); 
             }
 
             let currentBaseTotal = 0;
@@ -685,11 +720,63 @@
                     }
                 });
             }
+
+            // --- 2. INLINE PAYMENT MODAL LOGIC ---
+            const bookingForm = document.getElementById('bookingForm');
+            const paymentModal = document.getElementById('paymentModal');
+            const modalTotal = document.getElementById('modalTotal');
+            const paymentContent = document.getElementById('paymentContent');
+            const paymentLoader = document.getElementById('paymentLoader');
+            const paymentSuccess = document.getElementById('paymentSuccess');
+
+            if (bookingForm) {
+                bookingForm.addEventListener('submit', function (e) {
+                    e.preventDefault(); // Rok do form ko
+                    
+                    const finalPriceText = document.getElementById('displayTotal').innerText;
+                    
+                    // Safety Check: Date select nahi ki toh rok do
+                    if(finalPriceText === "₹ 0" || finalPriceText === "₹ NaN") {
+                        showToast("Please select valid dates first!", true);
+                        return;
+                    }
+
+                    if(modalTotal) modalTotal.innerText = finalPriceText;
+                    if(paymentModal) paymentModal.style.display = 'flex';
+                });
+            }
+
+            // Global Close Modal
+            window.closePayment = function() {
+                if(paymentModal) paymentModal.style.display = 'none';
+                if(paymentContent) paymentContent.style.display = 'block';
+                if(paymentLoader) paymentLoader.style.display = 'none';
+                if(paymentSuccess) paymentSuccess.style.display = 'none';
+            }
+
+            // Dummy Processing to Form Submission
+            window.startProcessing = function() {
+                if(paymentContent) paymentContent.style.display = 'none';
+                if(paymentLoader) paymentLoader.style.display = 'block';
+
+                setTimeout(() => {
+                    if(paymentLoader) paymentLoader.style.display = 'none';
+                    if(paymentSuccess) paymentSuccess.style.display = 'block';
+
+                    setTimeout(() => {
+                        if(bookingForm) bookingForm.submit(); 
+                    }, 1500);
+
+                }, 2500); 
+            }
+
+            // Modal ke bahar click karne par band karo
+            window.onclick = function(event) {
+                if (event.target == paymentModal) {
+                    closePayment();
+                }
+            }
         });
     </script>
-
-
-
-
 </body>
 </html>
