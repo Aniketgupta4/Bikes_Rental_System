@@ -30,9 +30,9 @@
         html, body { overflow-x: hidden; width: 100%; }
         body { background: var(--bg-body); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
 
-        /* ----------------------- 2. NAVBAR ----------------------- */
+        /* ----------------------- 2. UNIVERSAL NAVBAR ----------------------- */
         .navbar {
-            background: var(--secondary); padding: 15px 6%;
+            background: var(--secondary); padding: 12px 6%;
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
@@ -42,21 +42,22 @@
         .nav-links { display: flex; gap: 10px; align-items: center; }
         .nav-links a {
             color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 10px;
-            font-weight: 500; font-size: 0.9rem; transition: var(--transition);
+            font-weight: 500; font-size: 0.9rem; transition: 0.3s ease;
         }
         .nav-links a:hover { background: rgba(255, 107, 107, 0.1); color: var(--primary); }
         .nav-btn { background: var(--primary); color: #fff !important; }
-        .menu-btn { display: none; cursor: pointer; color: #fff; font-size: 1.6rem; }
+
+        .menu-btn { display: none; cursor: pointer; color: #fff; font-size: 1.6rem; padding: 5px; }
 
         /* Mobile Overlay */
         .mobile-overlay {
             position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
-            background: var(--secondary); z-index: 2500; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--secondary); z-index: 2500; transition: 0.4s ease;
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px;
         }
         .mobile-overlay.active { right: 0; }
-        .mobile-overlay a { color: #fff; text-decoration: none; font-size: 1.4rem; font-weight: 600; }
-        .close-menu { position: absolute; top: 25px; right: 25px; color: #fff; font-size: 2rem; cursor: pointer; }
+        .mobile-overlay a { color: #fff; text-decoration: none; font-size: 1.5rem; font-weight: 600; }
+        .close-menu { position: absolute; top: 25px; right: 25px; color: #fff; font-size: 2.2rem; cursor: pointer; }
 
         /* ----------------------- 3. MODALS & TOASTS ----------------------- */
         .welcome-modal {
@@ -91,11 +92,7 @@
         }
         #toast-container.show { bottom: 30px; }
         #toast-container.error { background: var(--danger); box-shadow: 0 10px 30px rgba(214, 48, 49, 0.4); }
-
-        /* PAYMENT MODAL ANIMATIONS */
-        @keyframes modalBounce { from { transform: translateY(100px) scale(0.8); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
-        .pay-spinner { width: 60px; height: 60px; border: 6px solid #f3f3f3; border-top: 6px solid #ff6b6b; border-radius: 50%; margin: 0 auto; animation: spinPay 1s linear infinite; }
-        @keyframes spinPay { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #toast-container.offer { background: var(--warning); color: #000; box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4); }
 
         /* ----------------------- 4. LAYOUT & VISUALS ----------------------- */
         .container { width: 90%; max-width: 1200px; margin: 30px auto; flex: 1; animation: fadeIn 0.6s ease-out; }
@@ -144,8 +141,17 @@
         .summary-line { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; opacity: 0.8; }
         .total-line { border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 10px; margin-top: 10px; font-weight: 700; color: var(--primary); font-size: 1.1rem; opacity: 1;}
 
+        /* RADIO BUTTONS STYLE */
+        .payment-options { background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #cbd5e0; margin-top: 15px; display: none;}
+        .payment-options label { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 600; color: var(--secondary); cursor: pointer; margin-bottom: 10px; padding: 10px; border-radius: 8px; border: 1px solid transparent; transition: 0.3s;}
+        .payment-options label:hover { background: #f1f5f9; }
+        .payment-options label.active-radio { border-color: var(--primary); background: rgba(255,107,107,0.05); }
+        .payment-options input[type="radio"] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
+
         .btn-submit { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--primary); color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 20px; transition: var(--transition); box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3); }
         .btn-submit:hover { background: var(--primary-dark); transform: translateY(-3px); }
+        .btn-pickup { background: var(--success); box-shadow: 0 8px 20px rgba(0, 184, 148, 0.3); }
+        .btn-pickup:hover { background: #00a082; }
 
         /* ----------------------- 6. COUPONS SLIDER ----------------------- */
         .coupons-container { margin-bottom: 40px; margin-top: 50px; }
@@ -179,79 +185,78 @@
         .user-name { font-weight: 800; color: var(--secondary); font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
         .user-time { color: #94a3b8; font-size: 0.8rem; font-weight: 500; margin-top: 2px; }
 
-        /* ----------------------- 8. NEW ENTERPRISE FOOTER ----------------------- */
-        footer { background: var(--secondary); color: #fff; padding: 70px 6% 30px; margin-top: 80px; border-top: 5px solid var(--primary); }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
-        .footer-col h3 { color: var(--primary); font-size: 1.8rem; font-weight: 800; margin-bottom: 20px; }
-        .footer-col h4 { color: #fff; font-size: 1.2rem; font-weight: 700; margin-bottom: 25px; position: relative; padding-bottom: 10px; }
-        .footer-col h4::after { content: ''; position: absolute; left: 0; bottom: 0; width: 35px; height: 3px; background: var(--primary); border-radius: 10px; }
-        .footer-col p { color: #cbd5e0; line-height: 1.7; font-size: 0.95rem; margin-bottom: 20px; }
-
-        /* Social Icons */
-        .social-links { display: flex; gap: 15px; margin-top: 20px; }
-        .social-links a { color: #fff; background: rgba(255, 255, 255, 0.1); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 1.1rem; transition: var(--transition); }
-        .social-links a:hover { background: var(--primary); transform: translateY(-3px); }
-
-        /* Links List */
-        .footer-links { list-style: none; }
-        .footer-links li { margin-bottom: 15px; }
-        .footer-links a { color: #cbd5e0; text-decoration: none; transition: var(--transition); font-size: 0.95rem; }
+        /* ----------------------- 8. UNIVERSAL FOOTER ----------------------- */
+        footer { background: var(--secondary); color: #fff; padding: 70px 6% 30px; margin-top: auto; border-top: 6px solid var(--primary); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
+        
+        .footer-brand h3 { color: var(--primary); font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; }
+        .footer-brand p { color: #b2bec3; font-size: 0.95rem; line-height: 1.7; }
+        .footer-links h4 { color: #fff; margin-bottom: 20px; font-size: 1.1rem; border-left: 3px solid var(--primary); padding-left: 10px; }
+        .footer-links ul { list-style: none; }
+        .footer-links a { color: #b2bec3; text-decoration: none; display: block; margin-bottom: 12px; font-size: 0.9rem; transition: 0.3s; }
         .footer-links a:hover { color: var(--primary); padding-left: 5px; }
 
-        /* Contact Items */
-        .contact-item { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; color: #cbd5e0; font-size: 0.95rem; }
-        .contact-item i { color: var(--primary); font-size: 1.1rem; }
+        .footer-form input, .footer-form textarea { width: 100%; padding: 12px; border-radius: 10px; border: none; background: #2d2d44; color: #fff; margin-bottom: 10px; outline: none; font-family: inherit;}
+        .footer-form button { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .footer-form button:hover { background: var(--primary-dark); }
 
-        /* Feedback Form In Footer */
-        .feedback-form input, .feedback-form textarea { width: 100%; padding: 12px; background: #2d2d44; border: 1px solid #3d3d5c; border-radius: 8px; color: #fff; margin-bottom: 12px; outline: none; font-family: inherit; }
-        .btn-submit-note { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: var(--transition); }
-        .btn-submit-note:hover { background: var(--primary-dark); }
+        .copyright { text-align: center; padding-top: 30px; margin-top: 50px; border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.85rem; }
 
-        /* Copyright Bar */
-        .copyright-bar { text-align: center; padding-top: 30px; margin-top: 60px; border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.85rem; }
-
-        /* ----------------------- 9. RESPONSIVENESS (MOBILE/TABLET) ----------------------- */
+        /* ----------------------- 9. RESPONSIVENESS ----------------------- */
         @media (min-width: 992px) {
             .bike-details-grid { grid-template-columns: 1.2fr 0.8fr; }
             .visual-side { position: sticky; top: 100px; height: fit-content; }
             .info-card { padding: 40px; }
             .info-card h2 { font-size: 2.5rem; }
         }
-        
-        @media (max-width: 768px) {
+        @media (max-width: 850px) { .nav-links { display: none; } .menu-btn { display: block; } }
+        @media (max-width: 600px) {
             .navbar { padding: 15px 5%; }
-            .nav-links { display: none; }
-            .menu-btn { display: block; }
-            
             .container { width: 95%; margin: 20px auto; }
             .bike-details-grid { gap: 20px; }
-            
             .image-card { border-radius: 15px; }
             .main-img { min-height: 200px; }
             .specs-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-            
             .info-card { padding: 20px; border-radius: 15px; }
             .info-card h2 { font-size: 1.6rem; }
             .price-row .amt { font-size: 1.5rem; }
-            
             .booking-form-box { padding: 15px; }
             .coupon-box { flex-direction: column; }
             .btn-coupon { width: 100%; padding: 12px; }
-            
             .reviews-header { flex-direction: column; align-items: flex-start; }
             .rating-badge { width: 100%; justify-content: center; }
-            
-            footer { padding: 50px 5% 30px; text-align: center; }
-            .footer-col h4::after { left: 50%; transform: translateX(-50%); }
-            .social-links { justify-content: center; }
-            .contact-item { justify-content: center; }
         }
-        @media (max-width: 480px) {
-            .specs-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 480px) { .specs-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
+
+    <header class="navbar">
+        <a href="/" class="brand">Bike<span>Rental</span></a>
+        <div class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <% if (typeof user === 'undefined' || !user) { %>
+                <a href="/login">Login</a>
+                <a href="/signup" class="nav-btn">Create Account</a>
+            <% } else { %>
+                <a href="<%= user.role === 'admin' ? '/admin/dashboard' : '/user/dashboard' %>">Dashboard</a>
+                <a href="/logout" class="nav-btn">Logout</a>
+            <% } %>
+        </nav>
+    </header>
+
+    <div class="mobile-overlay" id="mobileNav">
+        <div class="close-menu" onclick="toggleMenu()"><i class="fas fa-times"></i></div>
+        <a href="/">Home</a>
+        <% if (typeof user === 'undefined' || !user) { %>
+            <a href="/login">Login</a>
+            <a href="/signup">Signup</a>
+        <% } else { %>
+            <a href="<%= user.role === 'admin' ? '/admin/dashboard' : '/user/dashboard' %>">Dashboard</a>
+            <a href="/logout">Logout</a>
+        <% } %>
+    </div>
 
     <div id="welcomeModal" class="welcome-modal">
         <div class="modal-content">
@@ -265,70 +270,6 @@
     <div id="toast-container">
         <i id="toastIcon" class="fas fa-check-circle"></i>
         <span id="toastMsg">Notification</span>
-    </div>
-
-    <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 15, 26, 0.9); align-items: center; justify-content: center; z-index: 10000; backdrop-filter: blur(10px); padding: 20px;">
-        <div style="background: #ffffff; width: 100%; max-width: 420px; border-radius: 30px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.5); animation: modalBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-            <div style="background: #1e1e2f; padding: 25px; color: #fff; display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h4 style="margin: 0; font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px;"><i class="fas fa-shield-alt" style="color: #00b894;"></i> Secure Checkout</h4>
-                    <p style="margin: 5px 0 0 0; font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">Enterprise Grade Gateway</p>
-                </div>
-                <i class="fas fa-times" onclick="closePayment()" style="cursor: pointer; opacity: 0.5; transition: 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5"></i>
-            </div>
-            <div id="paymentContent" style="padding: 30px;">
-                <div style="text-align: center; margin-bottom: 30px; background: #f8fafc; padding: 20px; border-radius: 20px; border: 1px solid #edf2f7;">
-                    <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Total Payable Amount</p>
-                    <h1 id="modalTotal" style="font-size: 3rem; font-weight: 800; color: #1e1e2f; margin: 0;">₹ 0</h1>
-                </div>
-                <div style="margin-bottom: 30px;">
-                    <p style="font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px;">Select Payment Method</p>
-                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #fff; border: 2px solid var(--primary); border-radius: 18px; margin-bottom: 12px; cursor: pointer; position: relative;">
-                        <div style="width: 45px; height: 45px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center;"><i class="fab fa-google-pay" style="font-size: 1.8rem; color: #5f6368;"></i></div>
-                        <div><p style="margin: 0; font-weight: 700; font-size: 0.95rem; color: #1e1e2f;">UPI / Google Pay</p><p style="margin: 0; font-size: 0.75rem; color: #00b894; font-weight: 600;">Verified & Fast</p></div>
-                        <i class="fas fa-check-circle" style="position: absolute; right: 15px; color: var(--primary); font-size: 1.2rem;"></i>
-                    </div>
-                </div>
-                <button onclick="startProcessing()" id="mainPayBtn" style="background: var(--primary); color: #fff; width: 100%; padding: 18px; border-radius: 18px; border: none; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(255,107,107,0.3);">Pay Securely Now</button>
-            </div>
-            <div id="paymentLoader" style="display: none; padding: 80px 40px; text-align: center;">
-                <div class="pay-spinner"></div>
-                <h3 style="color: #1e1e2f; font-weight: 700; margin-top: 25px;">Verifying with Bank...</h3>
-                <p style="color: #64748b; font-size: 0.9rem; margin-top: 10px;">Please do not close this window.</p>
-            </div>
-            <div id="paymentSuccess" style="display: none; padding: 80px 40px; text-align: center;">
-                <div style="width: 100px; height: 100px; background: #e6fcf5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;"><i class="fas fa-check-circle" style="font-size: 4rem; color: #00b894;"></i></div>
-                <h2 style="color: #1e1e2f; font-weight: 800; margin-bottom: 10px;">Payment Received!</h2>
-                <p style="color: #64748b;">Redirecting to your dashboard...</p>
-            </div>
-        </div>
-    </div>
-
-    <header class="navbar">
-        <a href="/" class="brand">Bike<span>Rental</span></a>
-        <div class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
-        <nav class="nav-links">
-            <a href="/">Home</a>
-            <% if (user) { %>
-                <a href="/user/dashboard">Dashboard</a>
-                <a href="/logout" class="nav-btn">Logout</a>
-            <% } else { %>
-                <a href="/login">Login</a>
-                <a href="/signup" class="nav-btn">Signup</a>
-            <% } %>
-        </nav>
-    </header>
-
-    <div class="mobile-overlay" id="mobileNav">
-        <div class="close-menu" onclick="toggleMenu()"><i class="fas fa-times"></i></div>
-        <a href="/" onclick="toggleMenu()">Home</a>
-        <% if (user) { %>
-            <a href="/user/dashboard" onclick="toggleMenu()">Dashboard</a>
-            <a href="/logout" onclick="toggleMenu()">Logout</a>
-        <% } else { %>
-            <a href="/login" onclick="toggleMenu()">Login</a>
-            <a href="/signup" onclick="toggleMenu()">Signup</a>
-        <% } %>
     </div>
 
     <main class="container">
@@ -374,7 +315,7 @@
 
                     <% if (user && user.role === 'user') { %>
                         <div class="booking-form-box">
-                            <form action="/user/book/<%= bike._id %>" method="POST" id="bookingForm">
+                            <form id="bookingForm"> 
                                 
                                 <div id="welcomeOfferIndicator" class="welcome-auto-badge">
                                     <i class="fas fa-sparkles"></i> <b>Welcome Offer Applied!</b> ₹100 Deducted from your first ride.
@@ -416,8 +357,22 @@
                                     </div>
                                 </div>
 
+                                <div class="payment-options" id="paymentOptionsBox">
+                                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--secondary); text-transform: uppercase; margin-bottom: 5px;">Select Payment Method</label>
+                                    
+                                    <label class="active-radio" id="labelOnline">
+                                        <input type="radio" name="paymentMode" value="online" checked>
+                                        <i class="fas fa-credit-card" style="color: var(--primary);"></i> Pay Now (Online)
+                                    </label>
+                                    
+                                    <label id="labelPickup">
+                                        <input type="radio" name="paymentMode" value="pickup">
+                                        <i class="fas fa-store" style="color: var(--success);"></i> Pay at Pickup
+                                    </label>
+                                </div>
+
                                 <input type="hidden" name="appliedCoupon" id="hiddenCouponCode">
-                                <button class="btn-submit" type="submit">Reserve This Ride</button>
+                                <button class="btn-submit" type="submit" id="payNowBtn" style="display: none;">Pay with Razorpay</button>
                             </form>
                         </div>
                     <% } else { %>
@@ -429,20 +384,12 @@
 
                     <div style="margin-top: 30px; padding-top: 25px; border-top: 1.5px dashed #e2e8f0;">
                         <p style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px;">Have questions? Contact Owner</p>
-                        
                         <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                             <a href="https://wa.me/918770191425?text=Hi!%20I'm%20interested%20in%20renting%20the%20<%= encodeURIComponent(bike.name) %>." 
-                               target="_blank" 
-                               style="flex: 1; min-width: 140px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; background: #25D366; color: #fff; text-decoration: none; border-radius: 15px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.25); transition: all 0.3s ease;"
-                               onmouseover="this.style.transform='translateY(-3px)'"
-                               onmouseout="this.style.transform='translateY(0)'">
+                               target="_blank" style="flex: 1; min-width: 140px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; background: #25D366; color: #fff; text-decoration: none; border-radius: 15px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.25); transition: all 0.3s ease;">
                                 <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> WhatsApp
                             </a>
-
-                            <a href="tel:+918770191425" 
-                               style="flex: 1; min-width: 140px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; background: #0984e3; color: #fff; text-decoration: none; border-radius: 15px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 10px 20px rgba(9, 132, 227, 0.25); transition: all 0.3s ease;"
-                               onmouseover="this.style.transform='translateY(-3px)'"
-                               onmouseout="this.style.transform='translateY(0)'">
+                            <a href="tel:+918770191425" style="flex: 1; min-width: 140px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; background: #0984e3; color: #fff; text-decoration: none; border-radius: 15px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 10px 20px rgba(9, 132, 227, 0.25); transition: all 0.3s ease;">
                                 <i class="fas fa-phone-alt" style="font-size: 1.1rem;"></i> Call Now
                             </a>
                         </div>
@@ -472,9 +419,7 @@
                             <div style="background: #f4f7fe; padding: 5px 12px; border-radius: 8px; font-family: monospace; font-weight: 800; color: var(--primary); border: 1px solid #e2e8f0; letter-spacing: 1px;">
                                 <%= coupon.code %>
                             </div>
-                            <button type="button" onclick="copyCode('<%= coupon.code %>')" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem;" title="Copy Code">
-                                <i class="far fa-copy"></i>
-                            </button>
+                            <button type="button" onclick="copyCode('<%= coupon.code %>')" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem;" title="Copy Code"><i class="far fa-copy"></i></button>
                         </div>
                     </div>
                 <% }) %>
@@ -491,9 +436,7 @@
                 <div class="rating-badge">
                     <i class="fas fa-star"></i> 
                     <%= bike.averageRating ? bike.averageRating : '0.0' %> 
-                    <span style="font-size: 1rem; color: var(--text-muted); font-weight: 600;">
-                        (<%= bike.reviews ? bike.reviews.length : 0 %>)
-                    </span>
+                    <span style="font-size: 1rem; color: var(--text-muted); font-weight: 600;">(<%= bike.reviews ? bike.reviews.length : 0 %>)</span>
                 </div>
             </div>
 
@@ -502,11 +445,7 @@
                     <div class="review-grid">
                         <% bike.reviews.reverse().forEach(review => { %> 
                             <div class="review-card">
-                                <div class="review-stars">
-                                    <% for(let i=1; i<=5; i++) { %>
-                                        <i class="<%= i <= review.rating ? 'fas' : 'far' %> fa-star"></i>
-                                    <% } %>
-                                </div>
+                                <div class="review-stars"><% for(let i=1; i<=5; i++) { %><i class="<%= i <= review.rating ? 'fas' : 'far' %> fa-star"></i><% } %></div>
                                 <p class="review-text">"<%= review.comment %>"</p>
                                 <div class="review-author">
                                     <div class="user-avatar"><%= review.user && review.user.name ? review.user.name.charAt(0).toUpperCase() : 'V' %></div>
@@ -531,95 +470,65 @@
 
     <footer>
         <div class="footer-grid">
-            <div class="footer-col">
+            <div class="footer-brand">
                 <h3>BikeRental</h3>
-                <p>Providing premium urban mobility solutions since 2026. Safe, reliable, and performance-driven bikes for every journey.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-x-twitter"></i></a>
+                <p>Providing the most reliable bike rental experience since 2026. Safe, fast, and high-performance rides for every urban explorer.</p>
+                <div style="display: flex; gap: 15px; margin-top: 25px;">
+                    <a href="#" style="font-size: 1.2rem; color: var(--primary);"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" style="font-size: 1.2rem; color: var(--primary);"><i class="fab fa-instagram"></i></a>
+                    <a href="#" style="font-size: 1.2rem; color: var(--primary);"><i class="fab fa-x-twitter"></i></a>
                 </div>
             </div>
-
-            <div class="footer-col">
-                <h4>Navigation</h4>
-                <ul class="footer-links">
-                    <li><a href="/">Browse Fleet</a></li>
-                    <li><a href="/user/dashboard">Ride History</a></li>
-                    <li><a href="#">Join Community</a></li>
-                    <li><a href="#">Security Policy</a></li>
-                </ul>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <ul><li><a href="/">Browse Fleet</a></li><li><a href="/signup">Join as Partner</a></li><li><a href="#">Privacy Policy</a></li></ul>
             </div>
-
-            <div class="footer-col">
-                <h4>Support Hub</h4>
-                <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>support@bikerental.com</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Civil Lines, Jabalpur, MP</span>
-                </div>
+            <div class="footer-links">
+                <h4>Contact Info</h4>
+                <p style="color:#b2bec3; font-size:0.9rem; margin-bottom:12px;"><i class="fas fa-envelope" style="color:var(--primary); margin-right:10px;"></i> support@bikerental.com</p>
+                <p style="color:#b2bec3; font-size:0.9rem;"><i class="fas fa-location-dot" style="color:var(--primary); margin-right:10px;"></i> Civil Lines, Jabalpur, MP</p>
             </div>
-
-            <div class="footer-col">
-                <h4>Direct Feedback</h4>
-                <form class="feedback-form" action="/feedback" method="POST">
+            <div class="footer-form">
+                <h4>Support Chat</h4>
+                <form action="/feedback" method="POST">
                     <input type="text" name="name" placeholder="Your Name" required>
-                    <textarea name="message" rows="2" placeholder="Your message..." required></textarea>
-                    <button type="submit" class="btn-submit-note">Send Message</button>
+                    <textarea name="message" placeholder="How can we help?" rows="2" required></textarea>
+                    <button type="submit">Submit Request</button>
                 </form>
             </div>
         </div>
-
-        <div class="copyright-bar">
-            <p>© <%= new Date().getFullYear() %> BikeRental System | Built with ❤️ by Aniket Kumar Gupta | SRIT Jabalpur</p>
-        </div>
+        <div class="copyright"><p>© <%= new Date().getFullYear() %> BikeRental System | Premium Mobility Solution | Developed by Aniket Kumar Gupta</p></div>
     </footer>
 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <script>
-        // Menu & Modals
         function toggleMenu() { document.getElementById("mobileNav").classList.toggle("active"); }
         function closeModal() { document.getElementById("welcomeModal").style.display = "none"; }
         
-        // Advanced Toast Notification
         function showToast(message, isError = false) {
             const toast = document.getElementById("toast-container");
             const icon = document.getElementById("toastIcon");
-            
             document.getElementById("toastMsg").innerText = message;
-            
-            if(isError) {
-                toast.classList.add("error");
-                icon.className = "fas fa-times-circle";
-            } else {
-                toast.classList.remove("error");
-                icon.className = "fas fa-check-circle";
-            }
-            
-            toast.classList.add("show");
-            setTimeout(() => { toast.classList.remove("show"); }, 3000);
+            toast.className = "show"; 
+            if(isError) { toast.classList.add("error"); icon.className = "fas fa-times-circle"; } 
+            else { icon.className = "fas fa-check-circle"; }
+            setTimeout(() => { toast.classList.remove("show"); }, 4000);
         }
 
-        // Copy Code to Clipboard
         function copyCode(code) {
             navigator.clipboard.writeText(code).then(() => {
                 showToast(`Code ${code} copied! Use it above.`);
                 const input = document.getElementById('couponCode');
                 if(input) { input.value = code; input.focus(); }
-            }).catch(() => {
-                showToast("Failed to copy code.", true);
-            });
+            }).catch(() => { showToast("Failed to copy code.", true); });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // --- 1. PRICING & COUPON LOGIC ---
             const pickupInput = document.getElementById('pickupDate');
             const returnInput = document.getElementById('returnDate');
             const priceSummary = document.getElementById('priceSummary');
             const couponSection = document.getElementById('couponSection');
-            
             const displayTotal = document.getElementById('displayTotal');
             const discountLine = document.getElementById('discountLine');
             const welcomeDiscountLine = document.getElementById('welcomeDiscountLine');
@@ -628,20 +537,39 @@
             
             const btnApply = document.getElementById('btnApplyCoupon');
             const couponInput = document.getElementById('couponCode');
+            const paymentOptionsBox = document.getElementById('paymentOptionsBox');
+            const payNowBtn = document.getElementById('payNowBtn');
+
+            const radios = document.querySelectorAll('input[name="paymentMode"]');
+            const labelOnline = document.getElementById('labelOnline');
+            const labelPickup = document.getElementById('labelPickup');
 
             const pricePerDay = Number('<%= bike.pricePerDay %>') || 0;
             const isFirstTimeUser = <%= (user && user.isFirstTimeUser) ? 'true' : 'false' %>;
 
-            // Welcome Modal Trigger
-            if(isFirstTimeUser) {
-                setTimeout(() => { 
-                    const wModal = document.getElementById('welcomeModal');
-                    if(wModal) wModal.style.display = 'flex'; 
-                }, 800); 
-            }
+            if(isFirstTimeUser) { setTimeout(() => { const wModal = document.getElementById('welcomeModal'); if(wModal) wModal.style.display = 'flex'; }, 800); }
 
             let currentBaseTotal = 0;
             let currentManualDiscount = 0;
+            let finalCalculatedPrice = 0; 
+
+            // Handle Radio Button UI Changes
+            radios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    labelOnline.classList.remove('active-radio');
+                    labelPickup.classList.remove('active-radio');
+                    
+                    if(e.target.value === 'online') {
+                        labelOnline.classList.add('active-radio');
+                        payNowBtn.innerText = "Pay with Razorpay";
+                        payNowBtn.className = "btn-submit";
+                    } else {
+                        labelPickup.classList.add('active-radio');
+                        payNowBtn.innerText = "Confirm Booking (Pay at Counter)";
+                        payNowBtn.className = "btn-submit btn-pickup";
+                    }
+                });
+            });
 
             if(pickupInput && returnInput) {
                 const now = new Date();
@@ -662,6 +590,8 @@
                         
                         priceSummary.style.display = 'block';
                         couponSection.style.display = 'block';
+                        paymentOptionsBox.style.display = 'block';
+                        payNowBtn.style.display = 'block';
 
                         if(isFirstTimeUser && welcomeAutoBadge && welcomeDiscountLine) {
                             welcomeAutoBadge.style.display = 'block';
@@ -670,21 +600,21 @@
                     } else {
                         priceSummary.style.display = 'none';
                         couponSection.style.display = 'none';
+                        paymentOptionsBox.style.display = 'none';
+                        payNowBtn.style.display = 'none';
                     }
                 }
 
                 function updateFinalDisplay() {
                     let autoDiscount = isFirstTimeUser ? 100 : 0;
                     let totalDeduction = autoDiscount + currentManualDiscount;
-                    const final = Math.max(0, currentBaseTotal - totalDeduction);
+                    finalCalculatedPrice = Math.max(0, currentBaseTotal - totalDeduction);
                     
                     if(currentManualDiscount > 0) {
                         discountLine.style.display = 'flex';
                         displayDiscount.innerText = `- ₹ ${currentManualDiscount}`;
-                    } else {
-                        discountLine.style.display = 'none';
-                    }
-                    displayTotal.innerText = `₹ ${final}`;
+                    } else { discountLine.style.display = 'none'; }
+                    displayTotal.innerText = `₹ ${finalCalculatedPrice}`;
                 }
 
                 pickupInput.addEventListener('change', () => { returnInput.min = pickupInput.value; calculatePrice(); });
@@ -713,68 +643,95 @@
                             showToast(data.message, true);
                             updateFinalDisplay();
                         }
-                    } catch (err) { 
-                        showToast("Server Error!", true); 
-                    } finally { 
-                        btnApply.innerText = "Apply"; 
-                    }
+                    } catch (err) { showToast("Server Error!", true); } finally { btnApply.innerText = "Apply"; }
                 });
             }
 
-            // --- 2. INLINE PAYMENT MODAL LOGIC ---
+            // --- SMART FORM SUBMISSION ---
             const bookingForm = document.getElementById('bookingForm');
-            const paymentModal = document.getElementById('paymentModal');
-            const modalTotal = document.getElementById('modalTotal');
-            const paymentContent = document.getElementById('paymentContent');
-            const paymentLoader = document.getElementById('paymentLoader');
-            const paymentSuccess = document.getElementById('paymentSuccess');
 
             if (bookingForm) {
-                bookingForm.addEventListener('submit', function (e) {
-                    e.preventDefault(); // Rok do form ko
-                    
-                    const finalPriceText = document.getElementById('displayTotal').innerText;
-                    
-                    // Safety Check: Date select nahi ki toh rok do
-                    if(finalPriceText === "₹ 0" || finalPriceText === "₹ NaN") {
-                        showToast("Please select valid dates first!", true);
-                        return;
+                bookingForm.addEventListener('submit', async function (e) {
+                    e.preventDefault(); 
+                    if(finalCalculatedPrice <= 0) return showToast("Please select valid dates first!", true);
+
+                    const selectedPaymentMode = document.querySelector('input[name="paymentMode"]:checked').value;
+                    const originalBtnText = payNowBtn.innerText;
+                    payNowBtn.innerText = "Processing...";
+                    payNowBtn.disabled = true;
+
+                    // Option 1: PAY AT PICKUP
+                    if(selectedPaymentMode === 'pickup') {
+                        try {
+                            const response = await fetch('/api/book-pay-at-pickup', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    bikeId: '<%= bike._id %>',
+                                    pickupDateTime: pickupInput.value,
+                                    returnDateTime: returnInput.value,
+                                    appliedCoupon: document.getElementById('hiddenCouponCode').value
+                                })
+                            });
+                            const data = await response.json();
+                            if(data.success) { window.location.href = "/user/dashboard?booking=success"; } 
+                            else { throw new Error(data.message); }
+                        } catch (error) {
+                            showToast(error.message || "Network Error!", true);
+                            payNowBtn.innerText = originalBtnText;
+                            payNowBtn.disabled = false;
+                        }
+                    } 
+                    // Option 2: RAZORPAY ONLINE
+                    else {
+                        try {
+                            const orderResponse = await fetch('/api/create-order', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    bikeId: '<%= bike._id %>', pickupDateTime: pickupInput.value,
+                                    returnDateTime: returnInput.value, appliedCoupon: document.getElementById('hiddenCouponCode').value
+                                })
+                            });
+                            const orderData = await orderResponse.json();
+
+                            if (!orderData.success) { throw new Error("Failed to initiate payment."); }
+
+                            var options = {
+                                "key": "rzp_test_SiTUP3xsa4IKXY", 
+                                "amount": orderData.order.amount,
+                                "currency": "INR", "name": "BikeRental", "description": "Premium Ride Booking",
+                                "order_id": orderData.order.id, 
+                                "handler": async function (response) {
+                                    showToast("Verifying payment... Please wait.");
+                                    const verifyRes = await fetch('/api/verify-payment', {
+                                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            razorpay_order_id: response.razorpay_order_id, razorpay_payment_id: response.razorpay_payment_id,
+                                            razorpay_signature: response.razorpay_signature, bikeId: '<%= bike._id %>',
+                                            pickupDateTime: pickupInput.value, returnDateTime: returnInput.value, finalPrice: orderData.finalPrice
+                                        })
+                                    });
+                                    const verifyData = await verifyRes.json();
+                                    if (verifyData.success) { window.location.href = "/user/dashboard?booking=success"; } 
+                                    else { throw new Error("Payment verification failed!"); }
+                                },
+                                "prefill": { "name": "<%= user ? user.name : '' %>", "email": "<%= user ? user.email : '' %>" },
+                                "theme": { "color": "#ff6b6b" }
+                            };
+
+                            var rzp1 = new Razorpay(options);
+                            rzp1.on('payment.failed', function (response){
+                                showToast("Payment Cancelled or Failed.", true);
+                                payNowBtn.innerText = originalBtnText; payNowBtn.disabled = false;
+                            });
+                            rzp1.open();
+                        } catch (error) {
+                            showToast(error.message || "Network Error!", true);
+                            payNowBtn.innerText = originalBtnText; payNowBtn.disabled = false;
+                        }
                     }
-
-                    if(modalTotal) modalTotal.innerText = finalPriceText;
-                    if(paymentModal) paymentModal.style.display = 'flex';
                 });
-            }
-
-            // Global Close Modal
-            window.closePayment = function() {
-                if(paymentModal) paymentModal.style.display = 'none';
-                if(paymentContent) paymentContent.style.display = 'block';
-                if(paymentLoader) paymentLoader.style.display = 'none';
-                if(paymentSuccess) paymentSuccess.style.display = 'none';
-            }
-
-            // Dummy Processing to Form Submission
-            window.startProcessing = function() {
-                if(paymentContent) paymentContent.style.display = 'none';
-                if(paymentLoader) paymentLoader.style.display = 'block';
-
-                setTimeout(() => {
-                    if(paymentLoader) paymentLoader.style.display = 'none';
-                    if(paymentSuccess) paymentSuccess.style.display = 'block';
-
-                    setTimeout(() => {
-                        if(bookingForm) bookingForm.submit(); 
-                    }, 1500);
-
-                }, 2500); 
-            }
-
-            // Modal ke bahar click karne par band karo
-            window.onclick = function(event) {
-                if (event.target == paymentModal) {
-                    closePayment();
-                }
             }
         });
     </script>

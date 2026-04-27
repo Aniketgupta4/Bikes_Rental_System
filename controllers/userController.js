@@ -3,6 +3,16 @@ const Bike = require("../models/Bike");
 const Coupon = require("../models/Coupon");
 const User = require("../models/User");
 
+// Naye Imports Payment ke liye (Socket.io HATA DIYA HAI)
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
+
+// Razorpay Instance Setup
+const razorpayInstance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+});
+
 // 1. User Dashboard (PAGINATION ke sath)
 exports.dashboard = async (req, res) => {
   try {
@@ -24,7 +34,8 @@ exports.dashboard = async (req, res) => {
       requests: requests || [], 
       user: req.session.user || null,
       currentPage: page,
-      totalPages: totalPages
+      totalPages: totalPages,
+      successMsg: req.query.booking === 'success' ? "Ride Reserved & Paid Successfully!" : null
     });
   } catch (err) {
     console.error("Dashboard Error:", err);
@@ -32,82 +43,163 @@ exports.dashboard = async (req, res) => {
   }
 };
 
-// 2. Updated Booking Logic: AUTOMATIC WELCOME DISCOUNT + MANUAL COUPON
-exports.bookBike = async (req, res) => {
-  try {
-    const bike = await Bike.findById(req.params.id);
-    if (!bike) return res.redirect("/");
+// 2. CREATE ORDER (Razorpay Order Generate karne ke liye)
+exports.createRazorpayOrder = async (req, res) => {
+    try {
+        const { bikeId, pickupDateTime, returnDateTime, appliedCoupon } = req.body;
+        const bike = await Bike.findById(bikeId);
+        const user = await User.findById(req.session.user._id);
 
-    const { pickupDateTime, returnDateTime, appliedCoupon } = req.body;
-    const start = new Date(pickupDateTime);
-    const end = new Date(returnDateTime);
+        const start = new Date(pickupDateTime);
+        const end = new Date(returnDateTime);
+        const diffInMs = Math.abs(end - start);
+        const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24)); 
+        let baseTotal = diffInDays * bike.pricePerDay;
+        
+        let totalDiscount = 0;
 
-    if (end <= start) {
-      return res.redirect(`/bike/${bike._id}?error=invalid_dates`);
-    }
-
-    // A. Base Price Calculation
-    const diffInMs = Math.abs(end - start);
-    const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24)); 
-    let baseTotal = diffInDays * bike.pricePerDay;
-    
-    let totalDiscount = 0;
-
-    // B. Fetch Latest User Data (Flag check karne ke liye)
-    const user = await User.findById(req.session.user._id);
-
-    // C. Logic 1: AUTOMATIC ₹100 WELCOME DISCOUNT
-    if (user.isFirstTimeUser) {
-      totalDiscount += 100;
-    }
-
-    // D. Logic 2: MANUAL COUPON DISCOUNT (Agar user ne dala ho)
-    if (appliedCoupon && appliedCoupon.trim() !== "") {
-      const coupon = await Coupon.findOne({ 
-        code: appliedCoupon.toUpperCase().trim(), 
-        isActive: true 
-      });
-
-      if (coupon) {
-        // Check expiry
-        if (new Date() <= coupon.expiryDate) {
-           let manualDisc = 0;
-           if (coupon.discountType === "percentage") {
-             manualDisc = (baseTotal * coupon.discountValue) / 100;
-           } else {
-             manualDisc = coupon.discountValue;
-           }
-           totalDiscount += manualDisc;
+        // Welcome Discount
+        if (user.isFirstTimeUser) {
+            totalDiscount += 100;
         }
-      }
+
+        // Manual Coupon Discount
+        if (appliedCoupon && appliedCoupon.trim() !== "") {
+            const coupon = await Coupon.findOne({ code: appliedCoupon.toUpperCase().trim(), isActive: true });
+            if (coupon && new Date() <= coupon.expiryDate) {
+                if (!coupon.isFirstTimeOnly || user.isFirstTimeUser) {
+                    let manualDisc = coupon.discountType === "percentage" ? (baseTotal * coupon.discountValue) / 100 : coupon.discountValue;
+                    totalDiscount += manualDisc;
+                }
+            }
+        }
+
+        const finalPrice = Math.max(0, baseTotal - totalDiscount);
+
+        // Razorpay Order Creation
+        const options = {
+            amount: finalPrice * 100, // Paise mein
+            currency: "INR",
+            receipt: "rcpt_" + Date.now()
+        };
+
+        const order = await razorpayInstance.orders.create(options);
+        
+        res.json({ success: true, order, finalPrice });
+    } catch (error) {
+        console.error("Order Creation Error:", error);
+        res.status(500).json({ success: false, message: "Could not create order" });
     }
-
-    // E. Final Price calculation
-    const finalPrice = Math.max(0, baseTotal - totalDiscount);
-
-    // F. Create Booking
-    await Booking.create({
-      user: user._id,
-      bike: bike._id,
-      pickupDateTime: start,
-      returnDateTime: end,
-      totalPrice: finalPrice
-    });
-
-    // G. UPDATE USER FLAG: Discount use ho gaya, ab 'false' kar do
-    if (user.isFirstTimeUser) {
-      await User.findByIdAndUpdate(user._id, { isFirstTimeUser: false });
-      req.session.user.isFirstTimeUser = false; // Update session
-    }
-
-    res.redirect("/user/dashboard");
-  } catch (err) {
-    console.error("Booking Error:", err);
-    res.redirect("/");
-  }
 };
 
-// 3. Cancellation Logic
+// 3. VERIFY PAYMENT (Payment hone ke baad Database mein save karne ke liye)
+exports.verifyRazorpayPayment = async (req, res) => {
+    try {
+        const { 
+            razorpay_order_id, 
+            razorpay_payment_id, 
+            razorpay_signature,
+            bikeId, pickupDateTime, returnDateTime, finalPrice 
+        } = req.body;
+
+        // Security: Signature Verification
+        const body = razorpay_order_id + "|" + razorpay_payment_id;
+        const expectedSignature = crypto
+            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+            .update(body.toString())
+            .digest('hex');
+
+        if (expectedSignature === razorpay_signature) {
+            // Payment success! Save to DB
+            const user = await User.findById(req.session.user._id);
+
+            await Booking.create({
+                user: user._id,
+                bike: bikeId,
+                pickupDateTime: new Date(pickupDateTime),
+                returnDateTime: new Date(returnDateTime),
+                totalPrice: finalPrice,
+                paymentStatus: 'paid',
+                transactionId: razorpay_payment_id,
+                paymentMethod: 'Razorpay UPI/Card',
+                status: 'pending' 
+            });
+
+            // Update user flag
+            if (user.isFirstTimeUser) {
+                await User.findByIdAndUpdate(user._id, { isFirstTimeUser: false });
+                req.session.user.isFirstTimeUser = false;
+            }
+
+            res.json({ success: true, message: "Payment verified successfully" });
+        } else {
+            res.status(400).json({ success: false, message: "Invalid Signature" });
+        }
+    } catch (error) {
+        console.error("Verification Error:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+};
+
+
+// 3.5 PAY AT PICKUP LOGIC (Bina Razorpay ke direct book)
+exports.bookPayAtPickup = async (req, res) => {
+    try {
+        const { bikeId, pickupDateTime, returnDateTime, appliedCoupon } = req.body;
+        const bike = await Bike.findById(bikeId);
+        const user = await User.findById(req.session.user._id);
+
+        const start = new Date(pickupDateTime);
+        const end = new Date(returnDateTime);
+        const diffInMs = Math.abs(end - start);
+        const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24)); 
+        let baseTotal = diffInDays * bike.pricePerDay;
+        
+        let totalDiscount = 0;
+
+        if (user.isFirstTimeUser) totalDiscount += 100;
+
+        if (appliedCoupon && appliedCoupon.trim() !== "") {
+            const coupon = await Coupon.findOne({ code: appliedCoupon.toUpperCase().trim(), isActive: true });
+            if (coupon && new Date() <= coupon.expiryDate) {
+                if (!coupon.isFirstTimeOnly || user.isFirstTimeUser) {
+                    let manualDisc = coupon.discountType === "percentage" ? (baseTotal * coupon.discountValue) / 100 : coupon.discountValue;
+                    totalDiscount += manualDisc;
+                }
+            }
+        }
+
+        const finalPrice = Math.max(0, baseTotal - totalDiscount);
+
+        // Direct DB mein save with 'Pay at Pickup' tag
+        await Booking.create({
+            user: user._id,
+            bike: bikeId,
+            pickupDateTime: start,
+            returnDateTime: end,
+            totalPrice: finalPrice,
+            paymentStatus: 'pending', // Paide abhi nahi mile
+            transactionId: 'PAY_AT_PICKUP',
+            paymentMethod: 'Cash/Counter UPI',
+            status: 'pending' 
+        });
+
+        // Update user flag
+        if (user.isFirstTimeUser) {
+            await User.findByIdAndUpdate(user._id, { isFirstTimeUser: false });
+            req.session.user.isFirstTimeUser = false;
+        }
+
+        res.json({ success: true, message: "Booking Confirmed! Pay at Counter." });
+    } catch (error) {
+        console.error("Pay at Pickup Error:", error);
+        res.status(500).json({ success: false, message: "Could not process booking" });
+    }
+};
+
+
+
+// 4. Cancellation Logic
 exports.cancelBooking = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
@@ -124,7 +216,7 @@ exports.cancelBooking = async (req, res) => {
   }
 };
 
-// 4. Review Logic
+// 5. Review Logic
 exports.submitReview = async (req, res) => {
     try {
         const { rating, comment, bikeId } = req.body;
@@ -150,5 +242,3 @@ exports.submitReview = async (req, res) => {
         res.redirect('/user/dashboard');
     }
 };
-
-

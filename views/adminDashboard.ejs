@@ -337,8 +337,7 @@
                 <th>Customer Details</th>
                 <th>Bike Model</th>
                 <th>Trip Schedule</th>
-                <th>Earnings</th>
-                <th>Status</th>
+                <th>Payment Info</th> <th>Status</th>
                 <th>Operations</th>
               </tr>
           </thead>
@@ -354,7 +353,9 @@
                     <i class="fas fa-phone" style="margin-right: 5px;"></i><%= bk.user && (bk.user.mobile || bk.user.phone) ? (bk.user.mobile || bk.user.phone) : "Not Provided" %>
                 </div>
               </td>
+              
               <td data-label="Bike Model"><div style="font-weight: 500;"><%= bk.bike ? bk.bike.name : "N/A" %></div></td>
+              
               <td data-label="Schedule">
                 <div style="font-size: 0.8rem; display: flex; flex-direction: column; gap: 4px;">
                   <% if (bk.pickupDateTime && !isNaN(new Date(bk.pickupDateTime))) { %>
@@ -365,13 +366,28 @@
                   <% } %>
                 </div>
               </td>
-              <td data-label="Earnings"><strong style="color: var(--secondary);">₹ <%= bk.totalPrice %></strong></td>
+
+              <td data-label="Payment Info">
+                <div style="font-size: 1rem; font-weight: 800; color: var(--secondary); margin-bottom: 5px;">₹ <%= bk.totalPrice %></div>
+                
+                <% if(bk.paymentStatus === 'paid') { %>
+                    <span style="background-color: #e6fcf5; color: #0ca678; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #c3fae8;">
+                        <i class="fas fa-check-circle"></i> Paid Online
+                    </span>
+                    <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 4px; font-family: monospace;">TXN: <%= bk.transactionId || 'N/A' %></div>
+                <% } else { %>
+                    <span style="background-color: #fff9db; color: #f08c00; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #ffe066;">
+                        <i class="fas fa-hand-holding-dollar"></i> Collect at Counter
+                    </span>
+                <% } %>
+              </td>
+
               <td data-label="Status">
                   <span class="status status-<%= bk.status %>"><%= bk.status %></span>
               </td>
+              
               <td data-label="Operations">
                 <div class="action-group">
-                  
                   <% if (bk.status === 'pending') { %>
                     <a class="btn btn-sm btn-success save-scroll" href="/admin/approve/<%= bk._id %>"><i class="fas fa-check"></i> Approve</a>
                     <a class="btn btn-sm btn-danger save-scroll" href="/admin/reject/<%= bk._id %>"><i class="fas fa-xmark"></i></a>
@@ -388,7 +404,6 @@
                       <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
                     </form>
                   <% } %>
-
                 </div>
               </td>
             </tr>

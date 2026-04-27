@@ -9,9 +9,23 @@ const BookingSchema = new mongoose.Schema({
   returnDateTime: { type: Date, required: true },
   
   totalPrice: { type: Number, required: true },
+
+  // 👇 NEW: Razorpay Payment Tracking Fields
+  paymentStatus: { 
+    type: String, 
+    enum: ['pending', 'paid', 'failed'], 
+    default: 'pending' 
+  },
+  transactionId: { 
+    type: String 
+  }, // Yahan 'razorpay_payment_id' save hoga
+  paymentMethod: { 
+    type: String,
+    default: 'Razorpay'
+  },
+
   status: { 
     type: String, 
-    // 👇 YAHAN FIX KIYA HAI: 'ongoing' aur 'completed' add kar diya hai
     enum: ["pending", "approved", "ongoing", "completed", "rejected", 'cancelled'], 
     default: "pending" 
   },
