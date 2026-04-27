@@ -100,23 +100,6 @@
         .bottom-links a { color: var(--primary); text-decoration: none; font-weight: 700; }
         .bottom-links a:hover { text-decoration: underline; }
 
-        /* ----------------------- 4. UNIVERSAL FOOTER ----------------------- */
-        footer { background: var(--secondary); color: #fff; padding: 70px 6% 30px; margin-top: auto; border-top: 6px solid var(--primary); }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 40px; }
-        
-        .footer-brand h3 { color: var(--primary); font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; }
-        .footer-brand p { color: #b2bec3; font-size: 0.95rem; line-height: 1.7; }
-        .footer-links h4 { color: #fff; margin-bottom: 20px; font-size: 1.1rem; border-left: 3px solid var(--primary); padding-left: 10px; }
-        .footer-links ul { list-style: none; }
-        .footer-links a { color: #b2bec3; text-decoration: none; display: block; margin-bottom: 12px; font-size: 0.9rem; transition: 0.3s; }
-        .footer-links a:hover { color: var(--primary); padding-left: 5px; }
-
-        .footer-form input, .footer-form textarea {
-            width: 100%; padding: 12px; border-radius: 10px; border: none; background: #2d2d44; color: #fff; margin-bottom: 10px; outline: none;
-        }
-        .footer-form button { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; }
-
-        .copyright { text-align: center; padding-top: 30px; margin-top: 50px; border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.85rem; }
 
         /* ----------------------- 5. RESPONSIVE QUERIES ----------------------- */
         @media (max-width: 850px) {
@@ -179,47 +162,7 @@
         </div>
     </main>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-brand">
-                <h3>BikeRental</h3>
-                <p>Providing the most reliable bike rental experience since 2026. Safe, fast, and high-performance rides for every urban explorer.</p>
-                <div style="display: flex; gap: 15px; margin-top: 25px;">
-                    <a href="#" style="font-size: 1.2rem;"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" style="font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
-                    <a href="#" style="font-size: 1.2rem;"><i class="fab fa-x-twitter"></i></a>
-                </div>
-            </div>
 
-            <div class="footer-links">
-                <h4>Company</h4>
-                <ul>
-                    <li><a href="/">Browse Fleet</a></li>
-                    <li><a href="/signup">Join as Partner</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-links">
-                <h4>Contact Info</h4>
-                <p style="color:#b2bec3; font-size:0.9rem; margin-bottom:12px;"><i class="fas fa-envelope" style="color:var(--primary); margin-right:10px;"></i> support@bikerental.com</p>
-                <p style="color:#b2bec3; font-size:0.9rem;"><i class="fas fa-location-dot" style="color:var(--primary); margin-right:10px;"></i> Civil Lines, Jabalpur, MP</p>
-            </div>
-
-            <div class="footer-form">
-                <h4>Support Chat</h4>
-                <form action="/feedback" method="POST">
-                    <input type="text" placeholder="Your Name" required>
-                    <textarea placeholder="How can we help?" rows="2" required></textarea>
-                    <button type="submit">Submit Request</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="copyright">
-            <p>© <%= new Date().getFullYear() %> BikeRental System | Premium Mobility Solution | Developed by Aniket Kumar Gupta</p>
-        </div>
-    </footer>
 
     <script>
         function toggleMenu() {

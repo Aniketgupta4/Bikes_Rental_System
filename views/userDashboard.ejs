@@ -238,20 +238,6 @@
             opacity: 0.5; cursor: not-allowed; pointer-events: none; background: #f8fafc;
         }
 
-        /* ---------------------------------------------------------
-           7. FOOTER
-        --------------------------------------------------------- */
-        footer { background: var(--secondary); color: var(--white); padding: 90px 8% 50px; margin-top: auto; border-top: 10px solid var(--primary); }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 60px; }
-        .footer-brand h3 { color: var(--primary); font-size: 2.2rem; font-weight: 800; margin-bottom: 25px; }
-        .footer-brand p { color: #cbd5e0; line-height: 1.9; font-size: 0.95rem; }
-        .footer-links h4 { font-size: 1.3rem; margin-bottom: 30px; position: relative; padding-bottom: 12px; font-weight: 700; }
-        .footer-links h4::after { content: ''; position: absolute; left: 0; bottom: 0; width: 45px; height: 4px; background: var(--primary); border-radius: 2px; }
-        .footer-links ul { list-style: none; }
-        .footer-links li { margin-bottom: 18px; }
-        .footer-links a { color: #cbd5e0; text-decoration: none; transition: 0.3s; font-size: 1rem; display: flex; align-items: center; gap: 10px; }
-        .footer-links a:hover { color: var(--primary); padding-left: 10px; }
-        .copyright { text-align: center; padding-top: 50px; margin-top: 80px; border-top: 1px solid rgba(255,255,255,0.08); color: #718096; font-size: 0.95rem; }
 
         /* ---------------------------------------------------------
            8. RESPONSIVE BREAKPOINTS
@@ -461,30 +447,7 @@
         <% } %>
     </main>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-brand">
-                <h3>BikeRental</h3>
-                <p>Premium mobility solutions for the modern explorer. Experience the freedom of the open road with our top-of-the-line fleet.</p>
-            </div>
-            <div class="footer-links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="/">Browse Bikes</a></li>
-                    <li><a href="/user/profile">My Profile</a></li>
-                    <li><a href="/terms">Terms & Conditions</a></li>
-                </ul>
-            </div>
-            <div class="footer-links">
-                <h4>Contact Support</h4>
-                <p style="color:#b2bec3; font-size:0.95rem; margin-bottom:15px;"><i class="fas fa-envelope" style="color:var(--primary); margin-right:12px;"></i> support@bikerental.com</p>
-                <p style="color:#b2bec3; font-size:0.95rem;"><i class="fas fa-phone" style="color:var(--primary); margin-right:12px;"></i> +91 98765 43210</p>
-            </div>
-        </div>
-        <div class="copyright">
-            <p>© <%= new Date().getFullYear() %> BikeRental System | Developed by Aniket Kumar Gupta</p>
-        </div>
-    </footer>
+    <%- include('partials/footer') %>
 
     <script>
         function toggleScrollLock(lock) { document.body.style.overflow = lock ? 'hidden' : 'auto'; }

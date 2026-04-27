@@ -93,26 +93,7 @@
         .btn-delete { color: var(--danger); background: #fff5f5; border: none; width: 38px; height: 38px; border-radius: 10px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center;}
         .btn-delete:hover { background: var(--danger); color: #fff; transform: scale(1.1); }
 
-        /* ----------------------- 4. ENTERPRISE FOOTER ----------------------- */
-        footer {
-            background: var(--secondary);
-            color: #fff;
-            padding: 70px 6% 30px;
-            margin-top: 80px;
-            border-top: 5px solid var(--primary);
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
 
-        .footer-col h3 { color: var(--primary); font-size: 1.8rem; font-weight: 800; margin-bottom: 20px; }
-        .footer-col h4 { color: var(--primary); font-size: 1.2rem; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; position: relative; padding-bottom: 10px;}
-        .footer-col h4::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40px; height: 3px; background: var(--primary); border-radius: 10px; }
-        .footer-col p { color: #cbd5e0; line-height: 1.7; font-size: 0.95rem; margin-bottom: 20px; }
 
         /* Social Icons */
         .social-links { display: flex; gap: 15px; margin-top: 20px; }
@@ -292,58 +273,8 @@
         </div>
     </main>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h3>BikeRental</h3>
-                <p>Advanced fleet management and real-time booking automation system. Designed for high-performance rental businesses.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
+    <%- include('partials/footer') %>
 
-            <div class="footer-col">
-                <h4>Admin Links</h4>
-                <ul class="footer-links">
-                    <li><a href="/admin/dashboard">Operations Dashboard</a></li>
-                    <li><a href="/admin/analytics">Revenue Analytics</a></li>
-                    <li><a href="/admin/manage-coupons">Coupon Center</a></li>
-                    <li><a href="/">Public Site Preview</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Emergency Support</h4>
-                <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>tech-support@bikerental.com</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-phone-alt"></i>
-                    <span>+91 98765 43210</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Jabalpur HQ, India</span>
-                </div>
-            </div>
-
-            <div class="footer-col">
-                <h4>System Feedback</h4>
-                <form class="feedback-form" action="/admin/feedback" method="POST">
-                    <input type="text" name="adminName" placeholder="Admin Name" required>
-                    <textarea name="feedback" rows="2" placeholder="Log internal feedback or bugs..." required></textarea>
-                    <button type="submit" class="btn-submit-note">Submit Note</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="copyright-bar">
-            <p>© <%= new Date().getFullYear() %> BikeRental Enterprise Edition | Built with ❤️ by Aniket Kumar Gupta | SRIT Jabalpur</p>
-        </div>
-    </footer>
     <script>
         async function deleteCoupon(id) {
             if(!confirm('Are you sure you want to delete this coupon permanently?')) return;

@@ -140,26 +140,6 @@
     .page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3); }
     .page-btn.disabled { opacity: 0.5; cursor: not-allowed; background: #f1f5f9; color: #cbd5e0; }
 
-    /* ---------------------------------------------------- */
-    /* 4. MASTER FOOTER */
-    /* ---------------------------------------------------- */
-    footer { background: var(--secondary); color: #fff; padding: 50px 6% 30px; margin-top: auto; border-top: 5px solid var(--primary); text-align: left; }
-    .footer-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 30px; width: 100%; text-align: left;}
-    footer h3 { color: var(--primary); margin-bottom: 20px; font-size: 1.3rem; font-weight: 700; text-align: left; }
-    footer p, footer li { color: #b2bec3; font-size: 0.9rem; margin-bottom: 12px; line-height: 1.6; text-align: left; }
-    footer ul { list-style: none; padding-left: 0; text-align: left;}
-    footer a { color: #b2bec3; text-decoration: none; transition: 0.3s; display: inline-block; text-align: left;}
-    footer a:hover { color: var(--primary); padding-left: 5px; }
-
-    footer form input, footer form textarea {
-      width: 100%; padding: 12px; border-radius: 8px; border: none; background: #2d2d44; color: #fff; margin-bottom: 12px; outline: none; transition: 0.3s;
-    }
-    footer form input:focus, footer form textarea:focus { background: #353555; box-shadow: 0 0 0 2px var(--primary); }
-    footer form button {
-      background: var(--primary); width: 100%; padding: 12px; border: none; color: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; text-align: center;
-    }
-    footer form button:hover { background: var(--primary-dark); transform: scale(1.02); }
-    .copyright { text-align: left; margin-top: 40px; padding-top: 20px; border-top: 1px solid #2d2d44; color:#636e72; font-size:0.8rem; }
 
     /* ---------------------------------------------------- */
     /* 5. RESPONSIVE MAGIC */
@@ -430,49 +410,7 @@
     </div>
   </main>
 
-  <footer>
-    <div class="footer-container">
-      <div class="footer-section">
-        <h3>BikeRental</h3>
-        <p>Advanced fleet management and real-time booking automation system. Designed for high-performance rental businesses.</p>
-        <div class="social-icons" style="display: flex; gap: 15px; margin-top: 25px;">
-            <a href="#" style="font-size: 1.3rem;"><i class="fab fa-facebook-square"></i></a>
-            <a href="#" style="font-size: 1.3rem;"><i class="fab fa-instagram"></i></a>
-            <a href="#" style="font-size: 1.3rem;"><i class="fab fa-linkedin"></i></a>
-        </div>
-      </div>
-
-      <div class="footer-section">
-        <h3>Admin Links</h3>
-        <ul>
-          <li><a href="/admin/dashboard">Operations Dashboard</a></li>
-          <li><a href="/admin/export-bookings">Revenue Analytics</a></li>
-          <li><a href="/admin/manage-coupons">Coupon Center</a></li>
-          <li><a href="/">Public Site Preview</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-section footer-contact">
-        <h3>Emergency Support</h3>
-        <p><i class="fas fa-envelope-open-text" style="color: var(--primary); margin-right: 10px;"></i> tech-support@bikerental.com</p>
-        <p><i class="fas fa-headset" style="color: var(--primary); margin-right: 10px;"></i> +91 98765 43210</p>
-        <p><i class="fas fa-location-dot" style="color: var(--primary); margin-right: 10px;"></i> Jabalpur HQ, India</p>
-      </div>
-
-      <div class="footer-section">
-        <h3>System Feedback</h3>
-        <form action="/feedback" method="POST">
-          <input type="text" name="name" placeholder="Admin Name" required>
-          <textarea name="message" placeholder="Log internal feedback or bugs..." rows="2" required></textarea>
-          <button type="submit">Submit Note</button>
-        </form>
-      </div>
-    </div>
-    
-    <div class="copyright">
-      <p>© <%= new Date().getFullYear() %> BikeRental Enterprise Edition | Built with ❤️ by Aniket Kumar Gupta | SRIT Jabalpur</p>
-    </div>
-  </footer>
+   <%- include('partials/footer') %>
   
   <script>
     // 1. SMART SCROLL MEMORY LOGIC 

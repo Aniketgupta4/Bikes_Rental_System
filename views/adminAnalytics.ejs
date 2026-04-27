@@ -153,21 +153,6 @@
 
         .chart-wrapper { flex: 1; position: relative; min-height: 280px; width: 100%; }
 
-        /* ----------------------- 6. UNIVERSAL FOOTER ----------------------- */
-        footer { background: var(--secondary); color: #fff; padding: 70px 6% 30px; margin-top: auto; border-top: 6px solid var(--primary); }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
-        .footer-brand h3 { color: var(--primary); font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; }
-        .footer-brand p { color: #b2bec3; font-size: 0.95rem; line-height: 1.7; }
-        .footer-links h4 { color: #fff; margin-bottom: 20px; font-size: 1.1rem; position: relative; padding-bottom: 8px; }
-        .footer-links h4::after { content:''; position: absolute; left: 0; bottom: 0; width: 30px; height: 2px; background: var(--primary); }
-        .footer-links ul { list-style: none; }
-        .footer-links a { color: #b2bec3; text-decoration: none; display: block; margin-bottom: 12px; font-size: 0.9rem; transition: 0.3s; }
-        .footer-links a:hover { color: var(--primary); padding-left: 5px; }
-        .footer-contact p { color: #b2bec3; font-size: 0.9rem; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
-        .footer-contact i { color: var(--primary); }
-        .footer-form input, .footer-form textarea { width: 100%; padding: 12px; border-radius: 10px; border: none; background: #2d2d44; color: #fff; margin-bottom: 10px; outline: none; }
-        .footer-form button { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; }
-        .copyright { text-align: center; padding-top: 30px; margin-top: 50px; border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.85rem; }
 
         /* ---------------------------------------------------------
            7. ADVANCED RESPONSIVENESS (MOBILE/TABLET)
@@ -292,45 +277,7 @@
         </div>
     </main>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-brand">
-                <h3>BikeRental</h3>
-                <p>Providing premium urban mobility solutions since 2026. Data-driven decisions for Jabalpur's riders.</p>
-                <div style="display: flex; gap: 15px; margin-top: 25px;">
-                    <a href="#" style="color:#fff;"><i class="fab fa-linkedin fa-lg"></i></a>
-                    <a href="#" style="color:#fff;"><i class="fab fa-github fa-lg"></i></a>
-                    <a href="#" style="color:#fff;"><i class="fab fa-instagram fa-lg"></i></a>
-                </div>
-            </div>
-            <div class="footer-links">
-                <h4>Intelligence Hub</h4>
-                <ul>
-                    <li><a href="/admin/dashboard">Operations</a></li>
-                    <li><a href="/admin/add-bike">Inventory</a></li>
-                    <li><a href="/logout">Admin Exit</a></li>
-                </ul>
-            </div>
-            <div class="footer-links">
-                <h4>System Support</h4>
-                <div class="footer-contact">
-                    <p><i class="fas fa-envelope"></i> help@bikerental.com</p>
-                    <p><i class="fas fa-location-dot"></i> Hub Office, Jabalpur, MP</p>
-                </div>
-            </div>
-            <div class="footer-links">
-                <h4>Quick Feedback</h4>
-                <form class="footer-form">
-                    <input type="text" placeholder="Admin Note Title">
-                    <button type="button">Save Log</button>
-                </form>
-            </div>
-        </div>
-        <div class="copyright">
-            <p>© <%= new Date().getFullYear() %> BikeRental Intelligence Hub | Engineered for Scale</p>
-            <p style="font-size: 0.8rem; margin-top: 12px; opacity: 0.5;">Developed by <strong>Aniket Kumar Gupta</strong></p>
-        </div>
-    </footer>
+   <%- include('partials/footer') %>
 
     <script>
         // Menu Controller

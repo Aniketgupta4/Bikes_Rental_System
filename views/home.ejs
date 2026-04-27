@@ -180,25 +180,7 @@
         .btn-book.disabled { background: #cbd5e0; color: #718096; cursor: not-allowed; pointer-events: none; }
         .btn-book.maintenance-btn { background: #e2e8f0; color: #4a5568; }
 
-        /* ----------------------- 6. UNIVERSAL FOOTER ----------------------- */
-        footer { background: var(--secondary); color: #fff; padding: 80px 6% 40px; margin-top: auto; border-top: 6px solid var(--primary); }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 50px; max-width: 1250px; margin: 0 auto; }
-        .footer-brand h3 { color: var(--primary); font-size: 2rem; font-weight: 800; margin-bottom: 20px; }
-        .footer-brand p { color: #cbd5e0; font-size: 0.95rem; line-height: 1.8; }
-        .social-icons { display: flex; gap: 15px; margin-top: 20px; }
-        .social-icons a { color: var(--primary); font-size: 1.3rem; transition: 0.3s; }
-        .social-icons a:hover { color: #fff; transform: translateY(-3px); }
-        .footer-links h4 { color: #fff; margin-bottom: 25px; font-size: 1.2rem; }
-        .footer-links ul { list-style: none; }
-        .footer-links a { color: #cbd5e0; text-decoration: none; display: block; margin-bottom: 12px; font-size: 0.95rem; transition: 0.3s; }
-        .footer-links a:hover { color: var(--primary); padding-left: 8px; }
-        .footer-contact p { color: #cbd5e0; font-size: 0.95rem; margin-bottom: 15px; display: flex; align-items: center; gap: 12px; }
-        .footer-contact i { color: var(--primary); width: 20px; }
-        .footer-form input, .footer-form textarea { width: 100%; padding: 12px; border-radius: 10px; border: none; background: #2d2d44; color: #fff; margin-bottom: 12px; outline: none; font-family: inherit; }
-        .footer-form button { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .footer-form button:hover { background: var(--primary-dark); }
-        .copyright { text-align: center; padding-top: 40px; margin-top: 60px; border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.85rem; }
-
+        
         /* ----------------------- 7. STRICT RESPONSIVE QUERIES ----------------------- */
         @media (max-width: 1024px) { 
             .filter-grid { grid-template-columns: 1fr 1fr; gap: 20px; } 
@@ -405,37 +387,9 @@
         </div>
     </main>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-brand">
-                <h3>BikeRental</h3>
-                <p>Ride with confidence. Premium quality bikes, sanitized and ready for your adventure.</p>
-            </div>
-            <div class="footer-links">
-                <h4>Shortcuts</h4>
-                <ul>
-                    <li><a href="/">Browse Bikes</a></li>
-                    <li><a href="/login">User Access</a></li>
-                </ul>
-            </div>
-            <div class="footer-links">
-                <h4>Support</h4>
-                <p style="color:#b2bec3;"><i class="fas fa-envelope" style="color:var(--primary); margin-right:10px;"></i> support@bikerental.com</p>
-                <p style="color:#b2bec3; margin-top:10px;"><i class="fas fa-phone" style="color:var(--primary); margin-right:10px;"></i> +91 98765 43210</p>
-            </div>
-            <div class="footer-links">
-                <h4>Feedback</h4>
-                <form action="/feedback" method="POST" style="display:flex; flex-direction:column; gap:10px;">
-                    <input type="text" placeholder="Name" required style="padding:10px; border-radius:8px; border:none; background:#2d2d44; color:#fff;">
-                    <textarea placeholder="Message" rows="2" required style="padding:10px; border-radius:8px; border:none; background:#2d2d44; color:#fff;"></textarea>
-                    <button type="submit" style="padding:10px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Send</button>
-                </form>
-            </div>
-        </div>
-        <div class="copyright">
-            <p>© <%= new Date().getFullYear() %> BikeRental | Developed by Aniket Kumar Gupta</p>
-        </div>
-    </footer>
+
+    <%- include('partials/footer') %>
+
 
     <button id="chat-fab"><i class="fas fa-comment-dots"></i></button>
     <div id="chat-window">

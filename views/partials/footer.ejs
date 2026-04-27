@@ -1,0 +1,203 @@
+<style>
+    /* ---------------------------------------------------- */
+    /* PREMIUM FOOTER DESIGN */
+    /* ---------------------------------------------------- */
+    footer { 
+        background: #11111d; 
+        color: #fff; 
+        padding: 80px 6% 30px; 
+        margin-top: auto; 
+        border-top: 5px solid #ff6b6b; 
+    }
+    .footer-grid { 
+        display: grid; 
+        grid-template-columns: 1.5fr 1fr 1.2fr 1.3fr; 
+        gap: 50px; 
+        max-width: 1300px; 
+        margin: 0 auto; 
+    }
+    
+    /* Brand Section */
+    .footer-brand h3 { 
+        color: #ff6b6b; 
+        font-size: 2rem; 
+        font-weight: 800; 
+        margin-bottom: 20px; 
+        letter-spacing: -1px;
+    }
+    .footer-brand p { 
+        color: #94a3b8; 
+        font-size: 0.95rem; 
+        line-height: 1.8; 
+        max-width: 300px;
+    }
+    .social-icons { display: flex; gap: 15px; margin-top: 25px; }
+    .social-icons a { 
+        width: 40px; height: 40px; background: #1e1e2f; color: #fff; 
+        display: flex; align-items: center; justify-content: center; 
+        border-radius: 10px; transition: 0.3s; text-decoration: none;
+    }
+    .social-icons a:hover { background: #ff6b6b; transform: translateY(-5px); }
+
+    /* Links Section */
+    .footer-links h4 { 
+        color: #fff; 
+        margin-bottom: 25px; 
+        font-size: 1.1rem; 
+        font-weight: 700;
+        position: relative;
+    }
+    .footer-links h4::after {
+        content: ''; position: absolute; left: 0; bottom: -8px; 
+        width: 30px; height: 3px; background: #ff6b6b; border-radius: 10px;
+    }
+    .footer-links ul { list-style: none; padding: 0; }
+    .footer-links a { 
+        color: #94a3b8; 
+        text-decoration: none; 
+        display: block; 
+        margin-bottom: 15px; 
+        font-size: 0.9rem; 
+        transition: 0.3s; 
+    }
+    .footer-links a:hover { color: #ff6b6b; padding-left: 8px; }
+
+    /* Contact Info */
+    .contact-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+    .contact-item i { color: #ff6b6b; font-size: 1.1rem; margin-top: 4px; }
+    .contact-item div p { color: #94a3b8; font-size: 0.9rem; margin: 0; line-height: 1.5; }
+    .contact-item div b { color: #fff; display: block; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 4px; }
+
+    /* Modern Support Form */
+    .footer-form { background: #1e1e2f; padding: 25px; border-radius: 20px; border: 1px solid #2d2d44; }
+    .footer-form h4 { color: #fff; margin-bottom: 15px; font-size: 1.1rem; }
+    .footer-form input, .footer-form textarea { 
+        width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #2d2d44; 
+        background: #11111d; color: #fff; margin-bottom: 12px; outline: none; 
+        font-size: 0.9rem; transition: 0.3s;
+    }
+    .footer-form input:focus, .footer-form textarea:focus { border-color: #ff6b6b; }
+    .btn-footer { 
+        width: 100%; padding: 12px; background: #ff6b6b; color: #fff; 
+        border: none; border-radius: 12px; font-weight: 700; cursor: pointer; 
+        transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .btn-footer:hover { background: #ee5253; transform: scale(1.02); }
+
+    .copyright { 
+        text-align: center; padding-top: 35px; margin-top: 60px; 
+        border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.85rem; 
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 992px) {
+        .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+        footer { padding: 60px 5% 30px; }
+    }
+</style>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <h3>BikeRental</h3>
+            <p>Experience the freedom of the road with premium bikes. Your trusted partner for urban mobility and adventure since 2026.</p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-x-twitter"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <h4>Quick Navigation</h4>
+            <ul>
+                <li><a href="/"><i class="fas fa-chevron-right" style="font-size: 0.7rem; margin-right: 8px;"></i> Explore Fleet</a></li>
+                <li><a href="/user/dashboard"><i class="fas fa-chevron-right" style="font-size: 0.7rem; margin-right: 8px;"></i> My Bookings</a></li>
+                <li><a href="/signup"><i class="fas fa-chevron-right" style="font-size: 0.7rem; margin-right: 8px;"></i> Partner with Us</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-links">
+            <h4>Get In Touch</h4>
+            <div class="contact-item">
+                <i class="fas fa-envelope-open-text"></i>
+                <div>
+                    <b>Official Email</b>
+                    <p>aniketkumargupta302@gmail.com</p>
+                </div>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone-volume"></i>
+                <div>
+                    <b>Customer Support</b>
+                    <p>+91 87701 91425</p>
+                </div>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-location-dot"></i>
+                <div>
+                    <b>Headquarters</b>
+                    <p>SRIT, Jabalpur, MP, India</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-form">
+            <h4>System Feedback</h4>
+            <form id="footerFeedbackForm">
+                <input type="text" id="fb-name" placeholder="Your Full Name" required>
+                <textarea id="fb-message" placeholder="Describe your issue or suggestion..." rows="2" required></textarea>
+                <button type="submit" class="btn-footer" id="fb-submit">
+                    <span>Submit Note</span> <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+            <p id="fb-status" style="display:none; font-size: 0.8rem; margin-top: 10px; text-align: center;"></p>
+        </div>
+    </div>
+
+    <div class="copyright">
+        <p>© <%= new Date().getFullYear() %> <b>BikeRental Enterprise</b> | Engineered by <b>Aniket Kumar Gupta</b></p>
+    </div>
+</footer>
+
+<script>
+    // Professional AJAX form submission (No Refresh)
+    document.getElementById('footerFeedbackForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('fb-name').value;
+        const message = document.getElementById('fb-message').value;
+        const btn = document.getElementById('fb-submit');
+        const status = document.getElementById('fb-status');
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+        try {
+            const response = await fetch('/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, message })
+            });
+
+            if(response.ok) {
+                status.style.display = 'block';
+                status.style.color = '#00b894';
+                status.innerHTML = '<i class="fas fa-check-circle"></i> Thanks Aniket! Feedback received.';
+                document.getElementById('footerFeedbackForm').reset();
+            } else {
+                throw new Error();
+            }
+        } catch (err) {
+            status.style.display = 'block';
+            status.style.color = '#ff6b6b';
+            status.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error sending message.';
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<span>Submit Note</span> <i class="fas fa-paper-plane"></i>';
+            setTimeout(() => { status.style.display = 'none'; }, 5000);
+        }
+    });
+</script>
