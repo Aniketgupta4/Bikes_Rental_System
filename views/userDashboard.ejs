@@ -103,21 +103,29 @@
 
         .menu-btn { display: none; cursor: pointer; color: var(--white); font-size: 2rem; transition: 0.3s; }
 
+        /* 🔥 MOBILE MENU OVERLAY (Fixed & Professional) */
         .mobile-menu-overlay {
             position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
-            background: rgba(30, 30, 47, 0.98); z-index: 6000;
+            background: rgba(17, 17, 29, 0.98); z-index: 6000; /* Darker, premium bg */
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-            backdrop-filter: blur(10px);
+            transition: 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            backdrop-filter: blur(15px);
         }
         .mobile-menu-overlay.active { right: 0; }
-        .close-menu-btn { position: absolute; top: 30px; right: 40px; color: var(--white); font-size: 3rem; cursor: pointer; }
-        .mobile-links { display: flex; flex-direction: column; gap: 35px; text-align: center; }
-        .mobile-links a { color: var(--white); text-decoration: none; font-size: 1.8rem; font-weight: 600; transition: 0.3s; }
-        .mobile-links a:hover { color: var(--primary); transform: translateY(-5px); }
+        .close-menu-btn { position: absolute; top: 25px; right: 30px; color: var(--white); font-size: 2.5rem; cursor: pointer; transition: 0.3s; }
+        .close-menu-btn:hover { color: var(--primary); transform: rotate(90deg); }
+        
+        .mobile-links { display: flex; flex-direction: column; gap: 15px; text-align: center; width: 85%; max-width: 320px; }
+        .mobile-links a { 
+            color: var(--white); text-decoration: none; font-size: 1.3rem; font-weight: 500; 
+            transition: 0.3s; padding: 15px; border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .mobile-links a:hover { background: rgba(255, 107, 107, 0.1); color: var(--primary); transform: translateY(-2px); }
+        .mobile-links a.active-link { background: rgba(255, 107, 107, 0.15); color: var(--primary); font-weight: 700; border-color: rgba(255, 107, 107, 0.3); }
 
         /* ---------------------------------------------------------
-           3. CUSTOM MODAL SYSTEM (CANCEL, INFO & RATING)
+           3. CUSTOM MODAL SYSTEM
         --------------------------------------------------------- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -127,120 +135,104 @@
         }
 
         .modal-card {
-            background: var(--card-bg); padding: 45px; border-radius: var(--radius-lg); 
-            width: 100%; max-width: 480px; text-align: center; 
+            background: var(--card-bg); padding: 40px; border-radius: var(--radius-lg); 
+            width: 100%; max-width: 450px; text-align: center; 
             box-shadow: var(--shadow-md); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-top: 10px solid var(--primary);
+            border-top: 8px solid var(--primary);
         }
 
         @keyframes popIn { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .modal-card i.warn-icon { font-size: 5rem; color: var(--primary); margin-bottom: 25px; }
-        .modal-card h3 { font-size: 1.8rem; color: var(--secondary); margin-bottom: 15px; font-weight: 800; }
-        .modal-card p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 25px; line-height: 1.7; }
+        .modal-card i.warn-icon { font-size: 4.5rem; color: var(--primary); margin-bottom: 20px; }
+        .modal-card h3 { font-size: 1.6rem; color: var(--secondary); margin-bottom: 12px; font-weight: 800; }
+        .modal-card p { color: var(--text-muted); font-size: 1rem; margin-bottom: 25px; line-height: 1.6; }
 
         .modal-btn-group { display: flex; gap: 15px; justify-content: center; }
         .btn-confirm-action { 
-            background: var(--primary); color: var(--white); padding: 14px 30px; 
+            background: var(--primary); color: var(--white); padding: 14px; 
             border-radius: 12px; border: none; font-weight: 700; cursor: pointer; 
             transition: var(--transition); font-size: 1rem; width: 100%;
         }
-        .btn-confirm-action:hover { background: var(--primary-dark); transform: translateY(-3px); }
+        .btn-confirm-action:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
         .btn-cancel-action { 
-            background: #f1f2f6; color: #57606f; padding: 14px 30px; 
+            background: #f1f2f6; color: #57606f; padding: 14px; 
             border-radius: 12px; border: none; font-weight: 700; cursor: pointer; 
             transition: var(--transition); font-size: 1rem; width: 100%;
         }
         .btn-cancel-action:hover { background: #dfe4ea; }
 
-        /* Star Rating */
-        .rating-css { 
-            display: flex; flex-direction: row-reverse; justify-content: center; gap: 10px; margin-bottom: 20px; 
-        }
+        .rating-css { display: flex; flex-direction: row-reverse; justify-content: center; gap: 10px; margin-bottom: 20px; }
         .rating-css input { display: none; }
-        .rating-css label { font-size: 2.5rem; color: #cbd5e0; cursor: pointer; transition: 0.2s; }
+        .rating-css label { font-size: 2.2rem; color: #cbd5e0; cursor: pointer; transition: 0.2s; }
         .rating-css input:checked ~ label, .rating-css label:hover, .rating-css label:hover ~ label { color: var(--warning); }
         .review-textarea { 
             width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #edf2f7; 
-            margin-bottom: 20px; outline: none; font-family: 'Poppins', sans-serif; resize: vertical; 
+            margin-bottom: 20px; outline: none; font-family: inherit; resize: vertical; 
         }
         .review-textarea:focus { border-color: var(--warning); }
 
         /* ---------------------------------------------------------
            4. MAIN CONTENT
         --------------------------------------------------------- */
-        main.container { width: 92%; max-width: 1300px; margin: 50px auto; flex: 1; animation: fadeIn 0.8s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        main.container { width: 92%; max-width: 1300px; margin: 40px auto; flex: 1; animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 40px; }
         .stat-card {
-            background: var(--card-bg); padding: 35px; border-radius: 28px;
+            background: var(--card-bg); padding: 30px; border-radius: 24px;
             box-shadow: var(--shadow-md); border-left: 8px solid var(--primary);
             transition: var(--transition); position: relative; overflow: hidden; border: 1px solid #edf2f7;
         }
-        .stat-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); border-color: var(--primary); }
-        .stat-card p { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.2px; }
-        .stat-card h3 { font-size: 2.5rem; color: var(--secondary); margin-top: 10px; font-weight: 800; }
-        .stat-card i { position: absolute; right: 25px; bottom: 25px; font-size: 3.5rem; color: rgba(0,0,0,0.03); }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.08); border-color: var(--primary); }
+        .stat-card p { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card h3 { font-size: 2.2rem; color: var(--secondary); margin-top: 8px; font-weight: 800; }
+        .stat-card i { position: absolute; right: 25px; bottom: 25px; font-size: 3rem; color: rgba(0,0,0,0.03); }
 
-        .dashboard-header { margin-bottom: 40px; border-bottom: 3px solid #f0f0f0; padding-bottom: 20px; }
-        .dashboard-header h2 { font-size: 2.5rem; font-weight: 800; color: var(--secondary); }
+        .dashboard-header { margin-bottom: 30px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; }
+        .dashboard-header h2 { font-size: 2.2rem; font-weight: 800; color: var(--secondary); }
 
         /* ---------------------------------------------------------
-           5. DATA TABLE
+           5. DATA TABLE (🔥 RESPONSIVE FIXES APPLIED HERE)
         --------------------------------------------------------- */
-        .data-card { background: var(--card-bg); border-radius: 28px; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid #edf2f7; }
+        .data-card { background: var(--card-bg); border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid #edf2f7; }
         table { width: 100%; border-collapse: collapse; }
-        table th { background: #f8fafc; padding: 25px; text-align: left; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); border-bottom: 2px solid #edf2f7; }
-        table td { padding: 25px; border-bottom: 1px solid #f1f5f9; font-size: 1rem; vertical-align: middle; }
+        table th { background: #f8fafc; padding: 20px 25px; text-align: left; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); border-bottom: 2px solid #edf2f7; }
+        table td { padding: 20px 25px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; vertical-align: middle; }
         table tr:last-child td { border-bottom: none; }
         table tr:hover { background-color: #fafbff; }
 
         .action-cell { display: flex; flex-direction: column; gap: 10px; max-width: 180px; margin: 0 auto; }
         
         .pdf-btn {
-            background: none; border: 2.5px solid var(--primary); color: var(--primary);
-            padding: 10px 18px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: var(--transition); display: flex; align-items: center; gap: 10px; width: 100%; justify-content: center;
+            background: none; border: 2px solid var(--primary); color: var(--primary);
+            padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
         }
         .pdf-btn:hover { background: var(--primary); color: var(--white); box-shadow: 0 6px 15px rgba(255, 107, 107, 0.25); }
         .pdf-btn.locked { border-color: #cbd5e0; color: #94a3b8; cursor: not-allowed; opacity: 0.75; }
+        .pdf-btn.locked:hover { background: none; color: #94a3b8; box-shadow: none; }
 
-        .cancel-btn-trigger { background: #fff5f5; border: 1.5px solid #ff7675; color: var(--danger); padding: 10px 18px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: var(--transition); text-align: center; display: block; }
-        .cancel-btn-trigger:hover { background: var(--danger); color: var(--white); transform: scale(1.03); }
+        .cancel-btn-trigger { background: #fff5f5; border: 1.5px solid #ff7675; color: var(--danger); padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: var(--transition); text-align: center; display: block; }
+        .cancel-btn-trigger:hover { background: var(--danger); color: var(--white); }
 
-        .status { padding: 8px 20px; border-radius: 35px; font-size: 0.8rem; font-weight: 700; display: inline-block; text-transform: uppercase; letter-spacing: 0.8px; }
-        .status-pending { background: #fff9db; color: #f08c00; border: 1.5px solid #ffe066; }
-        .status-approved { background: #e3f2fd; color: #1976d2; border: 1.5px solid #90caf9; }
-        .status-ongoing { background: #e6fcf5; color: #0ca678; border: 1.5px solid #63e6be; }
-        .status-completed { background: #f1f3f5; color: #495057; border: 1.5px solid #dee2e6; }
-        .status-cancelled { background: #fdf2f2; color: var(--danger); border: 1.5px solid #feb2b2; }
+        .status { padding: 6px 15px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; display: inline-block; text-transform: uppercase; letter-spacing: 0.8px; }
+        .status-pending { background: #fff9db; color: #f08c00; border: 1px solid #ffe066; }
+        .status-approved { background: #e3f2fd; color: #1976d2; border: 1px solid #90caf9; }
+        .status-ongoing { background: #e6fcf5; color: #0ca678; border: 1px solid #63e6be; }
+        .status-completed { background: #f1f3f5; color: #495057; border: 1px solid #dee2e6; }
+        .status-cancelled { background: #fdf2f2; color: var(--danger); border: 1px solid #feb2b2; }
 
         /* ---------------------------------------------------------
-           6. PAGINATION (FIXED FOR MOBILE & DESKTOP)
+           6. PAGINATION
         --------------------------------------------------------- */
-        .pagination { 
-            display: flex; justify-content: center; align-items: center; gap: 10px; 
-            margin-top: 40px; margin-bottom: 20px; flex-wrap: wrap; /* Allows wrapping on mobile */
-        }
-        .page-btn { 
-            padding: 10px 20px; background: var(--card-bg); border: 1.5px solid #edf2f7; 
-            text-decoration: none; border-radius: 12px; color: var(--secondary); 
-            font-weight: 600; transition: var(--transition); box-shadow: var(--shadow-sm); 
-        }
-        .page-btn:hover:not(.disabled) { 
-            background: var(--primary); color: #fff; border-color: var(--primary); transform: translateY(-2px); 
-        }
-        .page-btn.active { 
-            background: var(--secondary); color: #fff; border-color: var(--secondary); font-weight: 700;
-        }
-        .page-btn.disabled { 
-            opacity: 0.5; cursor: not-allowed; pointer-events: none; background: #f8fafc;
-        }
-
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 30px; margin-bottom: 20px; flex-wrap: wrap; }
+        .page-btn { padding: 8px 16px; background: var(--card-bg); border: 1.5px solid #edf2f7; text-decoration: none; border-radius: 10px; color: var(--secondary); font-weight: 600; transition: var(--transition); font-size: 0.9rem; }
+        .page-btn:hover:not(.disabled) { background: var(--primary); color: #fff; border-color: var(--primary); transform: translateY(-2px); }
+        .page-btn.active { background: var(--secondary); color: #fff; border-color: var(--secondary); }
+        .page-btn.disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; background: #f8fafc; }
 
         /* ---------------------------------------------------------
-           8. RESPONSIVE BREAKPOINTS
+           7. RESPONSIVE BREAKPOINTS (🔥 THE REAL MAGIC)
         --------------------------------------------------------- */
         @media (max-width: 1024px) { 
             .navbar { padding: 15px 5%; } .nav-links { display: none; } .menu-btn { display: block; } 
@@ -248,30 +240,64 @@
         @media (max-width: 768px) {
             .summary-grid { grid-template-columns: 1fr; gap: 15px; }
             .data-card { border: none; background: transparent; box-shadow: none; }
+            
+            /* Break the table structure */
             table, thead, tbody, th, td, tr { display: block; width: 100%; }
             table thead { display: none; }
-            table tr { background: var(--white); padding: 30px; border-radius: 25px; margin-bottom: 25px; box-shadow: var(--shadow-md); border: 1px solid #eee; position: relative; }
-            table td { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border: none; text-align: right; border-bottom: 1.5px dashed #f0f0f0; }
-            table td:last-child { border-bottom: none; flex-direction: column; padding-top: 20px; }
-            table td::before { content: attr(data-label); font-weight: 800; color: var(--secondary); text-align: left; text-transform: uppercase; font-size: 0.8rem; }
-            .action-cell { max-width: 100%; width: 100%; margin-top: 10px; }
-            .pagination { gap: 8px; }
-            .page-btn { padding: 10px 15px; font-size: 0.9rem; }
+            table tr { 
+                background: var(--card-bg); padding: 20px; border-radius: 20px; 
+                margin-bottom: 20px; box-shadow: var(--shadow-sm); border: 1px solid #edf2f7; 
+            }
+            table td { 
+                display: block; /* Changed from flex so elements stack right */
+                text-align: right; /* Aligns inner content to the right */
+                padding: 15px 0 15px 40%; /* Gives 40% space on the left for the label */
+                border: none; 
+                border-bottom: 1.5px dashed #f0f0f0; 
+                position: relative;
+                min-height: 45px;
+            }
+            table td:last-child { border-bottom: none; padding-bottom: 0; }
+            
+            /* Absolute positioned labels on the left */
+            table td::before { 
+                content: attr(data-label); 
+                position: absolute; left: 0; top: 18px; 
+                font-weight: 800; color: var(--secondary); text-align: left; 
+                text-transform: uppercase; font-size: 0.75rem; width: 35%; 
+            }
+            
+            /* Ensure multi-line contents stack cleanly on the right */
+            table td > div {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end; /* Pushes badges/text to the right */
+                gap: 5px;
+            }
+            
+            /* Actions block formatting */
+            .action-cell { width: 100%; max-width: 100%; align-items: stretch; margin-top: 5px; }
+            .pagination { gap: 6px; }
+            .page-btn { padding: 8px 12px; font-size: 0.85rem; }
         }
     </style>
 </head>
 <body>
 
+    <!-- MOBILE OVERLAY MENU (Fixed) -->
     <div class="mobile-menu-overlay" id="mobileMenu">
         <div class="close-menu-btn" onclick="toggleMobileNav()"><i class="fas fa-times"></i></div>
         <div class="mobile-links">
             <a href="/" onclick="toggleMobileNav()">Browse Fleet</a>
             <a href="/user/dashboard" class="active-link" onclick="toggleMobileNav()">My Bookings</a>
             <a href="/user/profile" onclick="toggleMobileNav()">My Profile</a>
-            <a href="/logout" class="logout-pill" style="padding: 15px 40px; display: inline-block;">Logout</a>
+            <a href="/logout" class="logout-pill" style="margin-top: 15px; justify-content: center; width: 100%; padding: 15px;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
         </div>
     </div>
 
+    <!-- Modals -->
     <div class="modal-overlay" id="infoModal">
         <div class="modal-card">
             <i class="fas fa-file-shield warn-icon"></i>
@@ -330,13 +356,14 @@
         </div>
     </div>
 
+    <!-- NAVBAR (SAME AS BEFORE) -->
     <header class="navbar">
         <a href="/" class="brand">Bike<span>Rental</span></a>
         <nav class="nav-links">
             <a href="/">Browse Bikes</a>
             <a href="/user/dashboard" class="active-link">My Bookings</a>
             <a href="/user/profile">Profile</a>
-            <a href="/logout" class="logout-pill">Logout</a>
+            <a href="/logout" class="logout-pill"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </nav>
         <div class="menu-btn" onclick="toggleMobileNav()"><i class="fas fa-bars"></i></div>
     </header>
@@ -368,11 +395,11 @@
         </div>
 
         <% if (!requests || requests.length === 0) { %>
-            <div style="text-align: center; padding: 120px 20px; background: #fff; border-radius: 35px; box-shadow: var(--shadow-sm); border: 3px dashed #cbd5e0;">
-                <i class="fas fa-motorcycle fa-5x" style="color: #cbd5e0; margin-bottom: 25px;"></i>
-                <h3 style="color: var(--secondary); font-size: 2rem;">No Rides Booked Yet</h3>
-                <p style="color: var(--text-muted); margin-bottom: 35px; font-size: 1.1rem;">Ready for an adventure? Start by choosing your dream bike today!</p>
-                <a href="/" style="background: var(--primary); color:#fff; padding: 18px 45px; border-radius: 18px; text-decoration: none; font-weight: 700; font-size: 1.2rem; box-shadow: 0 10px 25px rgba(255, 107, 107, 0.35);">Explore Bikes</a>
+            <div style="text-align: center; padding: 100px 20px; background: #fff; border-radius: 24px; box-shadow: var(--shadow-sm); border: 2px dashed #cbd5e0;">
+                <i class="fas fa-motorcycle fa-4x" style="color: #cbd5e0; margin-bottom: 20px;"></i>
+                <h3 style="color: var(--secondary); font-size: 1.8rem;">No Rides Booked Yet</h3>
+                <p style="color: var(--text-muted); margin-bottom: 30px;">Ready for an adventure? Start by choosing your dream bike today!</p>
+                <a href="/" style="background: var(--primary); color:#fff; padding: 14px 35px; border-radius: 12px; text-decoration: none; font-weight: 700; box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);">Explore Bikes</a>
             </div>
         <% } else { %>
             <div class="data-card">
@@ -381,7 +408,7 @@
                         <tr>
                             <th>Vehicle Details</th>
                             <th>Schedule (Pickup - Return)</th>
-                            <th>Total Amount</th>
+                            <th>Amount & Payment</th>
                             <th>Current Status</th>
                             <th style="text-align: center;">Actions</th>
                         </tr>
@@ -389,24 +416,45 @@
                     <tbody>
                         <% requests.forEach(r => { %>
                             <tr>
-                                <td data-label="Vehicle" style="font-weight: 700; color: var(--secondary); font-size: 1.1rem;">
-                                    <div style="display:flex; align-items:center; gap: 10px;">
-                                        <i class="fas fa-circle-check" style="color: var(--success); font-size: 0.9rem;"></i>
+                                <td data-label="Vehicle">
+                                    <div style="font-weight: 700; color: var(--secondary); font-size: 1.05rem; display:flex; align-items:center; gap: 8px;">
+                                        <i class="fas fa-circle-check" style="color: var(--success); font-size: 0.85rem;"></i>
                                         <%= r.bike ? r.bike.name : 'Premium Bike' %>
                                     </div>
                                 </td>
-                                <td data-label="Schedule" style="font-size: 0.9rem; line-height: 1.8;">
-                                    <div style="color: var(--success); font-weight: 700;"><i class="far fa-calendar-plus"></i> Pickup: <%= new Date(r.pickupDateTime).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) %></div>
-                                    <div style="color: var(--text-muted);"><i class="far fa-calendar-minus"></i> Return: <%= new Date(r.returnDateTime).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) %></div>
+                                <td data-label="Schedule">
+                                    <div style="font-size: 0.9rem; line-height: 1.6;">
+                                        <div style="color: var(--success); font-weight: 600;"><i class="far fa-calendar-plus" style="width:16px;"></i> <%= new Date(r.pickupDateTime).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) %></div>
+                                        <div style="color: var(--text-muted);"><i class="far fa-calendar-minus" style="width:16px;"></i> <%= new Date(r.returnDateTime).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) %></div>
+                                    </div>
                                 </td>
-                                <td data-label="Amount" style="font-weight: 800; color: var(--secondary); font-size: 1.2rem;">₹ <%= r.totalPrice.toLocaleString('en-IN') %></td>
-                                <td data-label="Status"><span class="status status-<%= r.status %>"><%= r.status %></span></td>
+                                
+                                <td data-label="Amount & Payment">
+                                    <div>
+                                        <div style="font-weight: 800; color: var(--secondary); font-size: 1.15rem;">₹ <%= r.totalPrice.toLocaleString('en-IN') %></div>
+                                        <% if(r.paymentStatus === 'paid') { %>
+                                            <div style="font-size: 0.7rem; color: #00b894; font-weight: 700; background: #e6fcf5; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #c3fae8;">
+                                                <i class="fas fa-check-circle"></i> Paid Online
+                                            </div>
+                                            <div style="font-size: 0.65rem; color: var(--text-muted);">TXN: <%= r.transactionId || 'N/A' %></div>
+                                        <% } else { %>
+                                            <div style="font-size: 0.7rem; color: #f08c00; font-weight: 700; background: #fff9db; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #ffe066;">
+                                                <i class="fas fa-store"></i> Pay at Counter
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                </td>
+
+                                <td data-label="Status">
+                                    <div><span class="status status-<%= r.status %>"><%= r.status %></span></div>
+                                </td>
+                                
                                 <td data-label="Actions">
                                     <div class="action-cell">
                                         <button class="pdf-btn <%= r.status !== 'completed' ? 'locked' : '' %>" 
-                                            onclick="handleReceiptAction('<%= r.status %>', '<%= r.bike ? r.bike.name : 'Bike' %>', '<%= r.totalPrice %>', '<%= new Date(r.pickupDateTime).toLocaleDateString('en-IN') %>')">
+                                            onclick="handleReceiptAction('<%= r.status %>', '<%= r._id %>', '<%= r.bike ? r.bike.name : 'Bike' %>', '<%= r.totalPrice %>', '<%= new Date(r.pickupDateTime).toLocaleDateString('en-IN') %>', '<%= new Date(r.returnDateTime).toLocaleDateString('en-IN') %>', '<%= r.paymentStatus %>', '<%= r.transactionId || 'N/A' %>', '<%= typeof user !== `undefined` && user ? user.name : `Customer` %>', '<%= typeof user !== `undefined` && user ? user.email : `N/A` %>')">
                                             <i class="<%= r.status !== 'completed' ? 'fas fa-lock' : 'fas fa-file-invoice-dollar' %>"></i> 
-                                            <%= r.status === 'completed' ? 'Download Receipt' : 'Locked' %>
+                                            <%= r.status === 'completed' ? 'Receipt' : 'Locked' %>
                                         </button>
 
                                         <% if (r.status === 'pending' || r.status === 'approved') { %>
@@ -421,7 +469,7 @@
                                                 <i class="<%= r.status !== 'completed' ? 'fas fa-lock' : 'fas fa-star' %>"></i> Rate Ride
                                             </button>
                                         <% } else { %>
-                                            <div style="text-align: center; font-size: 0.85rem; color: var(--success); font-weight: 800; background: rgba(0, 184, 148, 0.1); padding: 8px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                                            <div style="text-align: center; font-size: 0.8rem; color: var(--success); font-weight: 800; background: rgba(0, 184, 148, 0.1); padding: 6px; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 5px;">
                                                 <i class="fas fa-check-double"></i> Reviewed
                                             </div>
                                         <% } %>
@@ -436,7 +484,7 @@
             <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
                 <% const curr = Number(currentPage) || 1; %>
                 <div class="pagination">
-                    <a href="/user/dashboard?page=<%= curr > 1 ? curr - 1 : 1 %>" class="page-btn <%= curr === 1 ? 'disabled' : '' %>"><i class="fas fa-chevron-left"></i> Previous</a>
+                    <a href="/user/dashboard?page=<%= curr > 1 ? curr - 1 : 1 %>" class="page-btn <%= curr === 1 ? 'disabled' : '' %>"><i class="fas fa-chevron-left"></i> Prev</a>
                     <% for(let i = 1; i <= totalPages; i++) { %>
                         <a href="/user/dashboard?page=<%= i %>" class="page-btn <%= curr === i ? 'active' : '' %>"><%= i %></a>
                     <% } %>
@@ -447,7 +495,48 @@
         <% } %>
     </main>
 
-    <%- include('partials/footer') %>
+    <!-- FOOTER HTML -->
+    <style>
+        footer { background: #11111d; color: #fff; padding: 60px 6% 30px; margin-top: auto; border-top: 5px solid #ff6b6b; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
+        .footer-brand h3 { color: #ff6b6b; font-size: 1.8rem; font-weight: 800; margin-bottom: 15px; }
+        .footer-brand p { color: #94a3b8; font-size: 0.9rem; line-height: 1.6; }
+        .footer-links h4 { color: #fff; margin-bottom: 20px; font-size: 1.1rem; border-left: 3px solid #ff6b6b; padding-left: 10px; }
+        .footer-links ul { list-style: none; padding: 0;}
+        .footer-links a { color: #94a3b8; text-decoration: none; display: block; margin-bottom: 10px; font-size: 0.9rem; transition: 0.3s; }
+        .footer-links a:hover { color: #ff6b6b; padding-left: 5px; }
+        .footer-form { background: #1e1e2f; padding: 20px; border-radius: 15px; }
+        .footer-form input, .footer-form textarea { width: 100%; padding: 10px; border-radius: 8px; border: none; background: #11111d; color: #fff; margin-bottom: 10px; outline: none; font-family: inherit;}
+        .footer-form button { width: 100%; padding: 10px; background: #ff6b6b; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .footer-form button:hover { background: #ee5253; }
+        .copyright { text-align: center; padding-top: 25px; margin-top: 40px; border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.8rem; }
+    </style>
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>BikeRental</h3>
+                <p>Providing premium urban mobility solutions since 2026. Safe, reliable, and performance-driven bikes.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <ul><li><a href="/">Browse Fleet</a></li><li><a href="/signup">Join as Partner</a></li></ul>
+            </div>
+            <div class="footer-links">
+                <h4>Contact Info</h4>
+                <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:12px;"><i class="fas fa-envelope" style="color:#ff6b6b; margin-right:10px;"></i> support@bikerental.com</p>
+                <p style="color:#94a3b8; font-size:0.9rem;"><i class="fas fa-phone" style="color:#ff6b6b; margin-right:10px;"></i> +91 87701 91425</p>
+            </div>
+            <div class="footer-form">
+                <h4 style="color: white; margin-bottom: 15px; font-size: 1rem;">Support Chat</h4>
+                <form action="/feedback" method="POST">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <textarea name="message" placeholder="How can we help?" rows="2" required></textarea>
+                    <button type="submit">Submit Request</button>
+                </form>
+            </div>
+        </div>
+        <div class="copyright"><p>© <%= new Date().getFullYear() %> BikeRental System | Built with ❤️ by Aniket Kumar Gupta | SRIT Jabalpur</p></div>
+    </footer>
 
     <script>
         function toggleScrollLock(lock) { document.body.style.overflow = lock ? 'hidden' : 'auto'; }
@@ -476,7 +565,6 @@
             openModal('cancelConfirmModal');
         }
 
-        // Rating Handling
         function handleRateAction(status, bookingId, bikeId, bikeName) {
             if (status !== 'completed') {
                 openModal('rateInfoModal');
@@ -488,42 +576,107 @@
             openModal('reviewModal');
         }
 
-        // Receipt Handling
-        function handleReceiptAction(status, bike, price, date) {
+        // REALISTIC INVOICE SCRIPT
+        function handleReceiptAction(status, bookingId, bike, price, pickup, returnDate, payStatus, txnId, userName, userEmail) {
             if (status !== 'completed') { openModal('infoModal'); return; }
             
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            doc.setFillColor(30, 30, 47); doc.rect(0, 0, 210, 45, 'F');
-            doc.setTextColor(255, 255, 255); doc.setFontSize(26); doc.setFont("helvetica", "bold");
+            const primaryColor = [255, 107, 107];
+            const secondaryColor = [30, 30, 47];
+            const textColor = [60, 60, 60];
+            const lightGray = [245, 247, 254];
+
+            doc.setFillColor(...secondaryColor);
+            doc.rect(0, 0, 210, 45, 'F');
+
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(26);
+            doc.setFont("helvetica", "bold");
             doc.text("BikeRental", 15, 25);
-            doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.text("OFFICIAL RIDE INVOICE", 15, 33);
-            doc.setFontSize(20); doc.text("INVOICE", 160, 28);
             
-            doc.setTextColor(40, 40, 40); doc.setFontSize(11); doc.setFont("helvetica", "bold");
-            doc.text("BILLED TO: Registered Rider", 15, 60);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text("OFFICIAL TAX INVOICE", 15, 33);
+
+            doc.setFontSize(22);
+            doc.text("INVOICE", 160, 28);
             
-            const invID = "INV-" + Math.floor(Math.random() * 900000 + 100000);
-            doc.text("INVOICE NO:", 140, 60); doc.setFont("helvetica", "normal"); doc.text(invID, 170, 60);
-            doc.setFont("helvetica", "bold"); doc.text("DATE:", 140, 66); doc.setFont("helvetica", "normal"); doc.text(date, 170, 66);
-
-            doc.setFillColor(245, 247, 254); doc.rect(15, 85, 180, 10, 'F');
-            doc.setFont("helvetica", "bold"); doc.text("DESCRIPTION", 20, 92); doc.text("AMOUNT", 165, 92);
+            doc.setTextColor(...textColor);
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.text("BILLED TO:", 15, 60);
             
-            doc.setFont("helvetica", "normal"); doc.text(`Motorcycle Rental - ${bike}`, 20, 105); doc.text(`Rs. ${price}.00`, 165, 105);
-            doc.line(15, 115, 195, 115);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text(userName, 15, 67);
+            doc.text(userEmail, 15, 73);
+
+            const invID = "INV-" + bookingId.substring(0, 8).toUpperCase();
+            const today = new Date().toLocaleDateString('en-IN');
+
+            doc.setFont("helvetica", "bold");
+            doc.text("INVOICE NO:", 120, 60);
+            doc.text("INVOICE DATE:", 120, 67);
+            doc.text("PAYMENT MODE:", 120, 74);
+            if(payStatus === 'paid') doc.text("TRANSACTION ID:", 120, 81);
+
+            doc.setFont("helvetica", "normal");
+            doc.text(invID, 160, 60);
+            doc.text(today, 160, 67);
+            doc.text(payStatus === 'paid' ? "Online (Razorpay)" : "Cash at Counter", 160, 74);
+            if(payStatus === 'paid') doc.text(txnId, 160, 81);
+
+            let startY = 95;
+            doc.setFillColor(...lightGray);
+            doc.rect(15, startY, 180, 12, 'F');
+            doc.setFont("helvetica", "bold");
+            doc.text("ITEM DESCRIPTION", 20, startY + 8);
+            doc.text("PERIOD", 110, startY + 8);
+            doc.text("AMOUNT", 170, startY + 8);
             
-            doc.setFontSize(14); doc.setFont("helvetica", "bold"); doc.text("GRAND TOTAL", 110, 135);
-            doc.setTextColor(255, 107, 107); doc.text(`INR ${price}.00`, 160, 135);
+            startY += 20;
+            doc.setFont("helvetica", "normal");
+            doc.text(`Motorcycle Rental - ${bike}`, 20, startY);
+            doc.text(`${pickup} to ${returnDate}`, 110, startY);
+            doc.text(`Rs. ${price}.00`, 170, startY);
 
-            doc.setDrawColor(255, 107, 107); doc.setLineWidth(0.5); doc.roundedRect(160, 145, 30, 12, 2, 2, 'S');
-            doc.setFontSize(12); doc.text("PAID", 170, 153);
+            doc.setDrawColor(230, 230, 230);
+            doc.line(15, startY + 10, 195, startY + 10);
+            
+            startY += 25;
+            let basePrice = (price / 1.18).toFixed(2);
+            let gst = (price - basePrice).toFixed(2);
 
-            doc.setTextColor(150, 150, 150); doc.setFontSize(8); doc.setFont("helvetica", "italic");
-            doc.text("Computer generated document. Ride safe!", 105, 280, {align: "center"});
+            doc.setFontSize(10);
+            doc.text("Base Fare:", 130, startY);
+            doc.text(`Rs. ${basePrice}`, 170, startY);
 
-            doc.save(`${invID}_Receipt.pdf`);
+            startY += 8;
+            doc.text("Taxes (18% GST):", 130, startY);
+            doc.text(`Rs. ${gst}`, 170, startY);
+
+            startY += 12;
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("GRAND TOTAL", 110, startY);
+            doc.setTextColor(...primaryColor);
+            doc.text(`INR ${price}.00`, 160, startY);
+
+            doc.setDrawColor(...primaryColor);
+            doc.setLineWidth(1);
+            doc.roundedRect(160, startY + 10, 32, 12, 2, 2, 'S');
+            doc.setFontSize(12);
+            doc.text("PAID IN FULL", 163, startY + 18);
+
+            doc.setTextColor(150, 150, 150);
+            doc.setFontSize(8);
+            doc.setFont("helvetica", "italic");
+            doc.text("This is a computer generated document. No signature is required.", 105, 280, {align: "center"});
+            doc.text("Thank you for riding with BikeRental! Ride Safe.", 105, 285, {align: "center"});
+
+            doc.save(`${invID}_Tax_Invoice.pdf`);
         }
     </script>
 </body>
