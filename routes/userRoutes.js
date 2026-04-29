@@ -25,4 +25,7 @@ router.post('/review/:bookingId', ensureUser, userController.submitReview);
 // Coupon Validation
 router.post("/api/validate-coupon", bikeController.validateCoupon);
 
+// POST route for Footer Feedback Form
+router.post('/feedback', userController.submitFeedback);
+
 module.exports = router;

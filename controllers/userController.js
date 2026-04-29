@@ -242,3 +242,37 @@ exports.submitReview = async (req, res) => {
         res.redirect('/user/dashboard');
     }
 };
+
+
+
+// ==========================================
+// HANDLE SYSTEM FEEDBACK (FOOTER FORM)
+// ==========================================
+exports.submitFeedback = async (req, res) => {
+    try {
+        const { name, message } = req.body;
+
+        // Yahan tu chahe toh isko Database (MongoDB) mein save karwa sakta hai
+        // Example: await Feedback.create({ name, message });
+        
+        // Abhi ke liye hum isko terminal mein print kar rahe hain
+        console.log(`📩 New Feedback Received!`);
+        console.log(`👤 Name: ${name}`);
+        console.log(`💬 Message: ${message}`);
+        console.log(`--------------------------`);
+
+        // Frontend AJAX ko SUCCESS response bhejna zaroori hai
+        res.status(200).json({ 
+            success: true, 
+            message: "Feedback received successfully!" 
+        });
+
+    } catch (error) {
+        console.error("Feedback Error:", error);
+        // Agar koi error aaye toh frontend ko batao
+        res.status(500).json({ 
+            success: false, 
+            message: "Something went wrong!" 
+        });
+    }
+};
