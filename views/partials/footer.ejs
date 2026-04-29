@@ -89,6 +89,32 @@
         border-top: 1px solid #2d2d44; color: #636e72; font-size: 0.85rem; 
     }
 
+    /* ---------------------------------------------------- */
+    /* SLIDING TOAST POPUP CSS */
+    /* ---------------------------------------------------- */
+    .pro-toast {
+        position: fixed;
+        bottom: 30px;
+        right: -400px; /* Initially hidden off-screen */
+        background: #fff;
+        color: #1e1e2f;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        z-index: 9999;
+        font-weight: 600;
+        transition: right 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        border-left: 6px solid #00b894;
+    }
+    .pro-toast.show { right: 30px; } /* Slides in */
+    .pro-toast.error { border-left-color: #ff6b6b; }
+    .pro-toast-icon { font-size: 1.5rem; }
+    .pro-toast.success .pro-toast-icon { color: #00b894; }
+    .pro-toast.error .pro-toast-icon { color: #ff6b6b; }
+
     /* RESPONSIVE */
     @media (max-width: 992px) {
         .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -96,6 +122,8 @@
     @media (max-width: 600px) {
         .footer-grid { grid-template-columns: 1fr; gap: 40px; }
         footer { padding: 60px 5% 30px; }
+        .pro-toast { bottom: 20px; right: -100%; width: 90%; margin: 0 5%; }
+        .pro-toast.show { right: 0; }
     }
 </style>
 
@@ -105,11 +133,21 @@
             <h3>BikeRental</h3>
             <p>Experience the freedom of the road with premium bikes. Your trusted partner for urban mobility and adventure since 2026.</p>
             <div class="social-icons">
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://wa.me/918770191425?text=Hi!%20I%20need%20help%20with%20BikeRental." target="_blank" title="WhatsApp Us" style="background: #25D366; border-color: #25D366;">
+               <i class="fab fa-whatsapp"></i>
+                </a>
+    
+    <!-- Direct Phone Call -->
+    <a href="tel:+918770191425" title="Call Us" style="background: #0984e3; border-color: #0984e3;">
+        <i class="fas fa-phone-alt"></i>
+    </a>
+        
+        <a href="https://www.linkedin.com/in/gupta-aniket5/" target="_blank" title="Connect on LinkedIn" style="background: #0077b5; border-color: #0077b5;">
+        <i class="fab fa-linkedin-in"></i>
+        </a>
+                
             </div>
-        </div>
+        </div>w
 
         <div class="footer-links">
             <h4>Quick Navigation</h4>
@@ -154,24 +192,32 @@
                     <span>Submit Note</span> <i class="fas fa-paper-plane"></i>
                 </button>
             </form>
-            <p id="fb-status" style="display:none; font-size: 0.8rem; margin-top: 10px; text-align: center;"></p>
         </div>
     </div>
-
     <div class="copyright">
         <p>© <%= new Date().getFullYear() %> <b>BikeRental Enterprise</b> | Engineered by <b>Aniket Kumar Gupta</b></p>
     </div>
 </footer>
 
+<!-- SLIDING TOAST HTML -->
+<div id="feedbackToast" class="pro-toast">
+    <i id="toastIcon" class="fas fa-check-circle pro-toast-icon"></i>
+    <div style="display: flex; flex-direction: column; text-align: left;">
+        <span id="toastTitle" style="font-size: 0.95rem; color: #1e1e2f;">Success!</span>
+        <span id="toastMessage" style="font-size: 0.8rem; color: #718096; font-weight: 500;">Message sent.</span>
+    </div>
+</div>
+
 <script>
-    // Professional AJAX form submission (No Refresh)
+    // Professional AJAX form submission (No Refresh, Slider Popup)
     document.getElementById('footerFeedbackForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Roks default page reload and JSON screen!
+        
         const name = document.getElementById('fb-name').value;
         const message = document.getElementById('fb-message').value;
         const btn = document.getElementById('fb-submit');
-        const status = document.getElementById('fb-status');
 
+        // Set loading state
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
@@ -183,21 +229,45 @@
             });
 
             if(response.ok) {
-                status.style.display = 'block';
-                status.style.color = '#00b894';
-                status.innerHTML = '<i class="fas fa-check-circle"></i> Thanks Aniket! Feedback received.';
+                // Success: Form reset karo aur hara (green) popup dikhao
+                showProToast('Success!', 'Thanks Aniket! Feedback received.', 'success');
                 document.getElementById('footerFeedbackForm').reset();
             } else {
                 throw new Error();
             }
         } catch (err) {
-            status.style.display = 'block';
-            status.style.color = '#ff6b6b';
-            status.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error sending message.';
+            // Error: Laal (red) popup dikhao
+            showProToast('Error!', 'Could not send message. Try again.', 'error');
         } finally {
+            // Button normal karo
             btn.disabled = false;
             btn.innerHTML = '<span>Submit Note</span> <i class="fas fa-paper-plane"></i>';
-            setTimeout(() => { status.style.display = 'none'; }, 5000);
         }
     });
+
+    // Toast Control Function
+    function showProToast(title, message, type) {
+        const toast = document.getElementById('feedbackToast');
+        const icon = document.getElementById('toastIcon');
+        
+        document.getElementById('toastTitle').innerText = title;
+        document.getElementById('toastMessage').innerText = message;
+
+        if (type === 'error') {
+            toast.classList.add('error');
+            toast.classList.remove('success');
+            icon.className = 'fas fa-times-circle pro-toast-icon';
+        } else {
+            toast.classList.add('success');
+            toast.classList.remove('error');
+            icon.className = 'fas fa-check-circle pro-toast-icon';
+        }
+
+        toast.classList.add('show');
+        
+        // Hide after 4 seconds
+        setTimeout(() => { 
+            toast.classList.remove('show'); 
+        }, 4000);
+    }
 </script>
